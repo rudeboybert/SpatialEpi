@@ -138,6 +138,49 @@ int ProbSampleReplace(NumericVector prob) {
 
 
 // [[Rcpp::export]]
+NumericVector check_overlap(NumericMatrix config, List overlap) {
+  List presence = as<List>(overlap["presence"]);
+  List cluster_list = as<List>(overlap["cluster_list"]);
+  int nSim = config.nrow();
+  int k = config.ncol(), index, index2;
+  int nZones = cluster_list.size();
+
+  // Set all to true
+  NumericVector indicator(nSim), overlap_vector(nZones);
+  for(int i=0; i<nSim; ++i) {
+    indicator[i] = 1;
+  }
+  
+  for(int i=0; i<nSim; ++i){
+    // reset overlap vector
+    for(int j=0; j<nZones; ++j){
+      overlap_vector[j] = 0;
+    }
+    
+    for(int j=0; j<k; ++j) {
+      index = config(i, j) - 1;  // Watch R vs C Indexing
+      if(overlap_vector[index]==1){
+        indicator[i] = 0;
+        break;
+      }
+      
+      Rcpp::NumericVector areas = cluster_list[index];
+      for(int m=0; m<areas.size(); ++m){
+       // Watch R vs C Indexing
+        index2 = areas[m] - 1;
+        
+        Rcpp::NumericVector stuff = presence[index2];
+        for(int l=0; l<stuff.size(); ++l)
+         overlap_vector[ stuff[l] - 1 ] = 1;
+     }
+   } 
+ }
+ return indicator;
+}
+
+
+
+// [[Rcpp::export]]
 NumericMatrix clean_moves_matrix(NumericVector theta, NumericMatrix moves, int n_zones) {
   int n_moves = sum(moves), k = theta.size(), counter;
   NumericMatrix moves_reduced(k, n_moves);
