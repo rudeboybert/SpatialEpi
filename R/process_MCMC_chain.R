@@ -1,4 +1,4 @@
-process.MCMC.chain <-
+process_MCMC_chain <-
 function(chain, param, RR.area, cluster.list, cutoffs){
   n <- length(RR.area)
   # Store Outputs Here
@@ -60,4 +60,3 @@ function(chain, param, RR.area, cluster.list, cutoffs){
   
   return(list(high.area=high.area, low.area=low.area, RR.est.area=RR.est.area))
 }
-

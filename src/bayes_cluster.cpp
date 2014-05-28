@@ -705,7 +705,6 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
       
       // Update prob
       p_denom *= probs[z]; 
-      // printf("%i %i %4.6f %4.6f\n", z_star +1, z+1, p_num, p_denom);
 
 		} // end if/else if(move==3 && k==1)
 

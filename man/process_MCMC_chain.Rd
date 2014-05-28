@@ -1,8 +1,8 @@
-\name{process.MCMC.chain}
-\alias{process.MCMC.chain}
+\name{process_MCMC_chain}
+\alias{process_MCMC_chain}
 \title{Process MCMC Chain}
 \description{Takes the output of \code{\link{MCMC}} and produce area-by-area summaries}
-\usage{process.MCMC.chain(chain, param, RR.area, cluster.list, cutoffs)}
+\usage{process_MCMC_chain(chain, param, RR.area, cluster.list, cutoffs)}
 \arguments{
   \item{chain}{output of \code{\link{MCMC}} function}
   \item{param}{list of wide/narrow shape/rate gamma prior parameters}

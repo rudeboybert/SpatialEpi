@@ -1,4 +1,4 @@
-estimate.lambda <-
+estimate_lambda <-
 function(pi0, q){
   K <- length(q) - 1
   
@@ -8,4 +8,3 @@ function(pi0, q){
 
   return(lambda)
 }
-

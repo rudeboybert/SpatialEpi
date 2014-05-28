@@ -1,11 +1,11 @@
-`besag.newell` <- function(geo, population, cases, expected.cases=NULL, k, alpha.level){
+besag_newell <-
+function(geo, population, cases, expected.cases=NULL, k, alpha.level){
 
 #-------------------------------------------------------------------------
 # Initialization 
 #-------------------------------------------------------------------------
 #---------------------------------------------------
 # If no expected.cases provided, set them
-
 # if there are no expected counts
 if(is.null(expected.cases)){
 	p <- sum(cases)/sum(population)
@@ -20,18 +20,14 @@ geo.results <- zones(geo, population, 1)
 nearest.neighbors <- geo.results$nearest.neighbors
 # interpoint distance matrix
 distance <- geo.results$dist
-
-
-
+# number of zones
+n.zones <- length(unlist(nearest.neighbors))
 
 
 #-------------------------------------------------------------------------
 # Observed statistic computation
 #-------------------------------------------------------------------------
-results <- .Call("besagNewell", as.double(cases), as.double(expected.cases), nearest.neighbors, as.integer(k), PACKAGE="SpatialEpi") 
-
-
-
+results <- besagNewell(cases, expected.cases, nearest.neighbors, n.zones, k)
 
 
 #-------------------------------------------------------------------------
@@ -78,9 +74,6 @@ if( length(signif.indices) == 0){
 }
 
 
-
-
-
 #-------------------------------------------------------------------------
 # Output results
 #-------------------------------------------------------------------------
@@ -92,4 +85,3 @@ results <- list(
 )	
 return(results)
 }
-	

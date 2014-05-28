@@ -1,6 +1,6 @@
-\name{polygon2spatial.polygon}
+\name{polygon2spatial_polygon}
 \Rdversion{1.1}
-\alias{polygon2spatial.polygon}
+\alias{polygon2spatial_polygon}
 \title{
 Convert a Polygon to a Spatial Polygons Object
 }
@@ -8,7 +8,7 @@ Convert a Polygon to a Spatial Polygons Object
 Converts a polygon (a matrix of coordinates with NA values to separate subpolygons) into a Spatial Polygons object.
 }
 \usage{
-polygon2spatial.polygon(poly, coordinate.system, area.names = NULL, nrepeats = NULL)
+polygon2spatial_polygon(poly, coordinate.system, area.names = NULL, nrepeats = NULL)
 }
 \arguments{
   \item{poly}{a 2-column matrix of coordinates, where each complete subpolygon is separated by NA's}
@@ -42,7 +42,7 @@ coord.system <- '+proj=utm'
 names <- scotland$data$county.names
 nrepeats <- scotland$polygon$nrepeats
 
-spatial.polygon <- polygon2spatial.polygon(polygon,coord.system,names,nrepeats)
+spatial.polygon <- polygon2spatial_polygon(polygon,coord.system,names,nrepeats)
 
 par(mfrow=c(1,2))
 # plot using polygon function

@@ -1,4 +1,6 @@
-`kulldorff` <- function(geo, cases, population, expected.cases=NULL, pop.upper.bound, n.simulations, alpha.level, plot=TRUE){
+kulldorff <-
+function(geo, cases, population, expected.cases=NULL, pop.upper.bound, 
+         n.simulations, alpha.level, plot=TRUE){
 
 #-------------------------------------------------------------------------
 # Initialization 
@@ -25,17 +27,14 @@ geo.results <- zones(geo, population, pop.upper.bound)
 nearest.neighbors <- geo.results$nearest.neighbors
 # list of zone centers and edges
 cluster.coords <- geo.results$cluster.coords
-
-
-
+n.zones <- nrow(cluster.coords)
 
 
 #-------------------------------------------------------------------------
 # Observed statistic computation
 #-------------------------------------------------------------------------
-lkhd <- .Call("computeAllLogLkhd", as.double(cases), as.double(denominator),
-	nearest.neighbors, type, PACKAGE="SpatialEpi"
-)
+lkhd <- computeAllLogLkhd(cases, denominator, nearest.neighbors, n.zones, type)
+
 
 #---------------------------------------------------
 # Get areas included in most likely cluster
@@ -50,9 +49,6 @@ cluster <- nearest.neighbors[[center]]
 cluster <- cluster[1:which(cluster==end)]
 
 
-
-
-
 #-------------------------------------------------------------------------
 # Conduct Monte Carlo Simulations
 #-------------------------------------------------------------------------
@@ -63,10 +59,7 @@ perm <- rmultinom(n.simulations,round(sum(cases)),prob=denominator)
 
 #---------------------------------------------------
 # Compute simulated lambda's:  max log-lkhd in region
-sim.lambda <- .Call("kulldorffMC", perm, as.double(denominator), nearest.neighbors, type, PACKAGE="SpatialEpi" )
-
-
-
+sim.lambda <- kulldorffMC(perm, denominator, nearest.neighbors, n.zones, type)
 
 
 #-------------------------------------------------------------------------
@@ -81,7 +74,8 @@ p.value <- 1-mean(combined.lambda < max(lkhd))
 #---------------------------------------------------
 # Show histogram
 if(plot){
-	hist(combined.lambda,main="Monte Carlo Distribution of Lambda",xlab=expression(log(lambda)))
+	hist(combined.lambda,main="Monte Carlo Distribution of Lambda",
+       xlab=expression(log(lambda)))
 	abline(v=max(lkhd),col="red")
 	legend(	"top",
 		c(	paste("Obs. log(Lambda) = ",round(max(lkhd),3),sep=""), 
@@ -91,9 +85,6 @@ if(plot){
 		bty="n"
 	)
 }
-
-
-
 
 
 #-------------------------------------------------------------------------
@@ -109,9 +100,6 @@ most.likely.cluster = list(
 	monte.carlo.rank = sum(combined.lambda >= lkhd[cluster.index]),
 	p.value = p.value
 )
-
-
-
 
 
 #-------------------------------------------------------------------------
@@ -159,9 +147,6 @@ for(i in 2:length(indices)){
 }
 
 
-
-
-
 #-------------------------------------------------------------------------
 # Output results
 #-------------------------------------------------------------------------
@@ -174,4 +159,3 @@ results <- list(
 )
 return(results)
 }
-	

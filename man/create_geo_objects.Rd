@@ -1,10 +1,10 @@
-\name{create.geo.objects}
-\alias{create.geo.objects}
-\title{Create geographical objects to be used in \code{bayes.cluster} function.}
+\name{create_geo_objects}
+\alias{create_geo_objects}
+\title{Create geographical objects to be used in \code{bayes_cluster} function.}
 \description{
-This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link{bayes.cluster}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).  
+This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link{bayes_cluster}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).  
 }
-\usage{create.geo.objects(max.prop, pop, centroids, sp.obj, area = NULL)}
+\usage{create_geo_objects(max.prop, pop, centroids, sp.obj, area = NULL)}
 \arguments{
   \item{max.prop}{maximum proportion of study region's population each single zone can contain}
   \item{pop}{vector of length \code{n} of the population of each area}
@@ -28,7 +28,7 @@ max.prop <- 0.15
 pop <- tapply(pennLC$data$population, pennLC$data$county, sum)
 centroids <- latlong2grid(pennLC$geo[, 2:3])
 map <- pennLC$spatial.polygon
-output <- create.geo.objects(max.prop, pop, centroids, map)
+output <- create_geo_objects(max.prop, pop, centroids, map)
 
 ## number of single zones
 nrow(output$cluster.coords)

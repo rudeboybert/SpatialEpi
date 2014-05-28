@@ -1,5 +1,5 @@
 EBpostdens <-
-function(Y,E,alpha,beta,Xrow=NULL,lower=NULL,upper=NULL,main=""){
+function(Y, E, alpha, beta, Xrow=NULL, lower=NULL, upper=NULL, main=""){
   if (is.null(Xrow)) Xrow <- matrix(c(1),nrow=1,ncol=1)
   xvals <- seq(lower,upper,.01)
   mu <- as.numeric(exp(Xrow %*% beta))

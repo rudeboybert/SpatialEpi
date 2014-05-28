@@ -1,4 +1,6 @@
-mapvariable <- function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL, upper=NULL, main=NULL, xlab=NULL, ylab=NULL){
+mapvariable <-
+function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL, upper=NULL, 
+         main=NULL, xlab=NULL, ylab=NULL){
 
 #-----------------------------------------------------------------
 # Create id indicators for coloring scheme
@@ -98,4 +100,3 @@ rect(xleft=xl, ybottom=yb, xright=xr, ytop=yt, col=gray(gr), border=TRUE)
 palette("default")
 par(def.par)
 }
-

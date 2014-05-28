@@ -1,5 +1,5 @@
-\name{besag.newell}
-\alias{besag.newell}
+\name{besag_newell}
+\alias{besag_newell}
 \title{
 	Besag-Newell Cluster Detection Method
 }
@@ -16,7 +16,7 @@ Besag-Newell cluster detection method.  There are differences with the original 
 The first two and last differences are because we view the testing on an area-by-area level, rather than a case-by-case level.
 }
 \usage{
-	besag.newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+	besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
 }
 \arguments{
   \item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
@@ -75,10 +75,10 @@ k <- 1250
 alpha.level <- 0.05
 
 # not controlling for stratas
-results <- besag.newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+results <- besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
 
 # controlling for stratas
-results <- besag.newell(geo, population, cases, expected.cases, k, alpha.level)
+results <- besag_newell(geo, population, cases, expected.cases, k, alpha.level)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,6 +1,5 @@
-# From Jon Wakefield
-`eBayes` <-
-function(Y,E,Xmat=NULL){
+eBayes <-
+function(Y, E, Xmat=NULL){
 	# Check for covariates
 	if (is.null(Xmat)) {
 		mod <- glm.nb(Y ~ 1+offset(log(E)), link=log)
@@ -18,6 +17,5 @@ function(Y,E,Xmat=NULL){
 	RRmed <- qgamma(0.5,alpha+Y,(alpha+E*muhat)/muhat)
 	
 	# Output results
-	list(RR=RR,RRmed=RRmed,beta=mod$coeff,alpha=alpha,SMR=SMR)
+	list(RR=RR, RRmed=RRmed, beta=mod$coeff, alpha=alpha, SMR=SMR)
 }
-

@@ -9,15 +9,8 @@ Imports:
     Rcpp (>= 0.11.1),
     RcppArmadillo (>= 0.4.300.0),
     MASS,
-    maps,
     maptools,
-    shapefiles,
-    spdep,
-    gtools,
-    rgeos,
-    lattice,
-    Matrix,
-    nlme
+    spdep
 LinkingTo: Rcpp, RcppArmadillo
 Author: 
     Cici Chen <cicichen@u.washington.edu>,

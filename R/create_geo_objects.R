@@ -1,4 +1,5 @@
-create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
+create_geo_objects <-
+function(max.prop, pop, centroids, sp.obj, area=NULL){
   # Number of areas
   n <- nrow(centroids)
   
@@ -7,7 +8,7 @@ create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
   #-----------------------------------------------------------------------------
   # Compute adjacency matrix
   adj <- poly2nb(sp.obj, queen=TRUE)
-  adj <- nb2mat( adj )[1:n,1:n]
+  adj <- nb2mat(adj)[1:n,1:n]
   
   # Convert Adjacency Matrix To A List
   adj.new <- vector("list",length=n)
@@ -21,7 +22,10 @@ create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
   # Set up Zones
   #-----------------------------------------------------------------------------
   if(max.prop < max(pop/sum(pop))){
-    print(paste("max.prop needs to be at least ",round(max(pop/sum(pop)),3),sep=""))
+    print(paste("max.prop needs to be at least ", 
+                round(max(pop/sum(pop)),3),
+                sep="")
+          )
   }
   
   geoInfo <- zones(centroids, pop, max.prop)
@@ -33,7 +37,7 @@ create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
   cluster.list <- vector(mode="list",length=n.zones)
   counter <- 1
   for(i in 1:n)
-    for(j in 1:length(nn[[i]]) ){
+    for(j in 1:length(nn[[i]])){
       cluster.list[[counter]] <- nn[[i]][1:j] 
       counter <- counter + 1  
     } 
@@ -62,8 +66,9 @@ create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
     presence[[i]] <- which( sapply(cluster.list,function(x){is.element(i,x)}) )
   }
   
-  # If buffer wanted and regardless of overlap matrix or list, update presence list
-  # need to preserve original presence list all the way thru, so temporarily store results here
+  # If buffer wanted and regardless of overlap matrix or list, update presence
+  # list need to preserve original presence list all the way thru, so
+  # temporarily store results here
   presence_temp <- presence
   
   # Loop thru all areas
@@ -83,7 +88,5 @@ create.geo.objects <- function(max.prop, pop, centroids, sp.obj, area=NULL){
   # If data set is large, set overlap as a list
   #----------------------------------------------------------------
   overlap <- list(presence=presence, cluster_list=cluster.list)
-  
   return(list(overlap=overlap, cluster.coords=cluster.coords, areaz=areaz))
 }
-
