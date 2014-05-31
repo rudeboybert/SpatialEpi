@@ -7,11 +7,12 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector normalize(NumericVector x) {
   int n = x.size();
+  NumericVector y(n);
   double sum_x = sum(x);
   for(int i=0; i<n; ++i){
-    x[i] /= sum_x;
+    y[i] = x[i]/sum_x;
 	}
-  return x;
+  return y;
 }
 
 
@@ -46,7 +47,7 @@ double ldnbinom(double y, double E, double a, double b) {
 
 
 // [[Rcpp::export]]
-double ldmultinom(NumericVector x, double n, NumericVector prob) {
+double ldmultinom(NumericVector x, NumericVector prob) {
   int len = x.size();
 	NumericVector p(len);
 	double value = 0, sum_p = sum(prob);
@@ -56,7 +57,7 @@ double ldmultinom(NumericVector x, double n, NumericVector prob) {
 		p[i] = prob[i]/sum_p;
 	}
 
-	value = lgamma(n + 1);
+	value = lgamma(sum(x) + 1);
 	for(int i=0; i<len; ++i) {
 		if(p[i] != 0) {
 			value -= lgamma(x[i] + 1);
@@ -112,7 +113,7 @@ NumericVector coeff(NumericVector y_vector, NumericVector E_vector,
 			}
 		}
 
-		coeff[j] = ldmultinom(y_temp, sum(y_temp), E_temp) + 
+		coeff[j] = ldmultinom(y_temp, E_temp) + 
 		ldnbinom(yz, Ez, a_values[1], b_values[1]) - sum_log_fy_inside ;
 	}
 
@@ -511,9 +512,11 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     NumericVector p(n_zones);
 		int sampling_type = pattern[ sim % pattern.size() ];
 		if(sampling_type == 0) {
-      p = unif_p;
+      for(int i=0; i<n_zones; ++i)
+        p[i] = unif_p[i];
 		} else {
-      p = prop_p;
+      for(int i=0; i<n_zones; ++i)
+        p[i] = prop_p[i];
 		}
 
     // Get theta info 
@@ -611,8 +614,8 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
       
       // Update prob
       p_num *= probs[z_star];
+      
 		} // end if/else if(move==3 && k==1)
-
 
 
 
@@ -650,13 +653,12 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     List birth_rev_moves = return_birth_moves(theta_star, overlap);
     //if(as<int>(birth_rev_moves["move_possible"]) == 0)
     //  p_moves_rev[4] = 0;
+    
 		// Renormalize prob, set determined reverse move
     p_moves_rev = normalize(p_moves_rev);  
 		move_rev = reverse[move];
 		p_denom *= p_moves_rev[move_rev];
     
-    //return List::create(_["sample"] = p_moves_rev, _["move_trace"] = move_rev    ); 
-      
 		//--------------------------------------------------
 		// Set up sampling space of configurations
 		//--------------------------------------------------
@@ -678,7 +680,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     //--------------------------------------------------
   	// Compute probability of reverse move
     //--------------------------------------------------
-    // If k==1 and we have death move, treat differently
+    // If k_rev==1 and we have reverse death move, treat differently
 		if(move_rev==3 && k_rev==1){
 			p_denom *= 1;
 		} else {
@@ -708,6 +710,12 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 
 		} // end if/else if(move==3 && k==1)
 
+//    printf("%u %u %u \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f\n", 
+//    move+1, z_star, move_rev+1,
+//    p_moves[0], p_moves[1], p_moves[2], p_moves[3], p_moves[4],
+//    p_moves_rev[0], p_moves_rev[1], p_moves_rev[2], p_moves_rev[3], p_moves_rev[4],
+//    p_num, p_denom
+//    );
     
   	//-----------------------------------------------------------------
     // M-H Ratio
@@ -716,16 +724,16 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		ratio[sim-1] *= lambda[k_rev];
   	ratio[sim-1] /= lambda[k]; 
         
-		if( k_rev != 0 ) {
+		if(k_rev != 0) {
 			for(int j=0; j<k_rev; ++j) {
 				// Watch R vs C indexing
-				ratio[sim-1] *= lkhd_z[ theta_star[j]-1 ]; 
+				ratio[sim-1] *= lkhd_z[theta_star[j]-1]; 
 			}
 		}
-		if( k != 0 ) {
+		if(k != 0) {
 			for(int j=0; j<k; ++j) {
 				// Watch R vs C indexing
-				ratio[sim-1] /= lkhd_z[ theta[j]-1 ]; 
+				ratio[sim-1] /= lkhd_z[theta[j]-1]; 
 			}
 		}
 
@@ -735,7 +743,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 			sample[sim] = theta_star;
 			accpt_trace[sim-1] = 1;
 		} else {
-			sample[sim] =theta;
+			sample[sim] = theta;
 		}
 		
 		// Watch R vs C indexing
@@ -746,7 +754,8 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
   
   return List::create(
     _["sample"] = sample, _["move_trace"] = move_trace,
-    _["accpt_trace"] = accpt_trace, _["ratio"] = ratio
+    _["accpt_trace"] = accpt_trace, _["ratio"] = ratio, 
+    _["p_num"] = p_num, _["p_denom"] = p_denom
     ); 
 }
 
