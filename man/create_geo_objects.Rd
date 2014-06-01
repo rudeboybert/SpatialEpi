@@ -13,7 +13,7 @@ This internal function creates the geographical objects needed to run the Bayesi
   \item{area}{geographic area of each of the \code{n} areas. If not specified, this function will compute them based on \code{sp.obj}}
 }
 \value{
-\item{overlap}{a list with two elements: \code{1. presence} which lists for each areas all the single zones it is present in and \code{2. cluster_list} for each single zone its component areas}
+\item{overlap}{a list with two elements: \code{1. presence} which lists for each areas all the single zones it is present in and \code{2. cluster.list} for each single zone its component areas}
 \item{cluster.coords}{\code{n.zones x 2} matrix of the centering and radial area of each single zone}
 \item{areaz}{vector of the geographic surface area of each single zone}
 }

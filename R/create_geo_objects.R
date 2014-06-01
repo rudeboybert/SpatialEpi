@@ -87,6 +87,6 @@ function(max.prop, pop, centroids, sp.obj, area=NULL){
   #----------------------------------------------------------------
   # If data set is large, set overlap as a list
   #----------------------------------------------------------------
-  overlap <- list(presence=presence, cluster_list=cluster.list)
+  overlap <- list(presence=presence, cluster.list=cluster.list)
   return(list(overlap=overlap, cluster.coords=cluster.coords, areaz=areaz))
 }

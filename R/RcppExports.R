@@ -13,8 +13,8 @@ ldnbinom <- function(y, E, a, b) {
     .Call('SpatialEpi_ldnbinom', PACKAGE = 'SpatialEpi', y, E, a, b)
 }
 
-ldmultinom <- function(x, n, prob) {
-    .Call('SpatialEpi_ldmultinom', PACKAGE = 'SpatialEpi', x, n, prob)
+ldmultinom <- function(x, prob) {
+    .Call('SpatialEpi_ldmultinom', PACKAGE = 'SpatialEpi', x, prob)
 }
 
 coeff <- function(y_vector, E_vector, a_values, b_values, cluster_list) {

@@ -2,7 +2,7 @@ estimate_q <-
 function(n.sim, J, prior.z, overlap){
   n.zones <- length(prior.z)
 
-  # q_0 = q_1 = 1, since no concept of overlap for j=0,1
+  # q_0 = q_1 = 1, since no concept of overlap for j=0, 1
   q <- c(1, 1, rep(0, J-1))
   var.q <- c(NA, NA, rep(0, J-1))
 
@@ -21,8 +21,6 @@ function(n.sim, J, prior.z, overlap){
     
     q[k+1] <- mean(indicator/denom)
     var.q[k+1] <- var(indicator/denom)/n.sim
-
-    print(k) 
   }
   
   return(list(q=q, var.q=var.q))

@@ -3,7 +3,7 @@
 \title{MCMC Wrapper Function}
 \description{Internal wrapper function for C call to MCMC method.}
 \usage{
-MCMC(n.sim, overlap, cluster.coords, J, values, lambda, theta.init)
+MCMC(n.sim, overlap, cluster.coords, K, values, lambda, theta.init)
 }
 \arguments{
   \item{n.sim}{number of MCMC simulations}

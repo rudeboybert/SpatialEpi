@@ -141,7 +141,7 @@ int ProbSampleReplace(NumericVector prob) {
 // [[Rcpp::export]]
 NumericVector check_overlap(NumericMatrix config, List overlap) {
   List presence = as<List>(overlap["presence"]);
-  List cluster_list = as<List>(overlap["cluster_list"]);
+  List cluster_list = as<List>(overlap["cluster.list"]);
   int nSim = config.nrow();
   int k = config.ncol(), index, index2;
   int nZones = cluster_list.size();
@@ -255,12 +255,12 @@ NumericMatrix return_death_moves(NumericVector theta) {
 
 
 // [[Rcpp::export]]
-List return_birth_moves(NumericVector theta, List overlap) {
+NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
 	List presence = as<List>(overlap["presence"]);
-	List cluster_list = as<List>(overlap["cluster_list"]);
+	List cluster_list = as<List>(overlap["cluster.list"]);
 
 	int k = theta.size(), n_zones = cluster_list.size(), counter, zone, zone_area, 
-	n_birth_moves, move_possible;
+	n_birth_moves;//, move_possible;
 	
 	NumericVector overlap_vector(n_zones);
   NumericMatrix birth_moves(1, n_zones);
@@ -303,7 +303,7 @@ List return_birth_moves(NumericVector theta, List overlap) {
 
   //Make reduced table of all possible configs of birth moves
   n_birth_moves = sum(birth_moves);
-  move_possible = n_birth_moves > 0;
+  //move_possible = n_birth_moves > 0;
   NumericMatrix birth_moves_reduced(k+1, n_birth_moves);
   
   // Fill in old theta
@@ -341,10 +341,10 @@ List return_birth_moves(NumericVector theta, List overlap) {
 	/*
    * Output results
    */
-   List results = List::create(_["birth_moves"] = birth_moves_reduced, 
-   	_["move_possible"] = move_possible);
-
-   return results;
+   return birth_moves_reduced;
+//   List results = List::create(_["birth_moves"] = birth_moves_reduced, 
+//   	_["move_possible"] = move_possible);
+//   return results;
 }
     
     
@@ -354,7 +354,7 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 	cluster_coords) {
 
 	List presence = as<List>(overlap["presence"]);
-	List cluster_list = as<List>(overlap["cluster_list"]);
+	List cluster_list = as<List>(overlap["cluster.list"]);
 
 	int k = theta.size(), n_zones = cluster_list.size(), zone, start, end, zone_sub,
 	zone_sub2, center;
@@ -555,9 +555,10 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
       }
     }  
     // Figure out if birth moves are possible
-    List birth_moves = return_birth_moves(theta, overlap);
-    //if(as<int>(birth_moves["move_possible"]) == 0)
-    //  p_moves[4] = 0;
+    NumericMatrix birth_moves = return_birth_moves(theta, overlap);
+    if(birth_moves.ncol() == 0) {
+      p_moves[4] = 0;
+    }
 
 		// Renormalize prob and sample move
     p_moves = normalize(p_moves); 
@@ -579,7 +580,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		}
 		// Birth moves
 		if(move == 4) {
-      moves = as<NumericMatrix>(birth_moves["birth_moves"]);        
+      moves = birth_moves;        
 		}
 
 
@@ -650,9 +651,10 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
       }
     }  
     // Figure out if birth moves are possible
-    List birth_rev_moves = return_birth_moves(theta_star, overlap);
-    //if(as<int>(birth_rev_moves["move_possible"]) == 0)
-    //  p_moves_rev[4] = 0;
+    NumericMatrix birth_rev_moves = return_birth_moves(theta_star, overlap);
+    if(birth_rev_moves.ncol() == 0){
+      p_moves_rev[4] = 0;
+    }
     
 		// Renormalize prob, set determined reverse move
     p_moves_rev = normalize(p_moves_rev);  
@@ -673,7 +675,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		}
 		// Birth moves
 		if(move_rev == 4) {
-      moves_rev = as<NumericMatrix>(birth_rev_moves["birth_moves"]);        
+      moves_rev = birth_rev_moves;        
 		}
 
 
@@ -754,8 +756,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
   
   return List::create(
     _["sample"] = sample, _["move_trace"] = move_trace,
-    _["accpt_trace"] = accpt_trace, _["ratio"] = ratio, 
-    _["p_num"] = p_num, _["p_denom"] = p_denom
+    _["accpt_trace"] = accpt_trace, _["ratio"] = ratio
     ); 
 }
 

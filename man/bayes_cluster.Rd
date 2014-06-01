@@ -5,22 +5,21 @@
 Implementation of the Bayesian Cluster detection model of Wakefield and Kim for a study region with \code{n} areas. The prior and posterior probabilities of each of the \code{n.zones} single zones being a cluster/anti-cluster are estimated using Markov chain Monte Carlo.
 }
 \usage{
-bayes_cluster(E, cases, population, centroids, map, max.prop, k, shape, rate, J, 
-pi0, n.sim.imp, n.sim.prior, n.sim.post)
+bayes_cluster(y, E, population, centroids, map, max.prop, shape, rate, J, 
+pi0, n.sim.lambda, n.sim.prior, n.sim.post)
 }
 \arguments{
+  \item{y}{vector of length \code{n} of the observed number of disease in each area}
   \item{E}{vector of length \code{n} of the expected number of disease in each area}
-  \item{cases}{vector of length \code{n} of the observed number of disease in each area}
   \item{population}{vector of length \code{n} of the population in each area}
   \item{centroids}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based} 
   \item{map}{an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class}) representing the study region}
   \item{max.prop}{maximum proportion of study region's population each single zone can contain}
-  \item{k}{parameter to tune the prior probability of each single zone being a cluster/anti-cluster as a function of geographical area size}
   \item{shape}{narrow/wide shape parameter for gamma prior on relative risk}
   \item{rate}{narrow/wide rate parameter for gamma prior on relative risk}
   \item{J}{maximum number of clusters/anti-clusters considered}
   \item{pi0}{prior probability of no clusters/anti-clusters i.e. probability that J=0}
-  \item{n.sim.imp}{number of importance sampling iterations to estimate lambda}
+  \item{n.sim.lambda}{number of importance sampling iterations to estimate lambda}
   \item{n.sim.prior}{number of MCMC iterations to estimate prior probabilities associated with each single zone}
   \item{n.sim.post}{number of MCMC iterations to estimate posterior probabilities associated with each single zone}
 }

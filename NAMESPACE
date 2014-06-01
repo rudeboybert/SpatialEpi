@@ -1,5 +1,5 @@
 useDynLib("SpatialEpi")
-import(RcppArmadillo)
+import(sp)
 importFrom(Rcpp, evalCpp)
 importFrom(MASS, glm.nb)
 importFrom(maptools, leglabs)
