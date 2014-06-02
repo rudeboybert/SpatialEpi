@@ -1,15 +1,16 @@
 bayes_cluster <-
-function(y, E, population, map, centroids, max.prop, shape, rate, J, pi0,
+function(y, E, population, sp.obj, centroids, max.prop, shape, rate, J, pi0,
          n.sim.lambda, n.sim.prior, n.sim.post, burnin.prop = 0.1,
          theta.init = vector(mode="numeric", length=0)
 ){
-
+print(paste("Algorithm started on:", date()))
+  
 # MCMC parameters
 pattern <- c(0, 1)
 p.moves <- normalize(c(1, 1, 1, 1, 1))
   
 # Geographic info and create geographical objects to use
-geo.objects <- create_geo_objects(max.prop, population, centroids, map)
+geo.objects <- create_geo_objects(max.prop, population, centroids, sp.obj)
 overlap <- geo.objects$overlap
 cluster.coords <- geo.objects$cluster.coords    
 n <- length(E)
@@ -33,10 +34,9 @@ prior.z <- rep(1/n.zones, n.zones)
 log_prior.z <- log(prior.z) - log(sum(prior.z))
 
 # Estimate q and lambda
-results <- estimate_q(n.sim.lambda, J, prior.z, overlap)
-q <- results$q
-lambda <- estimate_lambda(pi0, q)
-prior.j <- normalize(lambda*q)
+results <- estimate_lambda(n.sim.lambda, J, prior.z, overlap, pi0)
+lambda <- results$lambda
+prior.j <- results$prior.j
 print(paste("Importance sampling of lambda complete on:", date()))
 
 
@@ -90,8 +90,8 @@ k.vector <- table(sapply(post.chain$sample,length))
 k.names <- as.numeric(names(k.vector))
 k.vector <- normalize(k.vector)
 pk.y <- rep(0, J+1)
-pk.y[j.names+1] <- k.vector
-print(paste("Prior estimation complete on:", date()))
+pk.y[k.names+1] <- k.vector
+print(paste("Posterior estimation complete on:", date()))
 
 
 

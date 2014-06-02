@@ -1,12 +1,8 @@
 \name{expected}
 \alias{expected}
 \title{Compute Expected Numbers of Disease}
-\description{
-Compute the internally indirect standardized expected numbers of disease.  
-}
-\usage{
-expected(population, cases, n.strata)
-}
+\description{Compute the internally indirect standardized expected numbers of disease.}
+\usage{expected(population, cases, n.strata)}
 \arguments{
   \item{population}{a vector of population counts for each strata in each area}
   \item{cases}{a vector of the corresponding number of cases}
@@ -26,9 +22,9 @@ data(pennLC)
 population <- pennLC$data$population
 cases <- pennLC$data$cases
 
-## In each county in Pennsylvania, there are 2 races, gender and 4 age bands considered = 
-## 16 strata levels
+## In each county in Pennsylvania, there are 2 races, gender and 4 age bands 
+## considered = 16 strata levels
 pennLC$data[1:16,]
-expected(population,cases,16)
+expected(population, cases, 16)
 }
 \keyword{ file }

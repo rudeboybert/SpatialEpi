@@ -45,8 +45,8 @@ return_local_moves <- function(theta, overlap, cluster_coords) {
     .Call('SpatialEpi_return_local_moves', PACKAGE = 'SpatialEpi', theta, overlap, cluster_coords)
 }
 
-MCMC_simulation <- function(n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, K, lkhd_z, lambda) {
-    .Call('SpatialEpi_MCMC_simulation', PACKAGE = 'SpatialEpi', n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, K, lkhd_z, lambda)
+MCMC_simulation <- function(n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, J, lkhd_z, lambda) {
+    .Call('SpatialEpi_MCMC_simulation', PACKAGE = 'SpatialEpi', n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, J, lkhd_z, lambda)
 }
 
 binomialLogLkhd <- function(cz, nz, N, C) {
@@ -65,7 +65,7 @@ kulldorffMC <- function(permutedCaseMatrix, expectedCases, nearestNeighbors, nZo
     .Call('SpatialEpi_kulldorffMC', PACKAGE = 'SpatialEpi', permutedCaseMatrix, expectedCases, nearestNeighbors, nZones, logLkhdType)
 }
 
-besagNewell <- function(observedCases, expectedCases, nearestNeighborsList, nZones, k) {
-    .Call('SpatialEpi_besagNewell', PACKAGE = 'SpatialEpi', observedCases, expectedCases, nearestNeighborsList, nZones, k)
+besag_newell_internal <- function(observedCases, expectedCases, nearestNeighborsList, nZones, k) {
+    .Call('SpatialEpi_besag_newell_internal', PACKAGE = 'SpatialEpi', observedCases, expectedCases, nearestNeighborsList, nZones, k)
 }
 

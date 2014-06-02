@@ -2,9 +2,9 @@ mapvariable <-
 function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL, upper=NULL, 
          main=NULL, xlab=NULL, ylab=NULL){
 
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Create id indicators for coloring scheme
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 if (is.null(lower)) 
 	lower <- min(y) #- 0.0001
 if (is.null(upper)) 
@@ -19,9 +19,9 @@ id <- id + 1
 palette(gray(seq(1,0, len=(ncut+1))))
 
 
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Make the scale of the two axes the same
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 xrnge <- spatial.polygon@bbox[1,]
 yrnge <- spatial.polygon@bbox[2,]	
 
@@ -43,20 +43,13 @@ if(xd <= yd){
 }
 
 
-
-	
-
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Plots
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def.par <- par(no.readonly = TRUE)
 layout(matrix(c(1,2),ncol=2,nrow=1), heights=c(.3,.3), widths=c(.4,.1))
 
-
-
-#--------------------------------------
-# 1. plot variable
-#--------------------------------------
+# plot variable
 plot(spatial.polygon, axes=TRUE, col=id)
 
 # plot title and axis labels
@@ -70,11 +63,7 @@ if(!is.null(ylab)){
 	title(ylab=ylab)
 }
 
-
-
-#--------------------------------------
-# 2.  plot legend
-#--------------------------------------
+# plot legend
 plot(c(0,1), c(0,1), type="n", axes=FALSE, xlab="", ylab="")
 xlims <- rep(0, nlevels)
 atpts <- rep(0, nlevels)
@@ -93,10 +82,7 @@ gr <- seq(0, 1, 1/nlevels)
 gr <- max(gr) - gr
 rect(xleft=xl, ybottom=yb, xright=xr, ytop=yt, col=gray(gr), border=TRUE)
 
-
-#--------------------------------------
 # Reset colours to default
-#--------------------------------------
 palette("default")
 par(def.par)
 }

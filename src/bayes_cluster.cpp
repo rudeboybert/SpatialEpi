@@ -475,7 +475,7 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 // [[Rcpp::export]]
 List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init, 
 	List overlap, NumericMatrix cluster_coords, NumericVector p_moves_orig, 
-	int K, NumericVector lkhd_z, NumericVector lambda){
+	int J, NumericVector lkhd_z, NumericVector lambda){
 	
 	int n_zones = cluster_coords.nrow(), z_star, z,
   k, k_rev, 
@@ -542,8 +542,8 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
         p_moves[i] = 0;
 			p_moves[4] = 1;
 		}
-    // k==K: no birth move
-		if(k==K){
+    // k==J: no birth move
+		if(k==J){
 			p_moves[4] = 0;
 		}  
     // Figure out if local moves are possible
@@ -638,8 +638,8 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
         p_moves_rev[i] = 0;
 			p_moves_rev[4] = 1;
 		}
-		// k_rev==K: no death moves
-		if(k_rev==K){
+		// k_rev==J: no death moves
+		if(k_rev==J){
 			p_moves_rev[4] = 0;
 		}
     // Figure out if local moves are possible

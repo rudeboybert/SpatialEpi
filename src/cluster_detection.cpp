@@ -110,8 +110,8 @@ NumericVector kulldorffMC(
 
 
 // [[Rcpp::export]]
-List besagNewell(NumericVector observedCases, NumericVector expectedCases, 
-	List nearestNeighborsList, int nZones, int k) {
+List besag_newell_internal(NumericVector observedCases, NumericVector 
+  expectedCases, List nearestNeighborsList, int nZones, int k) {
 
 	double sumObserved, sumExpected;  
 	int nAreas = observedCases.size(), nNeighbors = 0;

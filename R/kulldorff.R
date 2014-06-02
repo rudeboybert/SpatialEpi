@@ -2,13 +2,10 @@ kulldorff <-
 function(geo, cases, population, expected.cases=NULL, pop.upper.bound, 
          n.simulations, alpha.level, plot=TRUE){
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Initialization 
-#-------------------------------------------------------------------------
-#---------------------------------------------------
-# Determine likelihood type
-
-# binomial case if there are no expected counts
+#-------------------------------------------------------------------------------
+# Determine likelihood type: binomial or poisson
 if(is.null(expected.cases)){
 	type <- "binomial"
 	denominator <- population
@@ -19,77 +16,62 @@ if(is.null(expected.cases)){
 	denominator <- expected.cases
 }
 
-#---------------------------------------------------
-# geographical information computation
+# Get geographic information
 geo.results <- zones(geo, population, pop.upper.bound)
-
-# list of all nearest neighbors for each area, up until pop.upper.bound is hit
 nearest.neighbors <- geo.results$nearest.neighbors
-# list of zone centers and edges
 cluster.coords <- geo.results$cluster.coords
 n.zones <- nrow(cluster.coords)
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Observed statistic computation
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 lkhd <- computeAllLogLkhd(cases, denominator, nearest.neighbors, n.zones, type)
 
-
-#---------------------------------------------------
 # Get areas included in most likely cluster
 cluster.index <- which.max(lkhd)
 
-# cluster center
+# cluster center and radial area
 center <- cluster.coords[cluster.index,1]
-# cluster edge
 end <- cluster.coords[cluster.index,2]
+
 # list of all areas included in cluster	
 cluster <- nearest.neighbors[[center]]
-cluster <- cluster[1:which(cluster==end)]
+cluster <- cluster[1:which(cluster == end)]
 
 
-#-------------------------------------------------------------------------
-# Conduct Monte Carlo Simulations
-#-------------------------------------------------------------------------
-#---------------------------------------------------
-# Simulate cases under null hypothesis of no area effects
-# i.e. conditioned on E
-perm <- rmultinom(n.simulations,round(sum(cases)),prob=denominator)
+#-------------------------------------------------------------------------------
+# Compute Monte Carlo randomized p-value
+#-------------------------------------------------------------------------------
+# Simulate cases under null hypothesis of no area effects i.e. conditioned on E
+perm <- rmultinom(n.simulations, round(sum(cases)), prob=denominator)
 
-#---------------------------------------------------
 # Compute simulated lambda's:  max log-lkhd in region
 sim.lambda <- kulldorffMC(perm, denominator, nearest.neighbors, n.zones, type)
 
-
-#-------------------------------------------------------------------------
-# Assess Monte Carlo Significance
-#-------------------------------------------------------------------------
-#---------------------------------------------------
 # Compute Monte Carlo p-value
 combined.lambda <- c(sim.lambda, max(lkhd))
 p.value <- 1-mean(combined.lambda < max(lkhd))
 
-
-#---------------------------------------------------
-# Show histogram
+# Plot histogram
 if(plot){
-	hist(combined.lambda,main="Monte Carlo Distribution of Lambda",
+	hist(combined.lambda, 
+       main="Monte Carlo Distribution of Lambda",
        xlab=expression(log(lambda)))
-	abline(v=max(lkhd),col="red")
-	legend(	"top",
-		c(	paste("Obs. log(Lambda) = ",round(max(lkhd),3),sep=""), 
+	abline(v=max(lkhd), col="red")
+	legend("top",
+		c(paste("Obs. log(Lambda) = ",round(max(lkhd),3),sep=""), 
 			paste("p-value = ", round(p.value,log10(n.simulations + 1)),sep="")),
-		lty=c(1,1), 
+		lty=c(1, 1), 
 		col=c("red","white"), 
 		bty="n"
 	)
 }
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Create Most Likely Cluster Object
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 most.likely.cluster = list(
 	location.IDs.included = cluster,
 	population = sum(population[cluster]),	
@@ -102,29 +84,29 @@ most.likely.cluster = list(
 )
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Investigate Secondary Clusters
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # running list of areas already covered to test overlap
 current.cluster <- cluster
-
 secondary.clusters <- NULL
 
-# go through log-likelihoods in decreasing order, skipping largest which corresponds to most likely cluster
-indices <- order(lkhd,decreasing=TRUE)
+# go through log-likelihoods in decreasing order, skipping largest which 
+# corresponds to most likely cluster
+indices <- order(lkhd, decreasing=TRUE)
 
 for(i in 2:length(indices)){
 	#---------------------------------------------------
 	# Get areas included in new potential cluster
 	new.cluster.index <- indices[i]
-	new.center <- cluster.coords[new.cluster.index,1]
-	new.end <- cluster.coords[new.cluster.index,2]
+	new.center <- cluster.coords[new.cluster.index, 1]
+	new.end <- cluster.coords[new.cluster.index, 2]
 	
 	new.cluster <- nearest.neighbors[[new.center]]
-	new.cluster <- new.cluster[1:which(new.cluster==new.end)]	
+	new.cluster <- new.cluster[1:which(new.cluster == new.end)]	
 	#---------------------------------------------------
 	# if there is no overlap between existing clusters and the new potential cluster
-	if( length(intersect(new.cluster,current.cluster))==0 ){		
+	if(length(intersect(new.cluster,current.cluster)) == 0){		
 		new.secondary.cluster <- list(
 			location.IDs.included = new.cluster,
 			population = sum(population[new.cluster]),
@@ -147,9 +129,9 @@ for(i in 2:length(indices)){
 }
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Output results
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 results <- list(
 	most.likely.cluster=most.likely.cluster,
 	secondary.clusters=secondary.clusters,

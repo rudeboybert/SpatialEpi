@@ -1,5 +1,6 @@
 circle <-
 function(geo, cluster.center, cluster.end){
+
 # Compute interpoint distance
 distance <- dist(as.matrix(geo), upper=TRUE, diag=TRUE)
 distance <- as.matrix(distance)[cluster.center, cluster.end]

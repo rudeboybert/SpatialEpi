@@ -1,30 +1,25 @@
 \name{besag_newell}
 \alias{besag_newell}
-\title{
-	Besag-Newell Cluster Detection Method
-}
-
+\title{Besag-Newell Cluster Detection Method}
 \description{
 Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
 \itemize{
 \item we base our analysis on \eqn{k} cases, rather than \eqn{k} \emph{other} cases as prescribed in the paper.
 \item we do not subtract 1 from the \emph{accumulated numbers of other cases} and \emph{accumulated numbers of others at risk}, as was prescribed in the paper to discount selection bias
-\item \eqn{M} is the total number of areas included, not the number of additional areas included.  i.e. \eqn{M} starts at 1, not 0.
-\item \eqn{p}-values are not based on the original value of \eqn{k}, rather the actual number of cases observed until we view \eqn{k} or more cases.  Ex:  if \eqn{k = 10}, but as we consider neighbors we encounter 1, 2, 9 then 12 cases, we base our \eqn{p}-values on \eqn{k=12}
+\item M is the total number of areas included, not the number of additional areas included.  i.e. \eqn{M} starts at 1, not 0.
+\item p-values are not based on the original value of \eqn{k}, rather the actual number of cases observed until we view \eqn{k} or more cases.  Ex:  if \eqn{k = 10}, but as we consider neighbors we encounter 1, 2, 9 then 12 cases, we base our \eqn{p}-values on \eqn{k=12}
 \item we do not provide a Monte-Carlo simulated \eqn{R}:  the number of tests that attain significance at a fixed level \eqn{\alpha}
 }
 The first two and last differences are because we view the testing on an area-by-area level, rather than a case-by-case level.
 }
-\usage{
-	besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
-}
+\usage{besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)}
 \arguments{
   \item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
   \item{cases}{aggregated case counts for all \code{n} areas}
   \item{population}{aggregated population counts for all \code{n} areas}
   \item{expected.cases}{expected numbers of disease for all \code{n} areas}
   \item{k}{number of cases to consider}
-  \item{alpha.level}{\eqn{\alpha}-level threshold used to declare significance}
+  \item{alpha.level}{alpha-level threshold used to declare significance}
 }
 \details{
 For the \code{population} and \code{cases} tables, the rows are bunched by areas first, and then for each area, the counts for each strata are listed.  It is important that the tables are balanced:  the strata information are in the same order for each area, and counts for each area/strata combination appear exactly once (even if zero). 
@@ -75,7 +70,8 @@ k <- 1250
 alpha.level <- 0.05
 
 # not controlling for stratas
-results <- besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+results <- besag_newell(geo, population, cases, expected.cases=NULL, k, 
+  alpha.level)
 
 # controlling for stratas
 results <- besag_newell(geo, population, cases, expected.cases, k, alpha.level)

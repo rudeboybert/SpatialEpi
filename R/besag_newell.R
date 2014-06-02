@@ -1,43 +1,34 @@
 besag_newell <-
 function(geo, population, cases, expected.cases=NULL, k, alpha.level){
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Initialization 
-#-------------------------------------------------------------------------
-#---------------------------------------------------
-# If no expected.cases provided, set them
-# if there are no expected counts
+#-------------------------------------------------------------------------------
+# If no expected.cases provided, set them if there are no expected counts
 if(is.null(expected.cases)){
 	p <- sum(cases)/sum(population)
 	expected.cases <- population*p
 }
 
-#---------------------------------------------------
 # geographical information computation
 geo.results <- zones(geo, population, 1)
-
-# list of all nearest neighbors for each area
 nearest.neighbors <- geo.results$nearest.neighbors
-# interpoint distance matrix
 distance <- geo.results$dist
-# number of zones
 n.zones <- length(unlist(nearest.neighbors))
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Observed statistic computation
-#-------------------------------------------------------------------------
-results <- besagNewell(cases, expected.cases, nearest.neighbors, n.zones, k)
+#-------------------------------------------------------------------------------
+results <- besag_newell_internal(cases, expected.cases, nearest.neighbors, 
+                                 n.zones, k)
 
-
-#-------------------------------------------------------------------------
-# Process results
-#-------------------------------------------------------------------------
-#---------------------------------------------------
-# significant areas
-p.values <- results$observed.p.values	# observed p.values for each ares
-m.values <- results$observed.m.values	# observed number of neighbors needed to observe k cases
-k.values <- results$observed.k.values	# actual observed number of cases
+# observed p.values for each areas
+p.values <- results$observed.p.values	
+# observed number of neighbors needed to observe k cases
+m.values <- results$observed.m.values	
+# actual observed number of cases
+k.values <- results$observed.k.values	
 
 # pick out areas that were significant and order them by p-value
 signif.indices <- order(p.values)[1:sum(p.values <= alpha.level)]
@@ -48,13 +39,11 @@ signif.m.values <- m.values[signif.indices]
 signif.k.values <- k.values[signif.indices]
 
 
-#---------------------------------------------------
 # Create object to output
-
 # If none are significant, return NULL
-if( length(signif.indices) == 0){
+if(length(signif.indices) == 0){
 	clusters <- NULL
-}else{
+} else {
 	clusters <- vector("list", length=length(signif.indices))
 
 	for( i in 1:length(clusters) ){	
@@ -74,9 +63,9 @@ if( length(signif.indices) == 0){
 }
 
 
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Output results
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 results <- list(
 	clusters=clusters,
 	p.values=p.values,

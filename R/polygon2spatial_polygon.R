@@ -1,9 +1,9 @@
 polygon2spatial_polygon <-
 function(poly, coordinate.system, area.names = NULL, nrepeats = NULL){
 
-#-----------------------------------------------------------------
-# 1. Deal with non-specified values
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Deal with non-specified values
+#-------------------------------------------------------------------------------
 if(missing(coordinate.system)){
 	stop("Coordinate system must be specified: '+proj=utm' or '+proj=longlat'.")
 }
@@ -17,13 +17,11 @@ if(is.null(area.names)){
 }
 
 
-
-#----------------------------------------------------------------
-# 2. create list of all polygon objects
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Create list of all polygon objects
+#-------------------------------------------------------------------------------
 na.index <- which(is.na(poly[,1]))
 n <- length(nrepeats)
-		
 list.polygon <- NULL
 
 # First Case
@@ -41,12 +39,11 @@ list.polygon <-	c(list.polygon,list(Polygon(
   ))
 
 
-
-#-----------------------------------------------------------------
-# 3.  from list of polygon objects, create "polygon" objects, that has one
-# element for each county.  A county can consist of several polygon as indicated
-# by nrepeats
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# From list of polygon objects, create "polygon" objects, that has one element
+# for each county.  A county can consist of several polygon as indicated by
+# nrepeats
+#-------------------------------------------------------------------------------
 list.polygons <- NULL
 
 start <- 1
@@ -65,10 +62,9 @@ for( i in 1:length(nrepeats) ){
 }
 
 
-
-#-----------------------------------------------------------------
-# 4.  Output Spatial Polygons object
-#-----------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Output spatial polygons object
+#-------------------------------------------------------------------------------
 Spatial.Polygon <- 
   SpatialPolygons(list.polygons, proj4string=CRS(coordinate.system))
 

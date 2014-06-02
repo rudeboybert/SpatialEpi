@@ -186,8 +186,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // MCMC_simulation
-List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init, List overlap, NumericMatrix cluster_coords, NumericVector p_moves_orig, int K, NumericVector lkhd_z, NumericVector lambda);
-RcppExport SEXP SpatialEpi_MCMC_simulation(SEXP n_simSEXP, SEXP patternSEXP, SEXP theta_initSEXP, SEXP overlapSEXP, SEXP cluster_coordsSEXP, SEXP p_moves_origSEXP, SEXP KSEXP, SEXP lkhd_zSEXP, SEXP lambdaSEXP) {
+List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init, List overlap, NumericMatrix cluster_coords, NumericVector p_moves_orig, int J, NumericVector lkhd_z, NumericVector lambda);
+RcppExport SEXP SpatialEpi_MCMC_simulation(SEXP n_simSEXP, SEXP patternSEXP, SEXP theta_initSEXP, SEXP overlapSEXP, SEXP cluster_coordsSEXP, SEXP p_moves_origSEXP, SEXP JSEXP, SEXP lkhd_zSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -198,10 +198,10 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< List >::type overlap(overlapSEXP );
         Rcpp::traits::input_parameter< NumericMatrix >::type cluster_coords(cluster_coordsSEXP );
         Rcpp::traits::input_parameter< NumericVector >::type p_moves_orig(p_moves_origSEXP );
-        Rcpp::traits::input_parameter< int >::type K(KSEXP );
+        Rcpp::traits::input_parameter< int >::type J(JSEXP );
         Rcpp::traits::input_parameter< NumericVector >::type lkhd_z(lkhd_zSEXP );
         Rcpp::traits::input_parameter< NumericVector >::type lambda(lambdaSEXP );
-        List __result = MCMC_simulation(n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, K, lkhd_z, lambda);
+        List __result = MCMC_simulation(n_sim, pattern, theta_init, overlap, cluster_coords, p_moves_orig, J, lkhd_z, lambda);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -282,9 +282,9 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// besagNewell
-List besagNewell(NumericVector observedCases, NumericVector expectedCases, List nearestNeighborsList, int nZones, int k);
-RcppExport SEXP SpatialEpi_besagNewell(SEXP observedCasesSEXP, SEXP expectedCasesSEXP, SEXP nearestNeighborsListSEXP, SEXP nZonesSEXP, SEXP kSEXP) {
+// besag_newell_internal
+List besag_newell_internal(NumericVector observedCases, NumericVector expectedCases, List nearestNeighborsList, int nZones, int k);
+RcppExport SEXP SpatialEpi_besag_newell_internal(SEXP observedCasesSEXP, SEXP expectedCasesSEXP, SEXP nearestNeighborsListSEXP, SEXP nZonesSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -294,7 +294,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< List >::type nearestNeighborsList(nearestNeighborsListSEXP );
         Rcpp::traits::input_parameter< int >::type nZones(nZonesSEXP );
         Rcpp::traits::input_parameter< int >::type k(kSEXP );
-        List __result = besagNewell(observedCases, expectedCases, nearestNeighborsList, nZones, k);
+        List __result = besag_newell_internal(observedCases, expectedCases, nearestNeighborsList, nZones, k);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
