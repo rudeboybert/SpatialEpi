@@ -12,7 +12,6 @@ vector indexing in C++.
 \usage{
 ProbSampleReplace(prob)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{prob}{Probability vector}
 }

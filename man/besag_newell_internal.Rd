@@ -13,7 +13,8 @@ nZones, k)
   \item{nZones}{number of single zones}
   \item{k}{max number of cases in each}
 }
-%\value{}
+\references{Besag J. and Newell J. (1991)
+The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \bold{154}, 143--155}
 \author{Albert Y. Kim}
 \seealso{\code{\link{besag_newell}}}
 \keyword{internal}

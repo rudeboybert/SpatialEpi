@@ -1,9 +1,7 @@
 \name{ldnbinom}
 \alias{ldnbinom}
 \title{log Negative Binomial Density}
-\description{
-Compute log of density of negative binomial allowing for non-integer counts
-}
+\description{Compute log of density of negative binomial allowing for non-integer counts}
 \usage{
 ldnbinom(y, E, a, b)
 }

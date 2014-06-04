@@ -42,12 +42,10 @@ The \code{clusters} list elements are themselves lists reporting:\cr\cr
   \code{p.value} \tab \eqn{p}-value\cr
 }
 }
-\references{
-Besag J. and Newell J. (1991)
-The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \bold{154}, 143--155
-}
+\references{Besag J. and Newell J. (1991)
+The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \bold{154}, 143--155}
 \author{Albert Y. Kim}
-\seealso{\code{\link{pennLC}}, \code{\link{expected}}}
+\seealso{\code{\link{pennLC}}, \code{\link{expected}}, \code{\link{besag_newell_internal}}}
 \examples{
 ## Load Pennsylvania Lung Cancer Data
 data(pennLC)

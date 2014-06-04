@@ -1,6 +1,6 @@
 \name{computeAllLogLkhd}
 \alias{computeAllLogLkhd}
-\title{Compute logLkhd for all single zones}
+\title{Compute log likelihood for all single zones}
 \description{For all n.zones single zones, compute Likelihood ratio test statistic}
 \usage{
 computeAllLogLkhd(observedCases, expectedCases, nearestNeighborsList, nZones, logLkhdType)

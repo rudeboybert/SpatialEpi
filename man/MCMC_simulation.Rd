@@ -1,6 +1,6 @@
 \name{MCMC_simulation}
 \alias{MCMC_simulation}
-\title{MCMC simulation to sampleconfigurations}
+\title{MCMC simulation to sample configurations}
 \description{MCMC simulation to estimate prior and posterior quantities by sampling 
 configurations.}
 \usage{MCMC_simulation(n_sim, pattern, theta_init, overlap, cluster_coords, 
@@ -23,8 +23,7 @@ p_moves_orig, J, lkhd_z, lambda)
   \item{accpt_trace}{trace of acceptance (0 = not accepted)}
   \item{ratio_trace}{trace of Metropolis-Hastings ratio}  
 }
-\references{Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.
-\emph{Biostatistics}, \bold{14}, 752--765.}
+\references{Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.}
 \author{Albert Y. Kim}
 \seealso{\code{\link{create_geo_objects}}, \code{\link{process_MCMC_sample}}}
 %\examples{}

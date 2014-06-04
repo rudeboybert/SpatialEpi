@@ -5,14 +5,11 @@
 non-overlapping birth move configuration}
 \usage{return_birth_moves(theta, overlap)}
 \arguments{
-  \item{theta}{Current configuration of length k}
-  \item{overlap}{See \code{\link{create_geo_objects}}}
+  \item{theta}{current configuration of length k}
+  \item{overlap}{see \code{\link{create_geo_objects}}}
 }
-\value{
-NumericMatrix with \code{k+1} rows and each column corresponding to a new possible
-configuration
-}
+\value{\code{NumericMatrix} with \code{k+1} rows and each column corresponding to a new possible
+configuration}
 \author{Albert Y. Kim}
 \seealso{\code{\link{return_death_moves}}, \code{\link{return_local_moves}}}
-%\examples{}
 \keyword{internal}

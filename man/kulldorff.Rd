@@ -43,14 +43,10 @@ The \code{most.likely.cluster} and \code{secondary.clusters} list elements are t
 }
 }
 \references{ 
- SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{http://www.satscan.org/}
-
-  Kulldorff, M. (1997)
- A spatial scan statistic.
-  \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496. %\url{http://www.satscan.org/papers/k-cstm1997.pdf}
-
-  Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
-\emph{Statistics in Medicine}, \bold{14}, 799--810.  %\url{http://www.satscan.org/papers/k-sm1995.pdf}
+ SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{http://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+ 
+ Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
+\emph{Statistics in Medicine}, \bold{14}, 799--810.
 }
 \author{Albert Y. Kim}
 \seealso{\code{\link{pennLC}}, \code{\link{expected}}}
