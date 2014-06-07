@@ -34,7 +34,8 @@ bayes_cluster(y, E, population, sp.obj, centroids, max.prop, shape, rate, J, pi0
 List containing
 \item{prior.map}{A list containing, for each area: 1) \code{high.area} the prior probability of cluster membership, 2) \code{low.area} anti-cluster membership, and 3) \code{RR.est.area} smoothed prior estimates of relative risk}
 \item{post.map}{A list containing, for each area: 1) \code{high.area} the posterior probability of cluster membership, 2) \code{low.area} anti-cluster membership, and 3) \code{RR.est.area} smoothed posterior estimates of the relative risk}
-\item{pk.y}{posterior probability of k clusters/anti-clusters given y for k=0,...,J}
+\item{prior.j}{prior probability of j clusters/anti-clusters for j=0,...,J}
+\item{pj.y}{posterior probability of j clusters/anti-clusters given y for j=0,...,J}
 }
 \references{Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.
 \emph{Biostatistics}, \bold{14}, 752--765.}
@@ -86,6 +87,6 @@ n.sim.post <- 10^5
 #plotmap(output$prior.map$high.area, sp.obj)
 #plotmap(output$post.map$high.area, sp.obj)
 #plotmap(output$post.map$RR.est.area, sp.obj, log=TRUE)
-#barplot(output$pk.y, names.arg=0:J, xlab="k", ylab="P(k|y)")                   
+#barplot(output$pj.y, names.arg=0:J, xlab="j", ylab="P(j|y)")                   
 }
 \keyword{file}

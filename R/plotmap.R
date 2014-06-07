@@ -28,16 +28,10 @@ colcode <- plotclr[colornum]
 
 # Modify legend
 if(is.null(legend)){
-  legend <- leglabs(signif(brks,digits=round))
-  # First element of legend
-  legend[1] <- paste(
-    signif(min(values), digits=round), "-", 
-    substr(legend[1], 7, nchar(legend[1]))
-  )
-  # Last element of legend
-  legend[nclr]<- paste(
-    substr(legend[nclr], 6, nchar(legend[nclr])), "-",
-    signif(max(values), digits=round)
+  legend <- paste(
+    signif(brks, digits=round)[1:nclr],
+    signif(brks, digits=round)[2:(nclr+1)],
+    sep=" - "
   )
 }
 

@@ -50,37 +50,6 @@ for(i in 1:n){
 }
 
 
-#-------------------------------------------------------------------------------
-# Compute "buffer" of areas between single zones.
-#-------------------------------------------------------------------------------
-# Compute adjacency matrix
-adj <- poly2nb(sp.obj, queen=TRUE)
-adj <- nb2mat(adj, zero.policy=TRUE)[1:n, 1:n]
-
-# Convert Adjacency Matrix To A List
-adj.new <- vector("list",length=n)
-for(i in 1:n){
-  adj.new[[i]] <- which(adj[i,]!=0)
-}
-adj <- adj.new
-rm(adj.new)
-
-# Update presence list to incorporate buffer.  We need to preserve original 
-# presence list all the way thru, so temporarily store results here
-presence_temp <- presence
-
-# Loop thru all areas
-for(i in 1:n){
-  current.zones <- presence[[i]]
-  adjacent.areas <- adj[[i]]
-  adjacent.zones <- unique(unlist(presence[adjacent.areas]))
-  presence_temp[[i]] <- sort(unique(c(adjacent.zones, current.zones)))
-}
-
-# restore presence list
-presence <- presence_temp
-
-
 #----------------------------------------------------------------
 # Return list
 #----------------------------------------------------------------

@@ -85,12 +85,12 @@ RR.post.area <- (y+shape[1])/(E+rate[1])
 post.map <- process_MCMC_sample(post.sample, param.post.zone, RR.post.area, 
                                 overlap$cluster.list, cutoffs)
 
-# Posterior probs of k cluster/anti-clusters for k=0,...,J
-k.vector <- table(sapply(post.chain$sample,length))
-k.names <- as.numeric(names(k.vector))
-k.vector <- normalize(k.vector)
-pk.y <- rep(0, J+1)
-pk.y[k.names+1] <- k.vector
+# Posterior probs of j cluster/anti-clusters for j=0,...,J
+j.vector <- table(sapply(post.chain$sample,length))
+j.names <- as.numeric(names(j.vector))
+j.vector <- normalize(j.vector)
+pj.y <- rep(0, J+1)
+pj.y[j.names+1] <- j.vector
 print(paste("Posterior estimation complete on:", date()))
 
 
@@ -101,5 +101,6 @@ print(paste("Posterior estimation complete on:", date()))
 return(list(
   prior.map=prior.map, 
   post.map=post.map, 
-  pk.y=pk.y))
+  prior.j=prior.j, 
+  pj.y=pj.y))
 }
