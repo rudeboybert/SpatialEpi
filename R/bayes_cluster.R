@@ -15,6 +15,7 @@ overlap <- geo.objects$overlap
 cluster.coords <- geo.objects$cluster.coords    
 n <- length(E)
 n.zones <- nrow(cluster.coords)
+print(paste("Geographic objects creation complete on:", date()))
 
 # Set cutoffs of the relative risk to determine low and high risk
 RR.range <- seq(0.7, 1/0.7, length=100000)
@@ -52,7 +53,8 @@ burnin <- n.sim.prior * burnin.prop
 prior.sample <- prior.chain$sample[-c(1:burnin)]
 
 # Prior Probs of Cluster Membership for each Area
-param.prior.zone <- list(shape=rep(shape[2],n.zones), rate=rep(rate[2],n.zones))
+param.prior.zone <- 
+  list(shape=rep(shape[2], n.zones), rate=rep(rate[2], n.zones))
 RR.prior.area <- rep(shape[1]/rate[1], n)
 prior.map <- process_MCMC_sample(prior.sample, param.prior.zone, RR.prior.area, 
                                  overlap$cluster.list, cutoffs)
