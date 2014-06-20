@@ -1,6 +1,6 @@
 ---
-title: "README"
-output: html_document
+output:
+  html_document: default
 ---
 
 SpatialEpi: Methods and Data for Spatial Epidemiology
@@ -31,7 +31,7 @@ map <- SpatialPolygons(map@polygons[-remove], proj4string=CRS("+proj=longlat"))
 ```
 
 We plot the incidence of leukemia for each census tract.  
-```{r, fig.height=8, fig.width=8}
+```{r, fig.height=8, fig.width=8, fig.path='figures'}
 plotmap(cases/population, map, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```

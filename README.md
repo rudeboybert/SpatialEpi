@@ -4,7 +4,7 @@ We load the data and convert the coordinate system from latitude/longitude to a
 grid-based system.  
 
 ```r
-library(SpatialEpi)
+require(SpatialEpi)
 data(NYleukemia)
 map <- NYleukemia$spatial.polygon
 centroids <- latlong2grid(NYleukemia$geo[, 2:3])
@@ -34,5 +34,5 @@ plotmap(cases/population, map, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
 
-<img src="./README_files/figure-html/unnamed-chunk-3.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" width="768" />
+<img src="figuresunnamed-chunk-3.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" width="768" />
 
