@@ -56,10 +56,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <div id="spatialepi-methods-and-data-for-spatial-epidemiology" class="section level1">
 <h1>SpatialEpi: Methods and Data for Spatial Epidemiology</h1>
 <p>We load the data and convert the coordinate system from latitude/longitude to a grid-based system.</p>
-<pre class="r"><code>require(SpatialEpi)</code></pre>
-<pre><code>## Loading required package: SpatialEpi
-## Loading required package: sp</code></pre>
-<pre class="r"><code>data(NYleukemia)
+<pre class="r"><code>require(SpatialEpi)
+data(NYleukemia)
 map &lt;- NYleukemia$spatial.polygon
 centroids &lt;- latlong2grid(NYleukemia$geo[, 2:3])
 population &lt;- NYleukemia$data$population
