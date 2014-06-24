@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Rprofile
+.Rbuildignore
 src/*.o
 src/*.so
 src/*.dll
