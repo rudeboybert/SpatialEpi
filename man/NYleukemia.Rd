@@ -3,7 +3,7 @@
 \docType{data}
 \title{Upstate New York Leukemia Data}
 \description{
-Census tract level (\code{n=281}) leukemia data for the 8 counties in upstate New York from 1978-1982, paired with population data from the 1980 census.  Note that 4 census tracts were completely surrounded by another unique census tract; when applying the Bayesian cluster detection model in \code{\link{bayes_cluster}}, we merge them with the surrounding census tracts yielding \code{n=277} areas.
+Census tract level (\code{n=281}) leukemia data for the 8 counties in upstate New York from 1978-1982, paired with population data from the 1980 census.
 }
 \usage{data(NYleukemia)}
 \format{
@@ -29,20 +29,6 @@ map <- NYleukemia$spatial.polygon
 population <- NYleukemia$data$population
 cases <- NYleukemia$data$cases
 centroids <- latlong2grid(NYleukemia$geo[, 2:3])
-
-## Identify the 4 census tract to be merged into their surrounding census tracts.  
-remove <- NYleukemia$surrounded
-add <- NYleukemia$surrounding
-
-## Merge population and case counts
-population[add] <- population[add] + population[remove]
-population <- population[-remove]
-cases[add] <- cases[add] + cases[remove]
-cases <- cases[-remove]
-
-## Modify geographical objects accordingly
-map <- SpatialPolygons(map@polygons[-remove], proj4string=CRS("+proj=longlat"))
-centroids <- centroids[-remove, ]
 
 ## Plot incidence in latitude/longitude
 plotmap(cases/population, map, log=TRUE, nclr=5)

@@ -42,31 +42,12 @@ List containing
 \author{Albert Y. Kim}
 \seealso{\code{\link{kulldorff}}}
 \examples{
-## Note for the NYleukemia example, 4 census tracts were completely surrounded 
-## by another unique census tract; when applying the Bayesian cluster detection 
-## model in \code{\link{bayes_cluster}}, we merge them with the surrounding 
-## census tracts yielding \code{n=277} areas.
-
 ## Load data and convert coordinate system from latitude/longitude to grid
 data(NYleukemia)
 sp.obj <- NYleukemia$spatial.polygon
 population <- NYleukemia$data$population
 cases <- NYleukemia$data$cases
 centroids <- latlong2grid(NYleukemia$geo[, 2:3])
-
-## Identify the 4 census tract to be merged into their surrounding census tracts 
-remove <- NYleukemia$surrounded
-add <- NYleukemia$surrounding
-
-## Merge population and case counts and geographical objects accordingly
-population[add] <- population[add] + population[remove]
-population <- population[-remove]
-cases[add] <- cases[add] + cases[remove]
-cases <- cases[-remove]
-sp.obj <-
-  SpatialPolygons(sp.obj@polygons[-remove], proj4string=CRS("+proj=longlat"))
-centroids <- centroids[-remove, ]
-
 
 ## Set parameters
 y <- cases
