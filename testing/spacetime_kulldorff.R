@@ -35,8 +35,6 @@ y <- group_by(cases.full, county) %>%
   summarise(cases=sum(cases)) %>%
   select(cases)
 y <- y[,1]
-plot(E, y, log='xy')
-abline(c(0,1))
 
 
 
@@ -45,3 +43,4 @@ counties <- c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadelupe", "Soc
 filter(cases, county %in% counties & 1985 <= year & year <= 1989) %>%
   summarize(counts=sum(cases))
 
+sum(E[geo$county %in% counties])/3
