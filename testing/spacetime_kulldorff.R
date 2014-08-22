@@ -91,37 +91,132 @@ for (i in 1:nrow(counts)) {
     select(E)
 }
 
+
+
+#---------------------------------------------------------------
+# Compare with most likely cluster from SatScan
+#---------------------------------------------------------------
 cluster <- c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadelupe", "Socorro", "Sandoval", "SanMiguel", "LosAlamos")
-filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
+count <- filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
   summarize(y=sum(y), E=sum(E))
+(count$y/count$E) / ((sum(counts$y)-count$y)/(sum(counts$E)-count$E))
 
 
 
 
 
 
-cases <- 
-  mutate(cases, year=as.integer(substr(cases$year, 3, 4))) %>%
-  group_by(county, age, gender) %>%
-  summarise(cases=sum(cases)) 
 
-pop <- group_by(pop, county, age, gender) %>%
-  summarise(pop=sum(pop))
-
-cases.full <- select(pop, county, age, gender) %>%
-  left_join(cases) 
-cases.full$cases <- ifelse(is.na(cases.full$cases), 0, cases.full$cases)
-
-E <- expected(pop$pop, cases.full$cases, 18*2)
-y <- group_by(cases.full, county) %>%
-  summarise(cases=sum(cases)) %>%
-  select(cases)
-y <- y[,1]
+#---------------------------------------------------------------
+# Compute SatScan
+#---------------------------------------------------------------
 
 
+library(maps)
+library(maptools)
+
+# Load Geographic Centroid Data + Map
+nmTemp <- map('county','new.mexico',fill=TRUE,plot=FALSE)
+nmIDs <- substr(nmTemp$names,1+nchar("new.mexico,"),nchar(nmTemp$names) )
+nm <- map2SpatialPolygons(nmTemp,IDs=nmIDs,proj4string=CRS("+proj=longlat"))
 
 
-filter(cases, county %in% counties & 1985 <= year & year <= 1989) %>%
-  summarize(counts=sum(cases))
+nm.id <- NULL
+for (i in 1:length(nm)) {
+  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
+}
+nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
+           "de baca", "dona ana", "eddy", "grant", "guadalupe", "harding", 
+           "hidalgo", "lea", "lincoln", "los alamos", "luna", "mckinley", 
+           "mora", "otero", "quay", "rio arriba", "roosevelt", "san juan", 
+           "san miguel", "sandoval", "santa fe", "sierra", "socorro", "taos", 
+           "torrance", "union", "valencia")
+nm <- unionSpatialPolygons(nm, nm.id)
+plot(nm, axes=TRUE, border="red", lwd=2)
+nm.id <- NULL
+for (i in 1:length(nm)) {
+  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
+}
 
-sum(E[geo$county %in% counties])/3
+
+
+population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% 
+  select(pop) %>% as.data.frame()
+population <- population[,1]
+geo.results <- zones(as.data.frame(geo[,2:3]), population, 0.50)
+geo.objects <- create_geo_objects(0.5, population, as.data.frame(geo[,2:3]), nm)
+cluster.list <- geo.objects$overlap$cluster.list
+n.zones <- length(cluster.list)
+
+# nearest.neighbors <- geo.results$nearest.neighbors
+# cluster.coords <- geo.results$cluster.coords
+
+years <- unique(cases$year)
+lengths <- c(1:5)
+
+windows <- as.vector(years, mode="list")
+# two years
+for(i in 2:5) {
+  blah <- matrix(0, nrow=i, ncol=length(years)-i+1)
+  for(j in 1:i) {
+    blah[j, ] <- c(years[j]:years[length(years)-i+j])
+  }
+  
+  temp <- vector(mode="list", length=ncol(blah))
+  for (j in 1:ncol(blah))
+    temp[[j]] <- blah[, j]
+  
+  windows <- c(windows, temp)
+}
+
+
+
+log.lkhd <- function (cz, nz, N, C) {
+  log.lkhd <- 0
+  
+  if(cz / nz <= (C - cz)/(N - nz)) {
+    log.lkhd <- 0
+  } else {
+    log.lkhd <-
+      cz * log(  (cz / nz) )  +
+      cz * log(  ( (N - nz)/( C - cz) ) )  +
+      C * log(  ( (C-cz)/(N-nz) )  ) +
+      C * log(  ( N/ C )  )
+  }  
+  return(log.lkhd)
+}
+
+
+#-------------------------------------------------------------------------------
+# Observed statistic computation
+#-------------------------------------------------------------------------------
+lkhd <- computeAllLogLkhd(cases, denominator, nearest.neighbors, n.zones, type)
+
+# Get areas included in most likely cluster
+cluster.index <- which.max(lkhd)
+
+# cluster center and radial area
+center <- cluster.coords[cluster.index,1]
+end <- cluster.coords[cluster.index,2]
+
+# list of all areas included in cluster  
+cluster <- nearest.neighbors[[center]]
+cluster <- cluster[1:which(cluster == end)]
+
+
+#-------------------------------------------------------------------------------
+# Compute Monte Carlo randomized p-value
+#-------------------------------------------------------------------------------
+# Simulate cases under null hypothesis of no area effects i.e. conditioned on E
+perm <- rmultinom(n.simulations, round(sum(cases)), prob=denominator)
+
+# Compute simulated lambda's:  max log-lkhd in region
+sim.lambda <- kulldorffMC(perm, denominator, nearest.neighbors, n.zones, type)
+
+# Compute Monte Carlo p-value
+combined.lambda <- c(sim.lambda, max(lkhd))
+p.value <- 1-mean(combined.lambda < max(lkhd))
+
+
+
+
