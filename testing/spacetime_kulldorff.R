@@ -4,7 +4,7 @@ library(SpatialEpi)
 
 #-------------------------------------------------------------------------------
 #
-# Recreate Kulldorff spatial results
+# Import data, compute expected and obseved counts, get map
 #
 #-------------------------------------------------------------------------------
 #---------------------------------------------------------------
@@ -13,21 +13,29 @@ library(SpatialEpi)
 geo <- 
   read.table("./testing/nm.geo", header=FALSE, col.names=c("county", "lat", "long")) %>%
   tbl_df()
+levels(geo$county)[10] <- "Guadalupe"
+levels(geo$county) <- tolower(levels(geo$county))
 
 pop <- 
   read.table("./testing/nm.pop", header=FALSE, col.names=c("county", "year", "pop", "age", "gender")) %>%
   tbl_df() %>%
   mutate(year=year+1900) %>%
+  # mutate(county=tolower(county)) %>%
   arrange(county, year, age, gender) %>%
   select(county, year, age, gender, pop)
+levels(pop$county)[10] <- "Guadalupe"
+levels(pop$county) <- tolower(levels(pop$county))
 
 cases <- 
   read.table("./testing/nm.cas", header=FALSE, col.names=c("county", "cases", "year", "age", "gender")) %>%
   tbl_df() %>%
+  # mutate(county=tolower(county)) %>% 
   group_by(county, year, age, gender) %>%
   summarize(cases=sum(cases)) %>%
   arrange(county, year, age, gender) %>%
   ungroup()
+levels(cases$county)[10] <- "Guadalupe"
+levels(cases$county) <- tolower(levels(cases$county))
 
 
 #---------------------------------------------------------------
@@ -42,9 +50,12 @@ for (i in 1:length(case.ref.years)) {
   closest.pop.year <- which.min(abs(pop.years-case.years[i]))
   case.ref.years[i] <- pop.years[closest.pop.year]
 }
-ref.years <- data.frame(orig.year=case.years, ref.year=case.ref.years)
+
+# Number of times to use each population count
 year.counts <- table(case.ref.years)
 
+# Match case year with pop year
+ref.years <- data.frame(orig.year=case.years, ref.year=case.ref.years)
 get.year <- function(orig.year, ref.years) {
   return(ref.years$ref.year[which(ref.years$orig.year==orig.year)])
 }
@@ -92,26 +103,9 @@ for (i in 1:nrow(counts)) {
 }
 
 
-
 #---------------------------------------------------------------
-# Compare with most likely cluster from SatScan
+# Load sp map
 #---------------------------------------------------------------
-cluster <- c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadelupe", "Socorro", "Sandoval", "SanMiguel", "LosAlamos")
-count <- filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
-  summarize(y=sum(y), E=sum(E))
-(count$y/count$E) / ((sum(counts$y)-count$y)/(sum(counts$E)-count$E))
-
-
-
-
-
-
-
-#---------------------------------------------------------------
-# Compute SatScan
-#---------------------------------------------------------------
-
-
 library(maps)
 library(maptools)
 
@@ -120,11 +114,14 @@ nmTemp <- map('county','new.mexico',fill=TRUE,plot=FALSE)
 nmIDs <- substr(nmTemp$names,1+nchar("new.mexico,"),nchar(nmTemp$names) )
 nm <- map2SpatialPolygons(nmTemp,IDs=nmIDs,proj4string=CRS("+proj=longlat"))
 
-
+# Get current county names
 nm.id <- NULL
 for (i in 1:length(nm)) {
   nm.id <- c(nm.id, nm@polygons[[i]]@ID)
 }
+dput(nm.id)
+
+# Reassign cibola county to valenica
 nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
            "de baca", "dona ana", "eddy", "grant", "guadalupe", "harding", 
            "hidalgo", "lea", "lincoln", "los alamos", "luna", "mckinley", 
@@ -132,25 +129,74 @@ nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry",
            "san miguel", "sandoval", "santa fe", "sierra", "socorro", "taos", 
            "torrance", "union", "valencia")
 nm <- unionSpatialPolygons(nm, nm.id)
-plot(nm, axes=TRUE, border="red", lwd=2)
+plot(nm, axes=TRUE, border="black", lwd=2)
+
+# Get county names
 nm.id <- NULL
 for (i in 1:length(nm)) {
   nm.id <- c(nm.id, nm@polygons[[i]]@ID)
 }
+nm.id <- str_replace_all(nm.id, " ", "")
+
+# Re-arrange sp objects
+index <- match(geo$county, nm.id)
+nm <- unionSpatialPolygons(nm, nm.id[index])
+plot(nm, axes=TRUE, border="black", lwd=2)
+text(coordinates(nm), nm.id)
+
+values <- group_by(counts, county) %>% summarise(y=sum(y), E=sum(E))
+values[11, "y"] <- 1
+plotmap(log(values$y/values$E), nm)
 
 
 
-population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% 
-  select(pop) %>% as.data.frame()
+#-------------------------------------------------------------------------------
+#
+# Import data, compute expected and obseved counts, get map
+#
+#-------------------------------------------------------------------------------
+#---------------------------------------------------------------
+# Compare with most likely cluster from SatScan
+#---------------------------------------------------------------
+cluster <- tolower(c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadalupe", "Socorro", "Sandoval", "SanMiguel", "LosAlamos"))
+count <- filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
+  summarize(y=sum(y), E=sum(E))
+
+cz <- count$y
+nz <- count$E
+C <- sum(counts$y)
+N <- sum(counts$E)
+(count$y/count$E) / ((sum(counts$y)-count$y)/(sum(counts$E)-count$E))
+
+log.lkhd(cz, nz, C, N)
+
+
+#---------------------------------------------------------------
+# Set up SatScan
+#---------------------------------------------------------------
+log.lkhd <- function (cz, nz, C, N) {  
+  if(cz / nz <= (C - cz)/(N - nz)) {
+    log.lkhd <- 0
+  } else {
+    log.lkhd <- cz * log(cz / nz) + 
+      cz * log((N - nz)/( C - cz))  +
+      C * log((C-cz)/(N-nz)) +
+      C * log( N/ C )
+  }  
+  return(log.lkhd)
+}
+
+
+# Get geographic zones
+population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% select(pop) %>% as.data.frame()
 population <- population[,1]
 geo.results <- zones(as.data.frame(geo[,2:3]), population, 0.50)
 geo.objects <- create_geo_objects(0.5, population, as.data.frame(geo[,2:3]), nm)
 cluster.list <- geo.objects$overlap$cluster.list
 n.zones <- length(cluster.list)
 
-# nearest.neighbors <- geo.results$nearest.neighbors
-# cluster.coords <- geo.results$cluster.coords
 
+# Get temporal zones
 years <- unique(cases$year)
 lengths <- c(1:5)
 
@@ -161,7 +207,6 @@ for(i in 2:5) {
   for(j in 1:i) {
     blah[j, ] <- c(years[j]:years[length(years)-i+j])
   }
-  
   temp <- vector(mode="list", length=ncol(blah))
   for (j in 1:ncol(blah))
     temp[[j]] <- blah[, j]
@@ -170,26 +215,31 @@ for(i in 2:5) {
 }
 
 
-
-log.lkhd <- function (cz, nz, N, C) {
-  log.lkhd <- 0
-  
-  if(cz / nz <= (C - cz)/(N - nz)) {
-    log.lkhd <- 0
-  } else {
-    log.lkhd <-
-      cz * log(  (cz / nz) )  +
-      cz * log(  ( (N - nz)/( C - cz) ) )  +
-      C * log(  ( (C-cz)/(N-nz) )  ) +
-      C * log(  ( N/ C )  )
-  }  
-  return(log.lkhd)
-}
-
-
-#-------------------------------------------------------------------------------
+#---------------------------------------------------------------
 # Observed statistic computation
-#-------------------------------------------------------------------------------
+#---------------------------------------------------------------
+lkhd <- matrix(0, nrow=n.zones, ncol=length(windows))
+C <- sum(counts$y)
+N <- sum(counts$E)
+for (i in 1:n.zones)
+  for (j in 1:length(windows)) {
+    areas <- geo$county[cluster.list[[i]]]
+    year.min <- min(windows[[j]])
+    year.max <- max(windows[[j]])
+    count <- filter(counts, county %in% areas & year.min <= year & year <= year.max) %>%
+      summarize(y=sum(y), E=sum(E))    
+    cz <- count$y
+    nz <- count$E
+    lkhd[i,j] <- log.lkhd(cz, nz, C, N)
+  }
+
+which(lkhd == max(lkhd), arr.ind=TRUE)
+
+
+
+
+
+
 lkhd <- computeAllLogLkhd(cases, denominator, nearest.neighbors, n.zones, type)
 
 # Get areas included in most likely cluster
