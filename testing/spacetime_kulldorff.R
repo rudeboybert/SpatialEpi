@@ -1,10 +1,12 @@
 library(dplyr)
 library(SpatialEpi)
+library(maps)
+library(maptools)
 
 
 #-------------------------------------------------------------------------------
 #
-# Recreate Kulldorff spatial results
+# Create expected counts and maps
 #
 #-------------------------------------------------------------------------------
 #---------------------------------------------------------------
@@ -28,6 +30,31 @@ cases <-
   summarize(cases=sum(cases)) %>%
   arrange(county, year, age, gender) %>%
   ungroup()
+
+
+#---------------------------------------------------------------
+# sp object
+#---------------------------------------------------------------
+nmTemp <- map('county','new.mexico',fill=TRUE,plot=FALSE)
+nmIDs <- substr(nmTemp$names,1+nchar("new.mexico,"),nchar(nmTemp$names) )
+nm <- map2SpatialPolygons(nmTemp,IDs=nmIDs,proj4string=CRS("+proj=longlat"))
+
+nm.id <- NULL
+for (i in 1:length(nm)) {
+  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
+}
+nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
+           "de baca", "dona ana", "eddy", "grant", "guadalupe", "harding", 
+           "hidalgo", "lea", "lincoln", "los alamos", "luna", "mckinley", 
+           "mora", "otero", "quay", "rio arriba", "roosevelt", "san juan", 
+           "san miguel", "sandoval", "santa fe", "sierra", "socorro", "taos", 
+           "torrance", "union", "valencia")
+nm <- unionSpatialPolygons(nm, nm.id)
+plot(nm, axes=TRUE, border="red", lwd=2)
+nm.id <- NULL
+for (i in 1:length(nm)) {
+  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
+}
 
 
 #---------------------------------------------------------------
@@ -93,53 +120,44 @@ for (i in 1:nrow(counts)) {
 
 
 
+
+
+#-------------------------------------------------------------------------------
+#
+# Compute SatScan
+#
+#-------------------------------------------------------------------------------
+# log lkhd function
+log.lkhd <- function (cz, nz, C, N) {
+  log.lkhd <- 0
+  
+  if(cz / nz <= (C - cz)/(N - nz)) {
+    log.lkhd <- 0
+  } else {
+    log.lkhd <-
+      cz * log(  (cz / nz) )  +
+      cz * log(  ( (N - nz)/( C - cz) ) )  +
+      C * log(  ( (C-cz)/(N-nz) )  ) +
+      C * log(  ( N/ C )  )
+  }  
+  return(log.lkhd)
+}
+
+
 #---------------------------------------------------------------
-# Compare with most likely cluster from SatScan
+# Compare E's and log-lkhd with most likely cluster from SatScan
 #---------------------------------------------------------------
 cluster <- c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadelupe", "Socorro", "Sandoval", "SanMiguel", "LosAlamos")
 count <- filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
   summarize(y=sum(y), E=sum(E))
 (count$y/count$E) / ((sum(counts$y)-count$y)/(sum(counts$E)-count$E))
 
-
-
-
-
+log.lkhd(count$y, count$E, sum(counts$y), sum(counts$E))
 
 
 #---------------------------------------------------------------
-# Compute SatScan
+# Geographic zones
 #---------------------------------------------------------------
-
-
-library(maps)
-library(maptools)
-
-# Load Geographic Centroid Data + Map
-nmTemp <- map('county','new.mexico',fill=TRUE,plot=FALSE)
-nmIDs <- substr(nmTemp$names,1+nchar("new.mexico,"),nchar(nmTemp$names) )
-nm <- map2SpatialPolygons(nmTemp,IDs=nmIDs,proj4string=CRS("+proj=longlat"))
-
-
-nm.id <- NULL
-for (i in 1:length(nm)) {
-  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
-}
-nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
-           "de baca", "dona ana", "eddy", "grant", "guadalupe", "harding", 
-           "hidalgo", "lea", "lincoln", "los alamos", "luna", "mckinley", 
-           "mora", "otero", "quay", "rio arriba", "roosevelt", "san juan", 
-           "san miguel", "sandoval", "santa fe", "sierra", "socorro", "taos", 
-           "torrance", "union", "valencia")
-nm <- unionSpatialPolygons(nm, nm.id)
-plot(nm, axes=TRUE, border="red", lwd=2)
-nm.id <- NULL
-for (i in 1:length(nm)) {
-  nm.id <- c(nm.id, nm@polygons[[i]]@ID)
-}
-
-
-
 population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% 
   select(pop) %>% as.data.frame()
 population <- population[,1]
@@ -151,8 +169,13 @@ n.zones <- length(cluster.list)
 # nearest.neighbors <- geo.results$nearest.neighbors
 # cluster.coords <- geo.results$cluster.coords
 
+
+#---------------------------------------------------------------
+# Temporal zones
+#---------------------------------------------------------------
 years <- unique(cases$year)
-lengths <- c(1:5)
+n.years <- 7
+lengths <- c(1:n.years)
 
 windows <- as.vector(years, mode="list")
 # two years
@@ -171,20 +194,7 @@ for(i in 2:5) {
 
 
 
-log.lkhd <- function (cz, nz, N, C) {
-  log.lkhd <- 0
-  
-  if(cz / nz <= (C - cz)/(N - nz)) {
-    log.lkhd <- 0
-  } else {
-    log.lkhd <-
-      cz * log(  (cz / nz) )  +
-      cz * log(  ( (N - nz)/( C - cz) ) )  +
-      C * log(  ( (C-cz)/(N-nz) )  ) +
-      C * log(  ( N/ C )  )
-  }  
-  return(log.lkhd)
-}
+
 
 
 #-------------------------------------------------------------------------------
