@@ -161,8 +161,10 @@ log.lkhd(count$y, count$E, sum(counts$y), sum(counts$E))
 population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% 
   select(pop) %>% as.data.frame()
 population <- population[,1]
-geo.results <- zones(as.data.frame(geo[,2:3]), population, 0.50)
-geo.objects <- create_geo_objects(0.5, population, as.data.frame(geo[,2:3]), nm)
+
+new.geo <- latlong2grid(as.data.frame(geo[,2:3]))
+geo.results <- zones(new.geo, population, 0.50)
+geo.objects <- create_geo_objects(0.5, population, new.geo, nm)
 cluster.list <- geo.objects$overlap$cluster.list
 n.zones <- length(cluster.list)
 
@@ -191,6 +193,27 @@ for(i in 2:n.years) {
   
   windows <- c(windows, temp)
 }
+
+
+#---------------------------------------------------------------
+# Observed statistic computation
+#---------------------------------------------------------------
+lkhd <- matrix(0, nrow=n.zones, ncol=length(windows))
+C <- sum(counts$y)
+N <- sum(counts$E)
+for (i in 1:n.zones)
+  for (j in 1:length(windows)) {
+    areas <- geo$county[cluster.list[[i]]]
+    year.min <- min(windows[[j]])
+    year.max <- max(windows[[j]])
+    count <- filter(counts, county %in% areas & year.min <= year & year <= year.max) %>%
+      summarize(y=sum(y), E=sum(E))
+    lkhd[i,j] <- log.lkhd(count$y, count$E, C, N)
+  }
+
+which(lkhd == max(lkhd), arr.ind=TRUE)
+
+
 
 
 
