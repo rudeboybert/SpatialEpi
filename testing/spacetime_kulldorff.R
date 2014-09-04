@@ -179,7 +179,7 @@ lengths <- c(1:n.years)
 
 windows <- as.vector(years, mode="list")
 # two years
-for(i in 2:5) {
+for(i in 2:n.years) {
   blah <- matrix(0, nrow=i, ncol=length(years)-i+1)
   for(j in 1:i) {
     blah[j, ] <- c(years[j]:years[length(years)-i+j])
@@ -191,9 +191,6 @@ for(i in 2:5) {
   
   windows <- c(windows, temp)
 }
-
-
-
 
 
 
