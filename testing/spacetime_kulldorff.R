@@ -44,17 +44,23 @@ for (i in 1:length(nm)) {
   nm.id <- c(nm.id, nm@polygons[[i]]@ID)
 }
 nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
-           "de baca", "dona ana", "eddy", "grant", "guadalupe", "harding", 
-           "hidalgo", "lea", "lincoln", "los alamos", "luna", "mckinley", 
-           "mora", "otero", "quay", "rio arriba", "roosevelt", "san juan", 
-           "san miguel", "sandoval", "santa fe", "sierra", "socorro", "taos", 
-           "torrance", "union", "valencia")
+          "debaca", "donaana", "eddy", "grant", "guadalupe", "harding", 
+          "hidalgo", "lea", "lincoln", "losalamos", "luna", "mckinley", 
+          "mora", "otero", "quay", "rio arriba", "roosevelt", "sanjuan", 
+          "sanmiguel", "sandoval", "santafe", "sierra", "socorro", "taos", 
+          "torrance", "union", "valencia")
 nm <- unionSpatialPolygons(nm, nm.id)
-plot(nm, axes=TRUE, border="red", lwd=2)
+plot(nm, axes=TRUE)
 nm.id <- NULL
 for (i in 1:length(nm)) {
   nm.id <- c(nm.id, nm@polygons[[i]]@ID)
 }
+text(coordinates(nm), labels=nm.id, cex=0.75)
+text(geo[,3:2], labels=geo$county, cex=0.75, col="red")
+
+cbind(as.character(geo$county), rownames(coordinates(nm)))
+
+
 
 
 #---------------------------------------------------------------
@@ -92,30 +98,40 @@ for(i in 1:nrow(q)) {
   # Associate years
   q$pop[i] <- sum(rep(pop.sub$pop, times=year.counts))
 }
-q <- mutate(q, q=cases/pop) %>% select(-c(cases:pop))
+q <- mutate(q, q=cases/pop) %>% 
+  select(-c(cases:pop))
 
 
 #---------------------------------------------------------------
 # Compute expected values E
 #---------------------------------------------------------------
 counts <- tbl_df(expand.grid(geo$county, unique(cases$year))) %>%
-  mutate(county=Var1, year=Var2, E=0) %>% select(county:E)
+  mutate(county=Var1, year=Var2, E=0, pop=0) %>% 
+  select(county:E)
 
 # Add observed counts
 cases.agg <- group_by(cases, county, year) %>% 
   summarise(y=sum(cases)) 
+pop.agg <- group_by(pop, county, year) %>% 
+  summarise(pop=sum(pop)) 
+
 counts <- left_join(counts, cases.agg, by=c("county", "year")) %>%
   mutate(y = ifelse(is.na(y), 0, y))
 
 
 for (i in 1:nrow(counts)) {
-  ref.year <- get.year(counts[i, "year"], ref.years)  
+  ref.year <- get.year(counts[i, "year"], ref.years)
+  
   counts[i, "E"] <- filter(pop, county==counts[i, "county"], year==ref.year) %>%
     inner_join(q, by=c("age", "gender")) %>%
     mutate(E=pop*q) %>%
     summarize(E=sum(E)) %>%
     ungroup() %>%
     select(E)
+  
+  counts[i, "pop"] <- filter(pop, county==counts[i, "county"], year==ref.year) %>%
+    inner_join(q, by=c("age", "gender")) %>%
+    summarize(pop=sum(pop)) 
 }
 
 
@@ -212,6 +228,24 @@ for (i in 1:n.zones)
   }
 
 which(lkhd == max(lkhd), arr.ind=TRUE)
+
+
+# Secondary Cluster
+plot(nm, axes=TRUE)
+plot(nm[cluster.list[[388]]], add=TRUE, col="red")
+plot(nm[match(cluster, geo$county)], add=TRUE, col="blue")
+
+mlc <- sort(match(cluster, geo$county))
+
+non.overlap <- 
+  lapply(cluster.list, function(x){!any(x %in% mlc)}) %>%
+  unlist()
+
+second.max <- max(lkhd[non.overlap,])
+which(lkhd == second.max, arr.ind=TRUE)
+
+plot(nm[3], add=TRUE, col="red")
+
 
 
 
