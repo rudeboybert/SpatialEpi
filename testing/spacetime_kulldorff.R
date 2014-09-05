@@ -231,13 +231,16 @@ for(i in 1:100){
   if(i %% 10 == 0) print(i)
 }
 
-save.image(file="satscan.RData")
+# save.image(file="satscan.RData")
 
 
 # Most likely cluster
 lkhd <- compute.lkhds(counts)
 max(lkhd)
 which(lkhd == max(lkhd), arr.ind=TRUE)
+hist(max.lkhds)
+abline(v=max(lkhd), col="red")
+mean(max.lkhds >= max(lkhd))
 
 # Secondary non-overlapping cluster
 non.overlap <- 
