@@ -46,7 +46,7 @@ for (i in 1:length(nm)) {
 nm.id <- c("bernalillo", "catron", "chaves", "valencia", "colfax", "curry", 
           "debaca", "donaana", "eddy", "grant", "guadalupe", "harding", 
           "hidalgo", "lea", "lincoln", "losalamos", "luna", "mckinley", 
-          "mora", "otero", "quay", "rio arriba", "roosevelt", "sanjuan", 
+          "mora", "otero", "quay", "rioarriba", "roosevelt", "sanjuan", 
           "sanmiguel", "sandoval", "santafe", "sierra", "socorro", "taos", 
           "torrance", "union", "valencia")
 nm <- unionSpatialPolygons(nm, nm.id)
@@ -58,7 +58,7 @@ for (i in 1:length(nm)) {
 text(coordinates(nm), labels=nm.id, cex=0.75)
 text(geo[,3:2], labels=geo$county, cex=0.75, col="red")
 
-cbind(as.character(geo$county), rownames(coordinates(nm)))
+tolower(as.character(geo$county)) == rownames(coordinates(nm))
 
 
 
@@ -103,7 +103,7 @@ q <- mutate(q, q=cases/pop) %>%
 
 
 #---------------------------------------------------------------
-# Compute expected values E
+# Compute expected values E, y, pop for each year/county
 #---------------------------------------------------------------
 counts <- tbl_df(expand.grid(geo$county, unique(cases$year))) %>%
   mutate(county=Var1, year=Var2, E=0, pop=0) %>% 
@@ -117,7 +117,6 @@ pop.agg <- group_by(pop, county, year) %>%
 
 counts <- left_join(counts, cases.agg, by=c("county", "year")) %>%
   mutate(y = ifelse(is.na(y), 0, y))
-
 
 for (i in 1:nrow(counts)) {
   ref.year <- get.year(counts[i, "year"], ref.years)
@@ -143,144 +142,113 @@ for (i in 1:nrow(counts)) {
 # Compute SatScan
 #
 #-------------------------------------------------------------------------------
-# log lkhd function
-log.lkhd <- function (cz, nz, C, N) {
-  log.lkhd <- 0
-  
-  if(cz / nz <= (C - cz)/(N - nz)) {
-    log.lkhd <- 0
-  } else {
-    log.lkhd <-
-      cz * log(  (cz / nz) )  +
-      cz * log(  ( (N - nz)/( C - cz) ) )  +
-      C * log(  ( (C-cz)/(N-nz) )  ) +
-      C * log(  ( N/ C )  )
-  }  
-  return(log.lkhd)
-}
-
-
 #---------------------------------------------------------------
-# Compare E's and log-lkhd with most likely cluster from SatScan
+# Compare E's with most likely cluster from SatScan
 #---------------------------------------------------------------
 cluster <- c("Torrance", "Bernalillo", "Valencia", "SantaFe", "Guadelupe", "Socorro", "Sandoval", "SanMiguel", "LosAlamos")
 count <- filter(counts, county %in% cluster & 1985 <= year & year <= 1989) %>%
   summarize(y=sum(y), E=sum(E))
 (count$y/count$E) / ((sum(counts$y)-count$y)/(sum(counts$E)-count$E))
 
-log.lkhd(count$y, count$E, sum(counts$y), sum(counts$E))
-
 
 #---------------------------------------------------------------
-# Geographic zones
+# Geographic zones.  Based on average population over the 19 years
 #---------------------------------------------------------------
-population <- group_by(pop, county) %>% summarise(pop=round(sum(pop)/3)) %>% 
-  select(pop) %>% as.data.frame()
-population <- population[,1]
+population <- group_by(counts, county) %>% 
+  summarise(pop=mean(pop))
+population <- population[,2]
 
-new.geo <- latlong2grid(as.data.frame(geo[,2:3]))
-geo.results <- zones(new.geo, population, 0.50)
+new.geo <- latlong2grid(coordinates(nm)[,2:1])
 geo.objects <- create_geo_objects(0.5, population, new.geo, nm)
 cluster.list <- geo.objects$overlap$cluster.list
 n.zones <- length(cluster.list)
-
-# nearest.neighbors <- geo.results$nearest.neighbors
-# cluster.coords <- geo.results$cluster.coords
 
 
 #---------------------------------------------------------------
 # Temporal zones
 #---------------------------------------------------------------
 years <- unique(cases$year)
-n.years <- 7
-lengths <- c(1:n.years)
+n.year.span <- 7
+time.windows <- as.vector(years, mode="list")
 
-windows <- as.vector(years, mode="list")
-# two years
-for(i in 2:n.years) {
+for(i in 2:n.year.span) {
+  # define all n-tuples
   blah <- matrix(0, nrow=i, ncol=length(years)-i+1)
   for(j in 1:i) {
     blah[j, ] <- c(years[j]:years[length(years)-i+j])
   }
   
-  temp <- vector(mode="list", length=ncol(blah))
+  # Append to list here
+  temp.list <- vector(mode="list", length=ncol(blah))
   for (j in 1:ncol(blah))
-    temp[[j]] <- blah[, j]
+    temp.list[[j]] <- blah[, j]
   
-  windows <- c(windows, temp)
+  time.windows <- c(time.windows, temp.list)
 }
 
 
 #---------------------------------------------------------------
 # Observed statistic computation
 #---------------------------------------------------------------
-lkhd <- matrix(0, nrow=n.zones, ncol=length(windows))
-C <- sum(counts$y)
-N <- sum(counts$E)
-for (i in 1:n.zones)
-  for (j in 1:length(windows)) {
-    areas <- geo$county[cluster.list[[i]]]
-    year.min <- min(windows[[j]])
-    year.max <- max(windows[[j]])
-    count <- filter(counts, county %in% areas & year.min <= year & year <= year.max) %>%
-      summarize(y=sum(y), E=sum(E))
-    lkhd[i,j] <- log.lkhd(count$y, count$E, C, N)
-  }
+# log lkhd function
+log.lkhd <- function (cz, nz, C, N) {  
+  if(cz / nz <= (C - cz)/(N - nz)) {
+    log.lkhd <- 0
+  } else {
+    log.lkhd <-
+      cz * log((cz / nz)) + cz * log(((N - nz)/(C - cz))) + C * log(((C-cz)/(N-nz))) + C * log((N/ C))
+  }  
+  return(log.lkhd)
+}
 
+# compute log lkhd function over all possible zones
+compute.lkhds <- function(counts){
+  lkhd <- matrix(0, nrow=n.zones, ncol=length(time.windows))
+  C <- sum(counts$y)
+  N <- sum(counts$E)
+  for (i in 1:n.zones) {
+    for (j in 1:length(time.windows)) {
+      areas <- geo$county[cluster.list[[i]]]
+      year.min <- min(time.windows[[j]])
+      year.max <- max(time.windows[[j]])
+      
+      count <- 
+        filter(counts, county %in% areas & year.min <= year & year <= year.max) %>%
+        summarize(y=sum(y), E=sum(E))
+      lkhd[i, j] <- log.lkhd(count$y, count$E, C, N)
+    }
+  }
+  return(lkhd)
+}
+
+# Monte Carlo simulation
+n.sim <- 100
+max.lkhds <- rep(0, n.sim)
+sim.counts <- counts
+for(i in 1:100){
+  sim.counts$y <- rmultinom(1, sum(sim.counts$E), normalize(sim.counts$E))
+  max.lkhds[i] <- max(compute.lkhds(sim.counts))
+  if(i %% 10 == 0) print(i)
+}
+
+
+# Most likely cluster
+lkhd <- compute.lkhds(counts)
+max(lkhd)
 which(lkhd == max(lkhd), arr.ind=TRUE)
 
+# Secondary non-overlapping cluster
+non.overlap <- 
+  lapply(cluster.list, function(x){!any(x %in% mlc)}) %>%
+  unlist()
+second.max <- max(lkhd[non.overlap,])
+which(lkhd == second.max, arr.ind=TRUE)
 
 # Secondary Cluster
 plot(nm, axes=TRUE)
 plot(nm[cluster.list[[388]]], add=TRUE, col="red")
+plot(nm[3], add=TRUE, col="blue")
+
+# SatScan most likely
 plot(nm[match(cluster, geo$county)], add=TRUE, col="blue")
-
-mlc <- sort(match(cluster, geo$county))
-
-non.overlap <- 
-  lapply(cluster.list, function(x){!any(x %in% mlc)}) %>%
-  unlist()
-
-second.max <- max(lkhd[non.overlap,])
-which(lkhd == second.max, arr.ind=TRUE)
-
-plot(nm[3], add=TRUE, col="red")
-
-
-
-
-
-
-#-------------------------------------------------------------------------------
-# Observed statistic computation
-#-------------------------------------------------------------------------------
-lkhd <- computeAllLogLkhd(cases, denominator, nearest.neighbors, n.zones, type)
-
-# Get areas included in most likely cluster
-cluster.index <- which.max(lkhd)
-
-# cluster center and radial area
-center <- cluster.coords[cluster.index,1]
-end <- cluster.coords[cluster.index,2]
-
-# list of all areas included in cluster  
-cluster <- nearest.neighbors[[center]]
-cluster <- cluster[1:which(cluster == end)]
-
-
-#-------------------------------------------------------------------------------
-# Compute Monte Carlo randomized p-value
-#-------------------------------------------------------------------------------
-# Simulate cases under null hypothesis of no area effects i.e. conditioned on E
-perm <- rmultinom(n.simulations, round(sum(cases)), prob=denominator)
-
-# Compute simulated lambda's:  max log-lkhd in region
-sim.lambda <- kulldorffMC(perm, denominator, nearest.neighbors, n.zones, type)
-
-# Compute Monte Carlo p-value
-combined.lambda <- c(sim.lambda, max(lkhd))
-p.value <- 1-mean(combined.lambda < max(lkhd))
-
-
-
 
