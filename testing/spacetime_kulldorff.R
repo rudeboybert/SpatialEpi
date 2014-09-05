@@ -231,6 +231,8 @@ for(i in 1:100){
   if(i %% 10 == 0) print(i)
 }
 
+save.image(file="satscan.RData")
+
 
 # Most likely cluster
 lkhd <- compute.lkhds(counts)
