@@ -1,5 +1,5 @@
 estimate_lambda <-
-function(n.sim, J, prior.z, overlap, pi0){
+function(n.sim, J, prior.z, overlap, pi0, equal.non.null=FALSE){
 
 n.zones <- length(prior.z)
 
@@ -35,10 +35,16 @@ for(k in 2:J){
 #-------------------------------------------------------------------------------
 # Using q compute estimate of lambda and prior probability of j clusters
 #-------------------------------------------------------------------------------
-lambda <- (1-pi0)/( (1-pi0)*J + pi0*sum(q[-1]) )
-lambda <- rep(lambda, J)
-lambda <- c(1-sum(lambda), lambda)
+if(equal.non.null) {
+  lambda <- (1-pi0)/((1-pi0)*J + pi0*sum(q[-1]))
+  lambda <- rep(lambda, J)
+  lambda <- c(1-sum(lambda), lambda)
+} else {
+  lambda <- (1-pi0)/q
+  lambda[1] <- pi0*J  # null prior
+  lambda <- normalize(lambda)
+}
 prior.j <- normalize(lambda*q)
 
-return(list(lambda=lambda, prior.j=prior.j))
+return(list(lambda=lambda, prior.j=prior.j, q=q))
 }
