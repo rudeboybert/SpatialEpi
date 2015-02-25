@@ -36,13 +36,13 @@ for(k in 2:J){
 # Using q compute estimate of lambda and prior probability of j clusters
 #-------------------------------------------------------------------------------
 if(equal.non.null) {
-  lambda <- (1-pi0)/((1-pi0)*J + pi0*sum(q[-1]))
-  lambda <- rep(lambda, J)
-  lambda <- c(1-sum(lambda), lambda)
-} else {
   lambda <- (1-pi0)/q
   lambda[1] <- pi0*J  # null prior
   lambda <- normalize(lambda)
+} else {
+  lambda <- (1-pi0)/((1-pi0)*J + pi0*sum(q[-1]))
+  lambda <- rep(lambda, J)
+  lambda <- c(1-sum(lambda), lambda)
 }
 prior.j <- normalize(lambda*q)
 
