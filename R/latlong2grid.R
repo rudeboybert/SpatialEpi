@@ -9,7 +9,7 @@ sine51 <- sin( 51.5*toradians )
 #-------------------------------------------------------------------------------
 # If a Spatial Polygon
 #-------------------------------------------------------------------------------
-if(is(input)[1] == "SpatialPolygons"){  
+if(any(is(input) == "SpatialPolygons")){ 
   for( i in 1:length(input@polygons) ){
     # for all Polygons's in polygon
     for( j in 1:length(input@polygons[[i]]@Polygons) ){
