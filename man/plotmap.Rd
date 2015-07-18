@@ -18,6 +18,7 @@ round = 3, brks = NULL, legend = NULL, location = "topright", rev = FALSE)
   \item{legend}{if desired, a pre-specified legend}
   \item{location}{location of legend}
   \item{rev}{boolean of whether to reverse colour scheme (darker colours for smaller values)}
+  \item{leg.cex}{cex for legend}
 }
 \value{A map colour-coded to indicate the different levels of \code{values}.}
 \seealso{ 
