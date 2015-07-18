@@ -38,7 +38,7 @@ if(is.null(legend)){
 
 plot(map, axes=TRUE, col=colcode, lwd=lwd)
 if(include.legend) {
-  legend(location, legend=legend, fill=plotclr, bty="n", leg.cex)
-}
+  legend(location, legend = legend, fill = plotclr, bty = "n", cex=leg.cex, 
+         pt.cex = 1)}
 
 }
