@@ -1,6 +1,6 @@
 plotmap <-
 function(values, map, log=FALSE, nclr=7, include.legend=TRUE, lwd=0.5, round=3,
-         brks=NULL, legend=NULL, location='topright', rev=FALSE, leg.cex){
+         brks=NULL, legend=NULL, location='topright', rev=FALSE, leg.cex=1){
 
 # create colors, each based on quantiles of data
 plotclr <- grey(1-seq(0, 1, by=1/(nclr-1)))
