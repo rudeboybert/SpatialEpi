@@ -1,0 +1,689 @@
+---
+title: "SISMID Spatial Statistics in Epidemiology and Public Health 
+\\
+
+2015 R Notes: Cluster Detection and Clustering for Count Data"
+author: |
+  | Jon Wakefield
+  | Departments of Statistics and Biostatistics, University of Washington
+
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    keep_tex: yes
+  slidy_presentation: default
+
+  
+---
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(collapse=TRUE, fig.align='center', tidy=TRUE, tidy.opts=list(blank=TRUE, width.cutoff=40), warning=FALSE,message=FALSE)
+```
+
+## North Carolina SIDS Data
+
+The ``nc.sids`` data frame has 100 rows and 21 columns and can be found in the ``spdep`` library. 
+
+
+It contains data given in Cressie (1991, pp. 386-9), Cressie and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North Carolina for 1974--78 and 1979--84.
+
+The data set also contains the neighbour list given by Cressie
+  and Chan (1989) omitting self-neighbours (``ncCC89.nb``), and the
+  neighbour list given by Cressie and Read (1985) for contiguities
+  (``ncCR85.nb``).
+
+Data is available on the numbers of cases and on the
+  number of  births, both dichotomized by a binary indicator of race.
+  
+The data are ordered by county ID number, not alphabetically as
+  in the source tables.
+
+
+## North Carolina SIDS Data
+
+ The code below plots the county boundaries along with the observed SMRs.
+ 
+The expected numbers are based on internal standardization with a single stratum.
+
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+library(maptools)
+nc.sids <- readShapePoly(system.file("etc/shapes/sids.shp", 
+           package="spdep")[1],ID="FIPSNO", 
+           proj4string=CRS("+proj=longlat +ellps=clrk66"))
+nc.sids2 <- nc.sids # Create a copy, to add to
+Y <- nc.sids$SID74
+E <- nc.sids$BIR74*sum(Y)/sum(nc.sids$BIR74)
+nc.sids2$SMR74 <- Y/E
+nc.sids2$EXP74 <- E
+brks <- seq(0,5,1)
+```
+
+## SMR Plot
+ 
+We map the SMRs, and see a number of counties with high relative risks.
+
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=4.5,fig.width=4, fig.cap="Map of SMRs for SIDS in 1974 in North Carolina", tidy.opts=list(width.cutoff=35)}
+spplot(nc.sids2,"SMR74",at=brks,
+       col.regions=grey.colors(5,start=.9,end=.1))
+```
+
+## Overdispersion
+
+Examine $\kappa$, the overdispersion statistic, and use a Monte Carlo test to examine significance.
+
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+library(spdep)
+kappaval <- function(Y,fitted,df){
+  sum((Y-fitted)^2/fitted)/df}
+mod <- glm(Y~1,offset=log(E),family="quasipoisson")
+kappaest <- kappaval(Y,mod$fitted,mod$df.resid)
+nMC <- 1000
+ncts <- length(E)
+yMC <- matrix(rpois(n=nMC*ncts,lambda=E),
+              nrow=ncts,ncol=nMC)
+kappaMC <- NULL
+for (i in 1:nMC){
+ modMC <- glm(yMC[,i]~1,offset=log(E),family="quasipoisson")
+ kappaMC[i] <- kappaval(yMC[,i],modMC$fitted,modMC$df.resid)
+}
+```
+
+##  Overdispersion
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=35)}
+hist(kappaMC,xlim=c(min(kappaMC),max(kappaMC,kappaest)),
+             main="",xlab=expression(kappa))
+abline(v=kappaest,col="red")
+```
+
+
+## Disease Mapping
+
+We first fit  a non-spatial random effects model:
+\begin{eqnarray*}
+Y_i | \alpha,V_i &\sim_{iid}&\mbox{Poisson}(E_i\mbox{e}^{\alpha+V_i}),\\
+V_i | \sigma_v^2 &\sim_{iid}& N(0,\sigma_v^2)
+\end{eqnarray*}
+
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+library(INLA)
+nc.sids$ID <- 1:100
+m0 <- inla(SID74~f(ID, model="iid"),family="poisson", 
+      E=EXP74, data=as.data.frame(nc.sids),
+      control.predictor=list(compute=TRUE))
+```
+## Disease Mapping
+
+Examine the first few "fitted values", summaries of the posterior distribution of
+$\exp(\alpha+V_i),\qquad i=1,\dots,n.$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+head(m0$summary.fitted.values)
+```
+
+## Disease Mapping
+
+Create two interesting inferential summaries.
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+# We add the posterior mean of the relative risk to our object
+nc.sids$RRpmean0 <- m0$summary.fitted.values[,1]
+# Also, a binary indicator of whether posterior
+# median is greater than 1.5 (an epidemiologically significant 
+# value)
+nc.sids$RRind0 <- m0$summary.fitted.values[,4] > 1.5
+```
+
+## Disease Mapping 
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, tidy.opts=list(width.cutoff=35)}
+# Display relative risk estimates
+spplot(nc.sids, "RRpmean0")
+```
+
+## Disease Mapping
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, tidy.opts=list(width.cutoff=35)}
+# Display indicators of whether 0.5 points above 1.5
+spplot(nc.sids, "RRind0")
+```
+
+## Disease Mapping
+
+We now fit a model with non-spatial and spatial random effects.
+
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+# Create adjacency matrix and output to INLA graph format
+poly2nb(nc.sids) %>% 
+  nb2INLA(file="vignettes/NC.graph", nb=.)
+nc.sids$ID2 <- 1:100
+m1 <- inla(
+  formula = SID74 ~ 1 + f(ID, model="iid") + 
+    f(ID2, model="besag", graph="vignettes/NC.graph"),
+  family="poisson", 
+  E=EXP74, 
+  data=nc.sids@data,
+  control.predictor=list(compute=TRUE))
+nc.sids$RRpmean1 <- m1$summary.fitted.values[,1]
+nc.sids$RRind1 <- m1$summary.fitted.values[,4] > 1.5
+```
+
+## Disease Mapping
+ 
+
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4,tidy.opts=list(width.cutoff=50)}
+spplot(nc.sids, "RRpmean1")
+```
+
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4,tidy.opts=list(width.cutoff=50)}
+# Display areas with medians above 1.5, ie those areas 
+# with greater than 50% chance of exceedence of 1.5.
+spplot(nc.sids, "RRind1")
+```
+
+
+
+## Disease Mapping: Comparison of posterior means
+
+```{r, echo=TRUE, collapse=TRUE,fig.height=3,fig.width=3, fig.cap="", tidy.opts=list(width.cutoff=40)}
+plot(nc.sids$RRpmean1~nc.sids$RRpmean0, type="n", xlab="Non-spatial model",
+  ylab="Spatial model")
+text(nc.sids$RRpmean1~nc.sids$RRpmean0)
+abline(0,1)
+title("Comparison of Posterior Means")
+```
+
+
+
+We now examine the variances of the spatial and non-spatial random effects.
+Recall that the ICAR model variance has a conditional interpretation. To obtain
+a rough estimate of the marginal variance we obtain the posterior median of the
+$U_i$'s and evaluate their variance. From the output below, we conclude that the
+spatial random effects dominate for the SIDS data so that we conclude there is
+clustering of cases in neighboring areas.
+
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+# Extract spatial random effects
+U <- m1$summary.random$ID2[5]; sqrt(var(U)) # 0.33
+# variance of non-spatial
+m1$summary.hyperpar
+```
+
+
+
+
+
+
+
+## Clustering via Moran's $I$
+
+We evaluate Moran's test for spatial autocorrelation using the "W" style weight
+function: this standardizes the weights so that for each area the weights sum to
+1. To obtain a variable with approximately constant variance we form residuals
+from an intercept only model.
+
+
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+col.W <- nb2listw(ncCR85.nb, style="W", zero.policy=TRUE)
+quasipmod <- glm(
+  formula = SID74~1,
+  offset=log(EXP74),
+  data=nc.sids,
+  family=quasipoisson())
+sidsres <- residuals(quasipmod, type="pearson")
+```
+
+## Clustering via Moran's $I$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+moran.test(sidsres,col.W)
+```
+## Clustering via Moran's $I$
+
+Moran's test may suggest spatial autocorrelation if there exists a non-constant mean function.
+
+Below we fit a model with Eastings and Northings (of the County seat) as covariates -- both show some association and the significance of the Moran statistic is reduced, though still significant.
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+quasipmod2 <- glm(SID74~east+north,offset=log(EXP74),
+      data=nc.sids2,family=quasipoisson())
+summary(quasipmod2)
+sidsres2 <- residuals(quasipmod2,type="pearson")
+nc.sids2$res <- sidsres2
+```
+
+
+## North Carolina SIDS Data: Disease Mapping
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+par(mar=c(.1,.1,.1,.1))
+spplot(nc.sids2,"res")
+```
+
+## Clustering via Moran's $I$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+moran.test(sidsres2,col.W)
+```
+
+## Clustering via Geary's $c$
+
+We now use Geary's statistic on the detrended residuals, and come to the same conclusion
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+geary.test(sidsres2,col.W)
+
+```
+
+## Clustering via Moran's $I$
+
+We now use Moran's statistic on the detrended residuals, but with the binary ``B" weight option.
+
+This option has unstandardized weights.
+
+Note the asymmetry in the ``W" weights option in the figure below. 
+
+The conclusion, evidence of spatial autocorrelation, is the same as with the standardized weights option.
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+col.B <- nb2listw(ncCR85.nb, style="B",zero.policy=TRUE)
+moran.test(sidsres2,col.B)  
+```
+
+## Clustering via Moran's $I$
+
+We now use Moran's statistic on the detrended residuals, but with the binary ``B" weight option.
+
+This option has unstandardized weights.
+
+Note the asymmetry in the ``W" weights option in the figure below. 
+
+The conclusion, evidence of spatial autocorrelation, is the same as with the standardized weights option.
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+col.B <- nb2listw(ncCR85.nb, style="B",zero.policy=TRUE)
+moran.test(sidsres2,col.B)  
+```
+
+
+## Neighborhood Options
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50),fig.show="hide"}
+library(RColorBrewer)
+pal <- brewer.pal(9, "Reds")
+par(mfrow=c(1,2))
+z <- t(listw2mat(col.W))
+brks <- c(0,0.1,0.143,0.167,0.2,0.5,1)
+nbr3 <- length(brks)-3
+image(1:100,1:100,z[,ncol(z):1],breaks=brks, 
+           col=pal[c(1,(9-nbr3):9)],
+ main="W style", axes=FALSE)
+box()
+z <- t(listw2mat(col.B))
+brks <- c(0,0.1,0.143,0.167,0.2,0.5,1)
+nbr3 <- length(brks)-3
+image(1:100,1:100,z[,ncol(z):1],breaks=brks, 
+           col=pal[c(1,(9-nbr3):9)],
+ main="B style", axes=FALSE)
+box()
+ 
+```
+
+## Neighborhood Options
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=3.5, fig.cap="", tidy.opts=list(width.cutoff=50),echo=FALSE}
+library(RColorBrewer)
+pal <- brewer.pal(9, "Reds")
+par(mfrow=c(1,2))
+z <- t(listw2mat(col.W))
+brks <- c(0,0.1,0.143,0.167,0.2,0.5,1)
+nbr3 <- length(brks)-3
+image(1:100,1:100,z[,ncol(z):1],breaks=brks, 
+           col=pal[c(1,(9-nbr3):9)],
+ main="W style", axes=FALSE)
+box()
+z <- t(listw2mat(col.B))
+brks <- c(0,0.1,0.143,0.167,0.2,0.5,1)
+nbr3 <- length(brks)-3
+image(1:100,1:100,z[,ncol(z):1],breaks=brks, 
+           col=pal[c(1,(9-nbr3):9)],
+ main="B style", axes=FALSE)
+box()
+```
+
+## North Carolina SIDS Data: Conclusions
+
+ Both of the Moran's $I$ and Geary's $c$ methods suggest that there is evidence of clustering in these data. 
+ 
+## North Carolina SIDS Data: Clustering
+
+We implement Openshaw's method using the centroids of the areas in data.
+
+
+Circles of radius 30 are used and the centers are placed on a grid of size 10.
+
+For multiple radii, multiple calls are required.
+
+
+The significance level for calling a cluster is 0.002.
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+library(spdep)
+data(nc.sids)
+sids <- data.frame(Observed=nc.sids$SID74)
+sids <- cbind(sids,Expected=nc.sids$BIR74*sum(nc.sids$SID74)/
+        sum(nc.sids$BIR74))
+sids <- cbind(sids, x=nc.sids$x, y=nc.sids$y)
+# GAM 
+library(DCluster)
+sidsgam <- opgam(data=sids, radius=30, step=10, alpha=.002)
+```
+
+## North Carolina SIDS Data
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=2.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+plot(sids$x, sids$y, xlab="Easting", ylab="Northing")
+# Plot points marked as clusters
+points(sidsgam$x, sidsgam$y, col="red", pch="*")
+```
+
+## Clustering via Openshaw
+
+Openshaw results.
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+sidsgam
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+library(SpatialEpi)
+library(maptools)
+library(spdep)
+library(maps)
+library(ggplot2)
+library(sp)
+nc.sids <- readShapePoly(system.file("etc/shapes/sids.shp",
+    package="spdep")[1],ID="FIPSNO",proj4string=
+    CRS("+proj=longlat +ellps=clrk66"))
+referencep <- sum(nc.sids$SID74)/sum(nc.sids$BIR74)
+population <- nc.sids$BIR74
+cases <- nc.sids$SID74
+E <- nc.sids$BIR74*referencep
+SMR <- cases/E
+n <- length(cases)
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+getLabelPoint <- function(county) {Polygon(county[c('long', 'lat')])@labpt}
+df <- map_data('county', 'north carolina') # NC region county data
+centNC <- by(df, df$subregion, getLabelPoint)     # Returns list
+centNC <- do.call("rbind.data.frame", centNC)  # Convert to Data Frame
+names(centNC) <- c('long', 'lat')     # Appropriate Header
+centroids <- matrix(0, nrow=n, ncol=2)
+for(i in 1:n) {centroids[i, ] <- c(centNC$lat[i],centNC$long[i])}
+colnames(centroids) <- c("x", "y")
+rownames(centroids) <- 1:n
+
+```
+
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+NCTemp <- map('county','north carolina',fill=TRUE,plot=FALSE)
+NCIDs <- substr(NCTemp$names,1+nchar("north carolina,"),nchar(NCTemp$names) )
+NC <- map2SpatialPolygons(NCTemp,IDs=NCIDs,proj4string=CRS("+proj=longlat"))
+# Fix currituck county which is 3 islands
+index <- match(c("currituck:knotts", "currituck:main", "currituck:spit"), NCIDs)
+currituck <- list()
+for(i in c(27:29))
+	currituck <- c(currituck,
+		list(Polygon(NC@polygons[[i]]@Polygons[[1]]@coords))
+	)
+currituck <- Polygons(currituck,ID = "currituck")
+
+```
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+# make new spatial polygons object
+NC.new <- NC@polygons[ 1:(index[1]-1) ]
+NC.new <- c(NC.new, currituck)
+NC.new <- c(NC.new, NC@polygons[ (index[3]+1):length(NC@polygons) ] )
+NC.new <- SpatialPolygons(NC.new,proj4string=CRS("+proj=longlat"))
+NCIDs <- c(NCIDs[ 1:(index[1]-1) ], "currituck", NCIDs[ (index[3]+1):length(NC@polygons) ])
+NC <- NC.new
+
+# SANITY CHECK: Reorder Spatial Polygons of list to match order of county 
+names <- rep("",100)
+for(i in 1:length(NC@polygons))
+	names[i] <- NC@polygons[[i]]@ID
+identical(names, NCIDs)
+
+index <- match(NCIDs,names)
+NC@polygons <- NC@polygons[index]
+rm(index)
+
+names <- rep("",100)
+for(i in 1:length(NC@polygons))
+	names[i] <- NC@polygons[[i]]@ID
+identical(names, NCIDs)
+
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+k <- 20
+alpha.level <- 0.01
+geo <- centroids
+BNresults <- besag_newell(geo,population,cases,
+          expected.cases=NULL,k,alpha.level)
+BNsig <- 
+ length(BNresults$p.values[BNresults$p.values<alpha.level])
+cat("No of sig results = ",BNsig,"\n") 
+resmat <- matrix(NA,nrow=BNsig,ncol=100); reslen <- NULL
+for (i in 1:length(BNresults$clusters)){
+   reslen[i] <- 
+   length(BNresults$clusters[[i]]$location.IDs.included)
+   resmat[i,1:reslen[i]] <- 
+   BNresults$clusters[[i]]$location.IDs.included
+}
+
+```
+## North Carolina SIDS Data
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+par(mfrow=c(3,3),mar=c(.1,.1,.1,.1))
+for (i in 1:6){
+   plot(NC.new)
+   plot(NC.new[resmat[i,c(1:reslen[i])]],col="red",add=T)}
+```
+## North Carolina SIDS Data
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+par(mfrow=c(3,3),mar=c(.1,.1,.1,.1))
+for (i in 6:10){
+   plot(NC.new)
+   plot(NC.new[resmat[i,c(1:reslen[i])]],col="red",add=T)}
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50),fig.show="hide"}
+# Kulldorff
+pop.upper.bound <- 0.2
+n.simulations <- 999
+alpha.level <- 0.05
+Kpoisson <- kulldorff(geo,cases,population,expected.cases=NULL, 
+pop.upper.bound, n.simulations, alpha.level, plot=T)
+Kcluster <- Kpoisson$most.likely.cluster$location.IDs.included
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+\scriptsize
+```{r, echo=FALSE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+# Kulldorff
+pop.upper.bound <- 0.2
+n.simulations <- 999
+alpha.level <- 0.05
+Kpoisson <- kulldorff(geo,cases,population,expected.cases=NULL, 
+pop.upper.bound, n.simulations, alpha.level, plot=T)
+Kcluster <- Kpoisson$most.likely.cluster$location.IDs.included
+```
+
+## North Carolina SIDS Data
+ 
+\small
+```{r, echo=TRUE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+plot(NC.new,axes=TRUE)
+plot(NC.new[Kcluster],add=TRUE,col="red")
+title("Most Likely Cluster")
+
+```
+
+## North Carolina SIDS Data: Besag and Newell $k=20$
+
+Now look at secondary clusters.
+
+Two are significant, and indicated in Figures below
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50),fig.show="hide"}
+K2cluster <- 
+  Kpoisson$secondary.clusters[[1]]$location.IDs.included
+plot(NC.new,axes=TRUE)
+plot(NC.new[K2cluster],add=TRUE,col="red")
+title("2nd Most Likely Cluster")
+```
+
+## North Carolina SIDS Data
+ 
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="", tidy.opts=list(width.cutoff=50)}
+plot(NC.new,axes=TRUE)
+plot(NC.new[K2cluster],add=TRUE,col="red")
+title("2nd Most Likely Cluster")
+```
+
+
+## North Carolina SIDS Data: Bayes cluster model
+
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+library(spdep)
+devtools::install_github("rudeboybert/SpatialEpi")
+library(SpatialEpi)
+data("nc.sids")
+# Load NC map and obtain geographic centroids
+library(maptools)
+sp.obj <- readShapePoly(system.file("etc/shapes/sids.shp",
+                                    package="spdep")[1],ID="FIPSNO",
+                        proj4string=CRS("+proj=longlat +ellps=clrk66"))
+centroids <- latlong2grid(coordinates(sp.obj))
+```
+## North Carolina SIDS Data: Bayes cluster model
+
+
+\scriptsize
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50)}
+library(maptools)
+y <- nc.sids$SID74
+population <- nc.sids$BIR74
+E <- expected(population, y, 1)
+max.prop <- 0.15
+k <- 0.00005
+shape <- c(2976.3, 2.31); rate <- c(2977.3, 1.31)
+J <- 7
+pi0 <- 0.95
+n.sim.lambda <- 0.5*10^4
+n.sim.prior <- 0.5*10^4
+n.sim.post <- 0.5*10^5
+output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
+                        shape, rate, J, pi0,
+                        n.sim.lambda, n.sim.prior, n.sim.post)
+```
+
+## Bayesian cluster model
+
+\small
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=50),fig.show="hide"}
+SMR <- y/E
+plotmap(SMR, sp.obj,nclr=6,location="bottomleft")
+plotmap(output$prior.map$high.area, sp.obj,nclr=6,location="bottomleft")
+plotmap(output$post.map$high.area, sp.obj,nclr=6,location="bottomleft")
+barplot(output$pj.y, names.arg=0:J, xlab="j", ylab="P(j|y)") 
+plotmap(output$post.map$RR.est.area, sp.obj, log=TRUE,nclr=6,location="bottomleft")
+```
+## Bayesian cluster model
+ 
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=4.2,fig.width=4.7, fig.cap="SMRs", tidy.opts=list(width.cutoff=50)}
+plotmap(SMR, sp.obj,nclr=6,location="bottomleft")
+```
+
+
+## Bayesian cluster model
+
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=4.2,fig.width=4.7, fig.cap="Prior probabilities of lying in a cluster", tidy.opts=list(width.cutoff=50)}
+plotmap(output$prior.map$high.area,nclr=6, sp.obj,location="bottomleft")
+```
+
+## Bayesian cluster model
+
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=4.2,fig.width=4.7, fig.cap="Posterior probability of a cluster", tidy.opts=list(width.cutoff=50)}
+plotmap(output$post.map$high.area,nclr=6,sp.obj,location="bottomleft")
+```
+
+
+## Bayesian cluster model
+ 
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="Posterior on the number of clusters", tidy.opts=list(width.cutoff=50)}
+barplot(output$pj.y, names.arg=0:J,xlab="j", ylab="P(j|y)")         
+```
+
+
+## Bayesian cluster model
+ 
+\small
+```{r, echo=FALSE, collapse=TRUE,fig.height=3.5,fig.width=4, fig.cap="Posterior relative risk estimates", tidy.opts=list(width.cutoff=50)}
+plotmap(output$post.map$RR.est.area,sp.obj,nclr=6, log=TRUE,location="bottomleft")
+```

@@ -1,28 +1,28 @@
 Package: SpatialEpi
-Type: Package
 Title: Methods and Data for Spatial Epidemiology
 Version: 1.2.2
-Date: 2014-06-05
-Depends:
-    R (>= 3.0.2),
-    sp
-Imports:
+Authors@R: c(
+    person("Cici", "Chen", email = "cicichen@u.washington.edu", role = "aut"),
+    person("Albert Y.", "Kim", email = "albert@stat.washington.edu", role = c("aut", "cre")),
+    person("Michelle", "Ross", email = "micher3@u.washington.edu", role = "aut"),
+    person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = "aut")
+    )
+Description: This package performs disease mapping, cluster detection, and other
+    spatial epidemiology methods.
+License: GPL-2
+LazyData: true
+Imports: 
     Rcpp,
-    MASS
+    MASS,
+    sp
+URL: https://github.com/rudeboybert/SpatialEpi
+BugReports: https://github.com/rudeboybert/SpatialEpi/issues
+Type: Package
+Date: 2014-06-05
 LinkingTo: 
     Rcpp (>= 0.9.10), 
     RcppArmadillo (>= 0.3.0)
-Author: 
-    Cici Chen <cicichen@u.washington.edu>,
-    Albert Y. Kim <albert@stat.washington.edu>, 
-    Michelle Ross <micher3@u.washington.edu>, 
-    Jon Wakefield <jonno@u.washington.edu>
 Maintainer: Albert Y. Kim <albert@stat.washington.edu>
-Description: 
-    Cluster Detection,
-    Disease Mapping
-License: GPL-2
-LazyLoad: true
-
-
-
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

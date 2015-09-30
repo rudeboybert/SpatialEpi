@@ -8,3 +8,4 @@ src/*.so
 src/*.dll
 SpatialEpi.Rproj
 README.Rmd
+inst/doc

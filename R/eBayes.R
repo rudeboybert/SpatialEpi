@@ -1,5 +1,4 @@
-eBayes <-
-function(Y, E, Xmat=NULL){
+eBayes <- function(Y, E, Xmat=NULL){
 	# Check for covariates
 	if (is.null(Xmat)) {
 		mod <- glm.nb(Y ~ 1+offset(log(E)), link=log)
