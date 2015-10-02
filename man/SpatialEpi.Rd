@@ -4,13 +4,12 @@
 \name{SpatialEpi}
 \alias{SpatialEpi}
 \alias{SpatialEpi-package}
-\title{SpatialEpi: A package for methods and data for spatial epidemiology.}
+\title{SpatialEpi: Data and methods for spatial epidemiology.}
 \description{
-The SpatialEpi package provides three categories of important functions:
-SpatialEpi, bar and baz.
+This package provides...
 }
-\section{SpatialEpi functions}{
+\section{Foo functions}{
 
-The SpatialEpi functions ...
+The foo functions ...
 }
 

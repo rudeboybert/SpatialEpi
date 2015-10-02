@@ -1,55 +1,83 @@
-zones <-
-function(geo, population, pop.upper.bound){
+# When using dplyr, R CMD CHECK returns NOTE that there is "no visible binding 
+# for global variable", hence this hack fix.
+# no visible binding for global variable
+utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
 
-# number of areas
-n <- nrow(geo)
-# total population
-total.pop <- sum(population)
-# Interpoint distance matrix
-dist <- as.matrix(dist(as.matrix(geo), upper=TRUE, diag=TRUE))
-
-
-#-------------------------------------------------------------------------------
-# For each area, list of closest neighbors up until pop.upper.bound of
-# population is met.  We count the number of candidate zones in n.zones 
-# Note:  for each county, the list of nearest neighbors form the total number of
-# candidate zones
-#-------------------------------------------------------------------------------
-nearest.neighbors <- vector(mode="list", length=n)
-
-n.zones <- 0
-vector.cutoffs <- rep(0, n+1)
-
-for(i in 1:n) {	
-  # Sort the areas by distance, then include them one-by-one until cluster bound
-  # is met
-  neighbors <- order(dist[,i])
+#' Define a study region's single zones.
+#' 
+#' Using the centroids of the n areas in a study region, define the set of 
+#' single zones based on the upper bound \code{pop_upper_bound} of the 
+#' proportion of the study region's population each single zone can contain.
+#' 
+#' @param centroids A data frame with 2 columns of the centroids of the n areas 
+#'   in the study region.
+#' @param population A vector of length n of the corresponding population 
+#'   counts.
+#' @param pop_upper_bound The upper bound of the proportion of the study 
+#'   region's population the single zones can contain.
+#'   
+#' @return A list with two objects \describe{ 
+#'   \item{\code{nearest_neighbors}}{A list of length n of the single zones 
+#'   for each area} 
+#'   \item{\code{cluster_coords}}{A data frame with 2 columns of the centering 
+#'   and radial area for each single zone.} 
+#'   }
+#' @references Kulldorff, M. (1997) A spatial scan statistic. 
+#'   \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 
+#'   1481--1496.
+#' @export
+#'   
+#' @examples 
+#' data(NYleukemia)
+#' centroids <- sp::coordinates(NYleukemia)
+#' single_zones <- define_single_zones(centroids, NYleukemia$population, 0.15)
+define_single_zones <- function(centroids, population, pop_upper_bound) {
   
-  # include only up until pop.upper.bound is hit
-  neighbors <- neighbors[ which( 
-      cumsum(population[neighbors])/total.pop <= pop.upper.bound
-    )] 
+  # Number of areas
+  n <- nrow(centroids)
+  # Interpoint distance matrix
+  dist_matrix <- 
+    centroids %>% 
+    dist(upper = TRUE, diag = TRUE) %>% 
+    as.matrix()
   
-  nearest.neighbors[[i]] <- neighbors
+  # Area indices and proportion of the population each area contains
+  areas <- data.frame(
+    area = 1:n,
+    prop_pop= population/sum(population)
+  )
   
-  # Update total number of zones
-  n.zones <- n.zones + length(neighbors)
+  # For each area, we compute the list of neighbors in order of distance such
+  # that the proportion of the study population that is included is less than or
+  # equal to pop_upper_bound. Save the results in a list
+  nearest_neighbors <- vector(mode = "list", length = n)
   
-  # internal
-  vector.cutoffs[i+1] <- n.zones	
+  for (i in 1:n) {
+    nearest_neighbors[[i]] <- 
+      areas %>% 
+      mutate(distance = dist_matrix[, i]) %>% 
+      arrange(distance) %>% 
+      mutate(cum_prop = cumsum(prop_pop)) %>% 
+      filter(cum_prop <= pop_upper_bound) %>% 
+      .[["area"]]
+  }
+  
+  # Save results in n_zones by 2 data frame denote the center and radial area
+  # for each single zone
+  cluster_coords <- data.frame(
+    center = rep(1:n, times = sapply(nearest_neighbors, length)),
+    radius = unlist(nearest_neighbors)
+  )
+  
+  # Output results
+  results <- list(
+    nearest_neighbors = nearest_neighbors, 
+    cluster_coords = cluster_coords
+    )
+  return(results)
 }
 
-cluster.coords <- cbind(rep(1:n, times=diff(vector.cutoffs)), 
-                        unlist(nearest.neighbors))
 
 
-#-------------------------------------------------------------------------------
-# Output results
-#-------------------------------------------------------------------------------
-results <- list(
-  nearest.neighbors = nearest.neighbors, 
-  cluster.coords = cluster.coords, 
-  dist=dist)
 
-return(results)
-}
+
