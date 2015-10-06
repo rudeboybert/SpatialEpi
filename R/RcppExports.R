@@ -45,11 +45,3 @@ kulldorffMC <- function(permutedCaseMatrix, expectedCases, nearestNeighborsList,
     .Call('SpatialEpi_kulldorffMC', PACKAGE = 'SpatialEpi', permutedCaseMatrix, expectedCases, nearestNeighborsList, logLkhdType)
 }
 
-multinom <- function(size, probs) {
-    .Call('SpatialEpi_multinom', PACKAGE = 'SpatialEpi', size, probs)
-}
-
-kulldorffMC2 <- function(nSims, expectedCases, nearestNeighborsList, logLkhdType) {
-    .Call('SpatialEpi_kulldorffMC2', PACKAGE = 'SpatialEpi', nSims, expectedCases, nearestNeighborsList, logLkhdType)
-}
-
