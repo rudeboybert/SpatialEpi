@@ -1,17 +1,5 @@
-# Testing define_zones
-load("/Users/rudeboybert/Dropbox/SpatialEpi/data/NYleukemia.rda")
-geo <- NYleukemia$geo[,2:3] %>% as.data.frame()
-population <- NYleukemia$data$population
-pop_upper_bound <- 0.15
-
-testing <- define_zones(geo, population, pop_upper_bound)
-testing2 <- zones(geo, population, pop_upper_bound)
-
-
-
 # Save NYleukemia data as SpatialPolygonsDataFrame
 load("/Users/rudeboybert/Dropbox/SpatialEpi/data/NYleukemia.rda")
-
 sp <- NYleukemia$spatial.polygon
 data <- NYleukemia$data %>% 
   rename(FIPS = censustract.FIPS) %>% 
@@ -21,5 +9,30 @@ data <- NYleukemia$data %>%
 NYleukemia <- SpatialPolygonsDataFrame(sp, data)
 devtools::use_data(NYleukemia, NYleukemia, overwrite=TRUE)
 
-library(sp)
-testing <- define_zones(coordinates(NYleukemia), NYleukemia$population, 0.15)
+
+
+# Testing define_single_zones
+data("NYleukemia")
+centroids <- coordinates(NYleukemia)
+population <- NYleukemia$population
+pop_upper_bound <- 0.15
+testing <- define_single_zones(centroids, population, pop_upper_bound)
+
+
+
+# Testing create_geo_objects
+testing <- create_geo_objects(centroids, population, pop_upper_bound)
+
+
+
+# Testing kulldorff
+data("NYleukemia")
+centroids <- coordinates(NYleukemia)
+cases <- NYleukemia$cases
+population <- NYleukemia$population
+expected_cases <- NULL
+pop_upper_bound <- 0.15
+alpha_level <- 0.05
+n_sim <- 10000
+testing <- kulldorff(centroids, cases, population, expected_cases=NULL, pop_upper_bound, 
+                     alpha_level=0.05)

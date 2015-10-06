@@ -14,7 +14,8 @@ License: GPL-2
 LazyData: true
 Imports: 
     sp (>= 1.2-0),
-    dplyr (>= 0.4.3)
+    dplyr (>= 0.4.3),
+    Rcpp
 URL: 
   https://github.com/rudeboybert/SpatialEpi
 BugReports: 
@@ -22,3 +23,4 @@ BugReports:
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+LinkingTo: Rcpp

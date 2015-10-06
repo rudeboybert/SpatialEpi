@@ -78,6 +78,68 @@ define_single_zones <- function(centroids, population, pop_upper_bound) {
 }
 
 
-
+#' Create geo objects needed for Bayesian method
+#'
+#' @inheritParams define_single_zones
+#'
+#' @return A list with three objects \describe{ 
+#'   \item{\code{presence}}{List of length n, for each area, the single zones it
+#'   is present in.}
+#'   \item{\code{cluster_list}}{List of length n_zones indicating the areas
+#'   included in each single zone}
+#'   \item{\code{cluster_coords}}{A data frame with 2 columns of the centering 
+#'   and radial area for each single zone.}
+#'   }
+#' @export
+#'
+#' @examples
+#' data(NYleukemia)
+#' centroids <- sp::coordinates(NYleukemia)
+#' geo_objects <- create_geo_objects(centroids, NYleukemia$population, 0.15)
+create_geo_objects <- function(centroids, population, pop_upper_bound){
+  
+  # Number of areas
+  n <- nrow(centroids)
+  
+  # Catch error
+  #     if(max.prop < max(normalize(population))){
+  #       print(paste("max.prop needs to be at least", max(normalize(population))))
+  #     }
+  
+  # Define single zones
+  zone_info <- define_single_zones(centroids, population, pop_upper_bound)
+  nearest_neighbors <- zone_info$nearest_neighbors
+  cluster_coords <- zone_info$cluster_coords
+  n_zones <- nrow(cluster_coords)
+  
+  # 1. Create list of length n_zones indicating the component areas for each
+  # zone
+  cluster_list <- vector(mode="list", length=n_zones)
+  counter <- 1
+  for(i in 1:n) {
+    nn <- nearest_neighbors[[i]]
+    for(j in 1:length(nn)) {
+      cluster_list[[counter]] <- nn[1:j] 
+      counter <- counter + 1  
+    } 
+  }
+  
+  # 2. Generate overlap object which tracks the overlap between single zones
+  # For each area, list all single zones that it is included in
+  presence <- vector(mode="list", length=n)
+  for(i in 1:n){
+    presence[[i]] <- cluster_list %>% 
+      sapply(function(x){is.element(i, x)}) %>% 
+      which()
+  }
+  
+  # Output results
+  results <- list(
+    presence = presence, 
+    cluster_list = cluster_list,
+    cluster_coords = cluster_coords
+  )
+  return(results)
+}
 
 

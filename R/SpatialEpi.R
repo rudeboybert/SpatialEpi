@@ -9,5 +9,7 @@
 #' @import dplyr
 #' @import sp
 #' @name SpatialEpi
+#' @useDynLib SpatialEpi
+#' @importFrom Rcpp sourceCpp
 NULL
 #> NULL
