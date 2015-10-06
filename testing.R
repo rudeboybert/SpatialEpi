@@ -26,6 +26,7 @@ testing <- create_geo_objects(centroids, population, pop_upper_bound)
 
 
 # Testing kulldorff
+library(SpatialEpi)
 data("NYleukemia")
 centroids <- coordinates(NYleukemia)
 cases <- NYleukemia$cases

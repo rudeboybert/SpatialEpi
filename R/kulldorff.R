@@ -75,6 +75,14 @@ kulldorff <- function(centroids, cases, population, expected_cases = NULL,
     c(., max(all_log_lkhd))
   p_value <- 1-mean(lambdas < max(all_log_lkhd))
   
+  lambdas2 <- 
+    kulldorffMC2(n_sim, denominator, zone_info$nearest_neighbors, type) %>% 
+    c(., max(all_log_lkhd))
+  
+  
+  
+  
+  
   #-------------------------------------------------------------------------------
   # Create Most Likely Cluster Object
   #-------------------------------------------------------------------------------

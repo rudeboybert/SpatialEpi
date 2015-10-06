@@ -61,3 +61,29 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// multinom
+NumericVector multinom(int size, NumericVector probs);
+RcppExport SEXP SpatialEpi_multinom(SEXP sizeSEXP, SEXP probsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type probs(probsSEXP);
+    __result = Rcpp::wrap(multinom(size, probs));
+    return __result;
+END_RCPP
+}
+// kulldorffMC2
+NumericVector kulldorffMC2(int nSims, NumericVector expectedCases, List nearestNeighborsList, String logLkhdType);
+RcppExport SEXP SpatialEpi_kulldorffMC2(SEXP nSimsSEXP, SEXP expectedCasesSEXP, SEXP nearestNeighborsListSEXP, SEXP logLkhdTypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type nSims(nSimsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type expectedCases(expectedCasesSEXP);
+    Rcpp::traits::input_parameter< List >::type nearestNeighborsList(nearestNeighborsListSEXP);
+    Rcpp::traits::input_parameter< String >::type logLkhdType(logLkhdTypeSEXP);
+    __result = Rcpp::wrap(kulldorffMC2(nSims, expectedCases, nearestNeighborsList, logLkhdType));
+    return __result;
+END_RCPP
+}
