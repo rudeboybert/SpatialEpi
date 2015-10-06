@@ -33,6 +33,6 @@ population <- NYleukemia$population
 expected_cases <- NULL
 pop_upper_bound <- 0.15
 alpha_level <- 0.05
-n_sim <- 10000
-testing <- kulldorff(centroids, cases, population, expected_cases=NULL, pop_upper_bound, 
+n_sim <- 9999
+testing <- kulldorff(centroids, cases, population, expected_cases, pop_upper_bound, 
                      alpha_level=0.05)

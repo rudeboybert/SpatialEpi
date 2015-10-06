@@ -14,7 +14,7 @@ return_single_zone_areas <- function(cluster_index, zone_info){
   radial <- zone_info$cluster_coords[cluster_index, 2]
  
   # Obtain all areas (in order of distance) from center to radial area
-  cluster <- nearest_neighbors[[center]]
+  cluster <- zone_info$nearest_neighbors[[center]]
   cluster <- cluster[1:which(cluster == radial)]
   
   return(cluster)
@@ -35,13 +35,13 @@ get_cluster_report <- function(cluster_index,
     SMR = sum(cases[cluster])/sum(expected_cases[cluster]),
     log_lkhd_ratio = all_log_lkhd[cluster_index], 
     monte_carlo_rank = sum(lambdas >= all_log_lkhd[cluster_index]),
-    p_value = 1-mean(lambdas < max(all_log_lkhd))
+    p_value = 1-mean(lambdas < all_log_lkhd[cluster_index])
   )
 }
 
 
 
-kulldorff <- function(centroids, cases, population, expected_cases=NULL, 
+kulldorff <- function(centroids, cases, population, expected_cases = NULL, 
                       pop_upper_bound, alpha_level, n_sim = 9999, plot = TRUE){
   # Get geographic information
   zone_info <- define_single_zones(centroids, population, pop_upper_bound)
@@ -71,7 +71,7 @@ kulldorff <- function(centroids, cases, population, expected_cases=NULL,
   # lambda's:  max log-lkhd in region
   lambdas <- 
     rmultinom(n=n_sim, size=round(sum(cases)), prob=denominator) %>% 
-    kulldorffMC(., denominator, nearest_neighbors, type) %>% 
+    kulldorffMC(., denominator, zone_info$nearest_neighbors, type) %>% 
     c(., max(all_log_lkhd))
   p_value <- 1-mean(lambdas < max(all_log_lkhd))
   
@@ -137,8 +137,8 @@ kulldorff <- function(centroids, cases, population, expected_cases=NULL,
     most_likely_cluster = most_likely_cluster,
     secondary_clusters = secondary_clusters,
     type = type,
-    log_lkhd = lkhd,
-    simulated_log_lkhd = sim_lambda
+    log_lkhd = all_log_lkhd,
+    simulated_log_lkhd = lambdas
   )
   return(results)
 }

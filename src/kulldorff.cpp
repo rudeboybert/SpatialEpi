@@ -13,7 +13,7 @@ using namespace Rcpp;
 double binomialLogLkhd(double cz, double nz, double C, double N) {
   double logLkhd = 0;
   
-  if(cz / nz <= (C - cz)/(N - nz)) {
+  if(cz/nz <= (C-cz)/(N-nz)) {
     logLkhd = 0;
   } else {
     logLkhd  =	
@@ -39,10 +39,10 @@ double poissonLogLkhd(double cz, double nz, double C, double N) {
     logLkhd = 0;
   } else {
     logLkhd =
-      cz * log(cz / nz)  +
-      cz * log((N - nz)/( C - cz))  +
+      cz * log(cz / nz) +
+      cz * log((N-nz)/(C-cz)) +
       C * log((C-cz)/(N-nz)) +
-      C * log(N/ C);
+      C * log(N/C);
   }  
   return logLkhd;
 }
@@ -81,8 +81,8 @@ NumericVector computeAllLogLkhd(NumericVector observedCases,
   
   // Loop through single zones and compute log-lkhd
   for (int i = 0; i < nAreas; ++i) {
-    cz = 0;
-    nz = 0;
+    cz = 0.0;
+    nz = 0.0;
     
     Rcpp::NumericVector nearestNeighbors = nearestNeighborsList[i];
     nNeighbors = nearestNeighbors.size();
@@ -93,7 +93,7 @@ NumericVector computeAllLogLkhd(NumericVector observedCases,
       cz += observedCases[nearestNeighbors[j]-1];
       nz += expectedCases[nearestNeighbors[j]-1];
       
-      if (logLkhdType=="poisson") {
+      if (logLkhdType == "poisson") {
         allLogLkhd[incrementor] = poissonLogLkhd(cz, nz, C, N);
       } else if (logLkhdType == "binomial") {
         allLogLkhd[incrementor] = binomialLogLkhd(cz, nz, C, N);
