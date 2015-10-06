@@ -13,9 +13,10 @@ Depends: R (>= 3.2.2)
 License: GPL-2
 LazyData: true
 Imports: 
-    sp (>= 1.2-0),
-    dplyr (>= 0.4.3),
     Rcpp
+Depends:
+    sp (>= 1.2-0),
+    dplyr (>= 0.4.3)
 URL: 
   https://github.com/rudeboybert/SpatialEpi
 BugReports: 
