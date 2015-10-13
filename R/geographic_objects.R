@@ -78,6 +78,30 @@ define_single_zones <- function(centroids, population, pop_upper_bound) {
 }
 
 
+#' Obtain all areas included in a single zone
+#'
+#' @param cluster_index integer index of single zone
+#' @param zone_info output of \code{\link{define_single_zones}} function
+#'
+#' @return vector of areas
+#' @export
+#'
+#' @examples
+#' 1+1
+return_single_zone_areas <- function(cluster_index, zone_info){
+  # Obtain single zone center and radial areas
+  center <- zone_info$cluster_coords[cluster_index, 1]
+  radial <- zone_info$cluster_coords[cluster_index, 2]
+  
+  # Obtain all areas (in order of distance) from center to radial area
+  cluster <- zone_info$nearest_neighbors[[center]]
+  cluster <- cluster[1:which(cluster == radial)]
+  
+  return(cluster)
+}
+
+
+
 #' Create geo objects needed for Bayesian method
 #'
 #' @inheritParams define_single_zones

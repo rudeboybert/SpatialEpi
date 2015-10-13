@@ -1,32 +1,23 @@
-#' Obtain all areas included in a single zone
+#' Title
 #'
-#' @param cluster_index integer index of single zone
-#' @param zone_info output of \code{\link{define_single_zones}} function
+#' @param cluster_index 
+#' @param population 
+#' @param cases 
+#' @param expected_cases 
+#' @param zone_info 
+#' @param all_log_lkhd 
+#' @param lambdas 
 #'
-#' @return vector of areas
+#' @return
 #' @export
 #'
 #' @examples
-#' 1+1
-return_single_zone_areas <- function(cluster_index, zone_info){
-  # Obtain single zone center and radial areas
-  center <- zone_info$cluster_coords[cluster_index, 1]
-  radial <- zone_info$cluster_coords[cluster_index, 2]
- 
-  # Obtain all areas (in order of distance) from center to radial area
-  cluster <- zone_info$nearest_neighbors[[center]]
-  cluster <- cluster[1:which(cluster == radial)]
-  
-  return(cluster)
-}
-
-
 get_cluster_report <- function(cluster_index, 
-                             population, cases, expected_cases,
-                             zone_info,
-                             all_log_lkhd, lambdas){
+                               population, cases, expected_cases,
+                               zone_info,
+                               all_log_lkhd, lambdas){
   cluster <- return_single_zone_areas(cluster_index, zone_info)
-
+  
   output <- list(
     location_IDs_included = cluster,
     population = sum(population[cluster]),	
