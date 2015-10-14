@@ -1,4 +1,7 @@
-#' Title
+#' Generate cluster reports
+#'
+#' Return a report on most likely cluster and secondary clusters containing the
+#' same fields as SatScan
 #'
 #' @param cluster_index 
 #' @param population 
@@ -12,10 +15,8 @@
 #' @export
 #'
 #' @examples
-get_cluster_report <- function(cluster_index, 
-                               population, cases, expected_cases,
-                               zone_info,
-                               all_log_lkhd, lambdas){
+get_cluster_report <- function(cluster_index, population, cases, expected_cases,
+                               zone_info, all_log_lkhd, lambdas){
   cluster <- return_single_zone_areas(cluster_index, zone_info)
   
   output <- list(
