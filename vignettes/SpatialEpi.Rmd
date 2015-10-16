@@ -9,15 +9,207 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+## Setting Up Your Machine
 
-## Vignette Info
+The next steps will enable your computer to read in ESRI shapefiles. Fortunately
+you only have to do this once:
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+### Mac Users
+
+* Install either Xcode (available for free in the App Store) or the [Command
+Line Tools for Xcode](https://developer.apple.com/downloads/). You’ll need to
+have a (free) Apple ID.
+* In your Mac menu bar go to System Preferences... -> Security & Privacy ->
+unlock the lock on the bottom left of panel -> select "Allow apps downloaded
+from": Anywhere -> relock the lock
+* Open Terminal by going to a Finder window -> Applications -> Utilities ->
+Terminal. You open new tabs in Terminal by pressing command+T.
+* In Terminal
+    + Run `sudo xcodebuild -license`, scroll to the bottom and type `agree` to
+    agree to the licence.
+    + Open a new tab and run `xcode-select --install`
+* Install Macports as per the [Quickstart](http://www.macports.org/install.php)
+instructions.
+    + You have already completed steps 1 and 2.
+    + To know what version of OS X you have click on the Apple icon on the top
+    left of the menu bar -> About This Mac
+* Install the [`gdal`](http://www.gdal.org/) and [`geos`](http://trac.osgeo.org/geos/) 
+geospatial libraries.
+    + In Terminal open a new tab and run `sudo port install gdal`
+    + In Terminal open a new tab and run `sudo port install geos`
+* Install the `rgdal` package to interface the `gdal` geospatial library with R
+    + Under [Downloads](https://cran.r-project.org/web/packages/rgdal/index.html) 
+    select "Package Source".  It should be named `rgdal_X.Y-Z.tar.gz` where
+    `X,Y,Z` denote the version number.
+    + In Terminal open a new tab and run `R CMD INSTALL
+    ~/Downloads/rgdal_X.Y-Z.tar.gz` where `X,Y,Z` are changed to match the name
+    of the file you just downloaded
+* Install the `rgeos` package to interface the `geos` geospatial library with R
+    + Under [Downloads](https://cran.r-project.org/web/packages/rgeos/index.html) 
+    select "Package Source".  It should be named `rgeos_X.Y-Z.tar.gz` where
+    `X,Y,Z` denote the version number.
+    + In Terminal open a new tab and run `R CMD INSTALL
+    ~/Downloads/rgeos_X.Y-Z.tar.gz` where `X,Y,Z` are changed to match the name
+    of the file you just downloaded
+
+### Windows Users
+
+* Follow the instructions in [Quick Start for OSGeo4W Users](http://trac.osgeo.org/osgeo4w/)
+* In R, run `install.packages("rgeos", repos="http://R-Forge.R-project.org", type="source")`
+
+### Linux Users
+
+I'm going to assume you know what you're doing!
+
+### All Users
+
+Test that both the `rgdal` and `rgeos` packages are installed by running
+```{r, eval=FALSE}
+library(rgdal)
+library(rgeos)
+```
+
+
+
+
+
+
+
+## North Carolina SIDS Data
+
+The ``nc.sids`` data frame has 100 rows and 21 columns and can be found in the 
+``spdep`` library. It contains data given in Cressie (1991, pp. 386-9), Cressie 
+and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North 
+Carolina for 1974--78 and 1979--84. The data set also contains the neighbour
+list given by Cressie and Chan (1989) omitting self-neighbours (`ncCC89.nb``),
+and the neighbour list given by Cressie and Read (1985) for contiguities
+(``ncCR85.nb``). Data is available on the numbers of cases and on the number of
+births, both dichotomized by a binary indicator of race. The data are ordered by
+county ID number, not alphabetically as in the source tables.
+
+The code below plots the county boundaries along with the observed SMRs. The
+expected numbers are based on internal standardization with a single stratum.
+
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+library(spdep)
+data(nc.sids)
+
+
+
+
+library(maptools)
+shapefile_name <- system.file("etc/shapes/sids.shp", package="spdep")
+shapefile_name <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/sids.shp"
+nc.sids <- readShapePoly(
+  fn = shapefile_name,
+  ID = "FIPSNO",
+  proj4string = CRS("+proj=longlat +ellps=clrk66")
+  )
+
+
+library(rgdal)
+shapefile_dir <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/"
+nc.sids <- readOGR(
+  dsn=shapefile_dir, 
+  layer="sids", 
+  p4s = "+proj=longlat +ellps=clrk66"
+  )
+
+
+library(dplyr)
+nc.data <- nc.sids@data %>% 
+  tbl_df() %>% 
+  mutate(FIPS = as.character(FIPS))
+
+library(ggplot2)
+nc.map <- fortify(nc.sids, region="FIPS") %>% 
+  tbl_df()
+
+nc.map <- inner_join(nc.map, nc.data, by=c("id"="FIPS"))
+
+
+ggplot(nc.map, aes(x=long, y=lat, group=group)) +
+  geom_polygon(fill="white") +
+  geom_path(col="black", size=0.5) +
+  coord_map() +
+  theme_bw()
+
+ggplot(nc.map, aes(x=long, y=lat, group=group, fill=SID74)) +
+  geom_polygon() +
+  geom_path(col="black", size=0.5) +
+  scale_fill_continuous(low="white", high="black", name="SIDS Deaths") +
+  coord_map() +
+  theme_bw()
+```
+
+
+
+
+
+
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+
+
+library(dplyr)
+library(spdep)
+# Awkward
+data(nc.sids)
+sids <- data.frame(
+  Observed=nc.sids$SID74,
+  Expected=nc.sids$BIR74*sum(nc.sids$SID74)/sum(nc.sids$BIR74),
+  x=nc.sids$x, 
+  y=nc.sids$y)
+
+nc.sids <- readShapePoly(
+  fn = system.file("etc/shapes/sids.shp", package="spdep"),
+  ID="FIPSNO",
+  proj4string=CRS("+proj=longlat +ellps=clrk66"))
+
+# Create a copy to modify
+nc.sids@data <- nc.sids@data %>% 
+  mutate(
+    Y = SID74,
+    E = sum(Y) * BIR74/sum(BIR74),
+    SMR74 = Y/E,
+    EXP74 = E
+  )
+brks <- seq(0, 5)
+```
+
+
+## SMR Plot
+ 
+We map the SMRs, and see a number of counties with high relative risks.
+
+```{r, echo=TRUE, collapse=TRUE,fig.height=4.5,fig.width=4, fig.cap="Map of SMRs for SIDS in 1974 in North Carolina", tidy.opts=list(width.cutoff=35)}
+spplot(nc.sids, "SMR74", at=brks, col.regions=grey.colors(5,start=.9,end=.1))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Styles
 

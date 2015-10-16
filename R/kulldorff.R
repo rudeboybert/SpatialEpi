@@ -11,10 +11,11 @@
 #' @param all_log_lkhd 
 #' @param lambdas 
 #'
-#' @return
+#' @return Cluster report
 #' @export
 #'
 #' @examples
+#' 1+1
 get_cluster_report <- function(cluster_index, population, cases, expected_cases,
                                zone_info, all_log_lkhd, lambdas){
   cluster <- return_single_zone_areas(cluster_index, zone_info)
