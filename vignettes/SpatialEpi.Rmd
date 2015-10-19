@@ -95,9 +95,16 @@ expected numbers are based on internal standardization with a single stratum.
 library(spdep)
 data(nc.sids)
 
+library(rgdal)
+shapefile_dir <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/"
+nc.sids <- readOGR(
+  dsn=shapefile_dir, 
+  layer="sids", 
+  p4s = "+proj=longlat +ellps=clrk66"
+  )
 
-
-
+# Read in shapefile
+options(stringsAsFactors=FALSE)
 library(maptools)
 shapefile_name <- system.file("etc/shapes/sids.shp", package="spdep")
 shapefile_name <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/sids.shp"
@@ -107,36 +114,33 @@ nc.sids <- readShapePoly(
   proj4string = CRS("+proj=longlat +ellps=clrk66")
   )
 
+# Convert map to data frame
+library(ggplot2)
+nc.map <- fortify(nc.sids, region="FIPSNO") %>% 
+  tbl_df()
 
-library(rgdal)
-shapefile_dir <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/"
-nc.sids <- readOGR(
-  dsn=shapefile_dir, 
-  layer="sids", 
-  p4s = "+proj=longlat +ellps=clrk66"
-  )
-
-
+# Get data 
 library(dplyr)
 nc.data <- nc.sids@data %>% 
   tbl_df() %>% 
-  mutate(FIPS = as.character(FIPS))
+  mutate(FIPSNO = as.character(FIPSNO))
 
-library(ggplot2)
-nc.map <- fortify(nc.sids, region="FIPS") %>% 
-  tbl_df()
-
-nc.map <- inner_join(nc.map, nc.data, by=c("id"="FIPS"))
+# Join data and map
+nc.map <- inner_join(nc.map, nc.data, by=c("id"="FIPSNO"))
 
 
-ggplot(nc.map, aes(x=long, y=lat, group=group)) +
-  geom_polygon(fill="white") +
-  geom_path(col="black", size=0.5) +
+p <- ggplot(nc.map, aes(x=long, y=lat, group=group)) +
   coord_map() +
   theme_bw()
 
-ggplot(nc.map, aes(x=long, y=lat, group=group, fill=SID74)) +
-  geom_polygon() +
+
+p + geom_polygon(fill="white") +
+  geom_path(col="black", size=0.5)
+
+p
+
+ggplot(nc.map, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=SID74)) +
   geom_path(col="black", size=0.5) +
   scale_fill_continuous(low="white", high="black", name="SIDS Deaths") +
   coord_map() +
