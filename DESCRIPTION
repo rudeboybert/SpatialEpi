@@ -9,14 +9,16 @@ Authors@R: c(
     )
 Description: This package provides commonly studied data in spatial epidemiology and methods disease mapping, cluster detection, and other
     spatial epidemiology methods.
-Depends: R (>= 3.2.2)
 License: GPL-2
 LazyData: true
 Imports: 
-    Rcpp
+    Rcpp,    
+    dplyr,
+    sp,
+    maptools,
+    ggplot2
 Depends:
-    sp (>= 1.2-0),
-    dplyr (>= 0.4.3)
+    R (>= 2.10)
 URL: 
   https://github.com/rudeboybert/SpatialEpi
 BugReports: 

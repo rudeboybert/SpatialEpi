@@ -7,13 +7,13 @@
 create_geo_objects(centroids, population, pop_upper_bound)
 }
 \arguments{
-\item{centroids}{A data frame with 2 columns of the centroids of the n areas
+\item{centroids}{data frame with 2 columns of the centroids of the n areas
 in the study region.}
 
-\item{population}{A vector of length n of the corresponding population
+\item{population}{vector of length n of the corresponding population
 counts.}
 
-\item{pop_upper_bound}{The upper bound of the proportion of the study
+\item{pop_upper_bound}{upper bound of the proportion of the study
   region's population the single zones can contain.}
 }
 \value{
@@ -33,5 +33,8 @@ Create geo objects needed for Bayesian method
 data(NYleukemia)
 centroids <- sp::coordinates(NYleukemia)
 geo_objects <- create_geo_objects(centroids, NYleukemia$population, 0.15)
+}
+\seealso{
+\code{\link{define_single_zones}}
 }
 

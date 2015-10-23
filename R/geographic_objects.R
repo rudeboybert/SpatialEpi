@@ -1,7 +1,8 @@
-# When using dplyr, R CMD CHECK returns NOTE that there is "no visible binding 
-# for global variable", hence this hack fix.
-# no visible binding for global variable
+# R CMD CHECK returns NOTE that there is "no visible binding 
+# for global variable" for variables used by dplyr/ggplot2, hence this hack fix.
 utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
+
+
 
 #' Define a study region's single zones.
 #' 
@@ -9,11 +10,11 @@ utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
 #' single zones based on the upper bound \code{pop_upper_bound} of the 
 #' proportion of the study region's population each single zone can contain.
 #' 
-#' @param centroids A data frame with 2 columns of the centroids of the n areas 
+#' @param centroids data frame with 2 columns of the centroids of the n areas 
 #'   in the study region.
-#' @param population A vector of length n of the corresponding population 
+#' @param population vector of length n of the corresponding population 
 #'   counts.
-#' @param pop_upper_bound The upper bound of the proportion of the study 
+#' @param pop_upper_bound upper bound of the proportion of the study 
 #'   region's population the single zones can contain.
 #'   
 #' @return A list with two objects \describe{ 
@@ -25,6 +26,7 @@ utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
 #' @references Kulldorff, M. (1997) A spatial scan statistic. 
 #'   \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 
 #'   1481--1496.
+#' @seealso \code{\link{create_geo_objects}}
 #' @export
 #'   
 #' @examples 
@@ -78,20 +80,22 @@ define_single_zones <- function(centroids, population, pop_upper_bound) {
 }
 
 
+
 #' Obtain all areas included in a single zone
 #'
-#' @param cluster_index integer index of single zone
-#' @param zone_info output of \code{\link{define_single_zones}} function
+#' @param single_zone_index integer index of single zone
+#' @param zone_info output of \code{\link{define_single_zones}} defining single
+#'   zones
 #'
 #' @return vector of areas
 #' @export
 #'
 #' @examples
 #' 1+1
-return_single_zone_areas <- function(cluster_index, zone_info){
+return_single_zone_areas <- function(single_zone_index, zone_info){
   # Obtain single zone center and radial areas
-  center <- zone_info$cluster_coords[cluster_index, 1]
-  radial <- zone_info$cluster_coords[cluster_index, 2]
+  center <- zone_info$cluster_coords[single_zone_index, 1]
+  radial <- zone_info$cluster_coords[single_zone_index, 2]
   
   # Obtain all areas (in order of distance) from center to radial area
   cluster <- zone_info$nearest_neighbors[[center]]
@@ -115,6 +119,7 @@ return_single_zone_areas <- function(cluster_index, zone_info){
 #'   and radial area for each single zone.}
 #'   }
 #' @export
+#' @seealso \code{\link{define_single_zones}}
 #'
 #' @examples
 #' data(NYleukemia)
@@ -136,8 +141,7 @@ create_geo_objects <- function(centroids, population, pop_upper_bound){
   cluster_coords <- zone_info$cluster_coords
   n_zones <- nrow(cluster_coords)
   
-  # 1. Create list of length n_zones indicating the component areas for each
-  # zone
+  # Create list of length n_zones indicating the component areas for each zone
   cluster_list <- vector(mode="list", length=n_zones)
   counter <- 1
   for(i in 1:n) {
@@ -148,8 +152,8 @@ create_geo_objects <- function(centroids, population, pop_upper_bound){
     } 
   }
   
-  # 2. Generate overlap object which tracks the overlap between single zones
-  # For each area, list all single zones that it is included in
+  # Generate overlap object which tracks the overlap between single zones. For
+  # each area, list all single zones that it is included in
   presence <- vector(mode="list", length=n)
   for(i in 1:n){
     presence[[i]] <- cluster_list %>% 

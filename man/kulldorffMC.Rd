@@ -8,13 +8,13 @@ kulldorffMC(permutedCaseMatrix, expectedCases, nearestNeighborsList,
   logLkhdType)
 }
 \arguments{
-\item{permutedCaseMatrix}{blah}
+\item{permutedCaseMatrix}{matrix of null simulated cases}
 
-\item{expectedCases}{}
+\item{expectedCases}{vector of expected cases}
 
-\item{nearestNeighborsList}{}
+\item{nearestNeighborsList}{list of nearest neighbors}
 
-\item{logLkhdType}{}
+\item{logLkhdType}{type of log-likelihood}
 }
 \value{
 Max

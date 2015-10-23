@@ -79,10 +79,10 @@ library(rgeos)
 ## North Carolina SIDS Data
 
 The ``nc.sids`` data frame has 100 rows and 21 columns and can be found in the 
-``spdep`` library. It contains data given in Cressie (1991, pp. 386-9), Cressie 
+``spdep`` package. It contains data given in Cressie (1991, pp. 386-9), Cressie 
 and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North 
 Carolina for 1974--78 and 1979--84. The data set also contains the neighbour
-list given by Cressie and Chan (1989) omitting self-neighbours (`ncCC89.nb``),
+list given by Cressie and Chan (1989) omitting self-neighbours (`ncCC89.nb`),
 and the neighbour list given by Cressie and Read (1985) for contiguities
 (``ncCR85.nb``). Data is available on the numbers of cases and on the number of
 births, both dichotomized by a binary indicator of race. The data are ordered by
@@ -91,16 +91,17 @@ county ID number, not alphabetically as in the source tables.
 The code below plots the county boundaries along with the observed SMRs. The
 expected numbers are based on internal standardization with a single stratum.
 
-```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=40), cache=TRUE}
 library(spdep)
 data(nc.sids)
 
 library(rgdal)
 shapefile_dir <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/"
-nc.sids <- readOGR(
+nc_sids <- readOGR(
   dsn=shapefile_dir, 
   layer="sids", 
-  p4s = "+proj=longlat +ellps=clrk66"
+  p4s = "+proj=longlat +ellps=clrk66",
+  verbose = FALSE
   )
 
 # Read in shapefile
@@ -108,147 +109,12 @@ options(stringsAsFactors=FALSE)
 library(maptools)
 shapefile_name <- system.file("etc/shapes/sids.shp", package="spdep")
 shapefile_name <- "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/spdep/etc/shapes/sids.shp"
-nc.sids <- readShapePoly(
+nc_sids <- readShapePoly(
   fn = shapefile_name,
   ID = "FIPSNO",
   proj4string = CRS("+proj=longlat +ellps=clrk66")
   )
-
-# Convert map to data frame
-library(ggplot2)
-nc.map <- fortify(nc.sids, region="FIPSNO") %>% 
-  tbl_df()
-
-# Get data 
-library(dplyr)
-nc.data <- nc.sids@data %>% 
-  tbl_df() %>% 
-  mutate(FIPSNO = as.character(FIPSNO))
-
-# Join data and map
-nc.map <- inner_join(nc.map, nc.data, by=c("id"="FIPSNO"))
-
-
-p <- ggplot(nc.map, aes(x=long, y=lat, group=group)) +
-  coord_map() +
-  theme_bw()
-
-
-p + geom_polygon(fill="white") +
-  geom_path(col="black", size=0.5)
-
-p
-
-ggplot(nc.map, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=SID74)) +
-  geom_path(col="black", size=0.5) +
-  scale_fill_continuous(low="white", high="black", name="SIDS Deaths") +
-  coord_map() +
-  theme_bw()
 ```
 
 
 
-
-
-
-```{r, message=FALSE, collapse=TRUE, tidy=TRUE,tidy.opts=list(width.cutoff=40)}
-
-
-library(dplyr)
-library(spdep)
-# Awkward
-data(nc.sids)
-sids <- data.frame(
-  Observed=nc.sids$SID74,
-  Expected=nc.sids$BIR74*sum(nc.sids$SID74)/sum(nc.sids$BIR74),
-  x=nc.sids$x, 
-  y=nc.sids$y)
-
-nc.sids <- readShapePoly(
-  fn = system.file("etc/shapes/sids.shp", package="spdep"),
-  ID="FIPSNO",
-  proj4string=CRS("+proj=longlat +ellps=clrk66"))
-
-# Create a copy to modify
-nc.sids@data <- nc.sids@data %>% 
-  mutate(
-    Y = SID74,
-    E = sum(Y) * BIR74/sum(BIR74),
-    SMR74 = Y/E,
-    EXP74 = E
-  )
-brks <- seq(0, 5)
-```
-
-
-## SMR Plot
- 
-We map the SMRs, and see a number of counties with high relative risks.
-
-```{r, echo=TRUE, collapse=TRUE,fig.height=4.5,fig.width=4, fig.cap="Map of SMRs for SIDS in 1974 in North Carolina", tidy.opts=list(width.cutoff=35)}
-spplot(nc.sids, "SMR74", at=brks, col.regions=grey.colors(5,start=.9,end=.1))
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))

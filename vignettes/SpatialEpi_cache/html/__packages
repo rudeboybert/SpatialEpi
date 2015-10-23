@@ -1,0 +1,11 @@
+base
+sp
+Matrix
+spdep
+rgdal
+maptools
+ggplot2
+dplyr
+maps
+mapproj
+SpatialEpi

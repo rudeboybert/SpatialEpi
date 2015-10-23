@@ -4,30 +4,40 @@
 \alias{get_cluster_report}
 \title{Generate cluster reports}
 \usage{
-get_cluster_report(cluster_index, population, cases, expected_cases, zone_info,
-  all_log_lkhd, lambdas)
+get_cluster_report(single_zone_index, zone_info, cases, population,
+  expected_cases, all_log_lkhd, lambdas)
 }
 \arguments{
-\item{cluster_index}{}
+\item{single_zone_index}{integer index of single zone}
 
-\item{population}{}
+\item{zone_info}{output of \code{\link{define_single_zones}} defining single
+  zones}
 
-\item{cases}{}
+\item{cases}{Vector of number of cases for each area}
 
-\item{expected_cases}{}
+\item{population}{vector of length n of the corresponding population
+counts.}
 
-\item{zone_info}{}
+\item{expected_cases}{Vector of number of expected cases for each area}
 
-\item{all_log_lkhd}{}
+\item{all_log_lkhd}{vector of the log likelihood of each single zone}
 
-\item{lambdas}{}
+\item{lambdas}{vector of simulated max log likelihood}
 }
 \value{
-Cluster report
+For a particular clusters a report including \describe{
+  \item{\code{location_IDs_included}}{ID's of areas in cluster, in order of distance}
+  \item{\code{population}}{population of cluster}
+  \item{\code{number_of_cases}}{number of cases in cluster}
+  \item{\code{expected_cases}}{expected number of cases in cluster}
+  \item{\code{SMR}}{estimated SMR of cluster}
+  \item{\code{log_lkhd_ratio}}{log-likelihood of cluster}
+  \item{\code{monte_carlo_rank}}{rank of lkhd of cluster within Monte Carlo simulated values}
+  \item{\code{p_value}}{Monte Carlo \eqn{p}-value}
+  }
 }
 \description{
-Return a report on most likely cluster and secondary clusters containing the
-same fields as SatScan
+Return a report for a given cluster containing the same information as SatScan
 }
 \examples{
 1+1

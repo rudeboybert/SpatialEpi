@@ -8,18 +8,16 @@ computeAllLogLkhd(observedCases, expectedCases, nearestNeighborsList,
   logLkhdType)
 }
 \arguments{
-\item{observedCases}{}
+\item{observedCases}{vector of observed cases}
 
-\item{expectedCases}{}
+\item{expectedCases}{vector of expected cases}
 
-\item{nearestNeighborsList}{}
+\item{nearestNeighborsList}{list of nearest neighbors}
 
-\item{logLkhdType}{}
-
-\item{nZones}{}
+\item{logLkhdType}{type of log-likelihood}
 }
 \value{
-Vector of log likelihood
+Vector of log likelihoods for each single zone
 }
 \description{
 Compute log likelihood ratio test statistic for all single zones.

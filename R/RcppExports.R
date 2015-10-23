@@ -24,12 +24,11 @@ poissonLogLkhd <- function(cz, nz, C, N) {
 
 #' Compute log likelihood ratio test statistic for all single zones.
 #' 
-#' @param observedCases
-#' @param expectedCases
-#' @param nearestNeighborsList
-#' @param nZones
-#' @param logLkhdType
-#' @return Vector of log likelihood
+#' @param observedCases vector of observed cases
+#' @param expectedCases vector of expected cases
+#' @param nearestNeighborsList list of nearest neighbors
+#' @param logLkhdType type of log-likelihood 
+#' @return Vector of log likelihoods for each single zone
 #' @export
 computeAllLogLkhd <- function(observedCases, expectedCases, nearestNeighborsList, logLkhdType) {
     .Call('SpatialEpi_computeAllLogLkhd', PACKAGE = 'SpatialEpi', observedCases, expectedCases, nearestNeighborsList, logLkhdType)
@@ -38,7 +37,7 @@ computeAllLogLkhd <- function(observedCases, expectedCases, nearestNeighborsList
 #' Compute log likelihood ratio test statistic for all 
 #' 
 #' @inheritParams computeAllLogLkhd
-#' @param permutedCaseMatrix blah
+#' @param permutedCaseMatrix matrix of null simulated cases
 #' @return Max
 #' @export
 kulldorffMC <- function(permutedCaseMatrix, expectedCases, nearestNeighborsList, logLkhdType) {

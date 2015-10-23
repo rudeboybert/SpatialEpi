@@ -49,12 +49,11 @@ double poissonLogLkhd(double cz, double nz, double C, double N) {
 
 //' Compute log likelihood ratio test statistic for all single zones.
 //' 
-//' @param observedCases
-//' @param expectedCases
-//' @param nearestNeighborsList
-//' @param nZones
-//' @param logLkhdType
-//' @return Vector of log likelihood
+//' @param observedCases vector of observed cases
+//' @param expectedCases vector of expected cases
+//' @param nearestNeighborsList list of nearest neighbors
+//' @param logLkhdType type of log-likelihood 
+//' @return Vector of log likelihoods for each single zone
 //' @export
 // [[Rcpp::export]]
 NumericVector computeAllLogLkhd(NumericVector observedCases, 
@@ -107,7 +106,7 @@ NumericVector computeAllLogLkhd(NumericVector observedCases,
 //' Compute log likelihood ratio test statistic for all 
 //' 
 //' @inheritParams computeAllLogLkhd
-//' @param permutedCaseMatrix blah
+//' @param permutedCaseMatrix matrix of null simulated cases
 //' @return Max
 //' @export
 // [[Rcpp::export]]

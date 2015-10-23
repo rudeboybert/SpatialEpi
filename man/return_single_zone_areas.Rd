@@ -4,12 +4,13 @@
 \alias{return_single_zone_areas}
 \title{Obtain all areas included in a single zone}
 \usage{
-return_single_zone_areas(cluster_index, zone_info)
+return_single_zone_areas(single_zone_index, zone_info)
 }
 \arguments{
-\item{cluster_index}{integer index of single zone}
+\item{single_zone_index}{integer index of single zone}
 
-\item{zone_info}{output of \code{\link{define_single_zones}} function}
+\item{zone_info}{output of \code{\link{define_single_zones}} defining single
+  zones}
 }
 \value{
 vector of areas

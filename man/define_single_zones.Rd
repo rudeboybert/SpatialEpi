@@ -7,13 +7,13 @@
 define_single_zones(centroids, population, pop_upper_bound)
 }
 \arguments{
-\item{centroids}{A data frame with 2 columns of the centroids of the n areas
+\item{centroids}{data frame with 2 columns of the centroids of the n areas
 in the study region.}
 
-\item{population}{A vector of length n of the corresponding population
+\item{population}{vector of length n of the corresponding population
 counts.}
 
-\item{pop_upper_bound}{The upper bound of the proportion of the study
+\item{pop_upper_bound}{upper bound of the proportion of the study
   region's population the single zones can contain.}
 }
 \value{
@@ -38,5 +38,8 @@ single_zones <- define_single_zones(centroids, NYleukemia$population, 0.15)
 Kulldorff, M. (1997) A spatial scan statistic.
   \emph{Communications in Statistics: Theory and Methods}, \bold{26},
   1481--1496.
+}
+\seealso{
+\code{\link{create_geo_objects}}
 }
 

@@ -8,6 +8,8 @@
 #' @docType package
 #' @import dplyr
 #' @import sp
+#' @import maptools
+#' @import ggplot2
 #' @name SpatialEpi
 #' @useDynLib SpatialEpi
 #' @importFrom Rcpp sourceCpp
