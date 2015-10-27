@@ -4,37 +4,51 @@
 \alias{map_variable}
 \title{Plot ggplot compliant map}
 \usage{
-map_variable(sp_obj, variable = NULL, x_label = "eastings",
-  y_label = "northings", title = NULL, legend_label = NULL)
+map_variable(sp_obj, variable_name = NULL, type = "continuous", n_int = 5,
+  x_label = "eastings", y_label = "northings", lwd = 0.5, title = NULL,
+  legend_title = NULL)
 }
 \arguments{
 \item{sp_obj}{SpatialPolygonsDataFrame object}
 
-\item{variable}{Variable within data frame \code{sp_obj@data}}
+\item{variable_name}{Variable within data frame \code{sp_obj@data}}
+
+\item{type}{string indicating type of plot. Must be either
+\code{"continuous"} for continuous scale, \code{"discrete"} for categorical
+variables, \code{"quantile"} for quantile-based bins, or
+\code{"equidistant"} for equally-sized bins.}
+
+\item{n_int}{For non-continuous scales, number of bins.}
 
 \item{x_label}{Label for eastings}
 
 \item{y_label}{Label for northings}
 
+\item{lwd}{line width between areas}
+
 \item{title}{Plot title}
 
-\item{legend_label}{label for legend. Defaults to variable name.}
+\item{legend_title}{label for legend. Defaults to \code{variable_name}.}
 }
 \value{
 a ggplot object
 }
 \description{
+As described in
 \url{https://github.com/hadley/ggplot2/wiki/plotting-polygon-shapefiles}
 }
 \examples{
+# Read in shapefile
 shapefile_name <- system.file("extdata/sids/sids.shp", package="SpatialEpi")
 proj4string <- sp::CRS("+proj=longlat +ellps=clrk66")
 nc_sids <- maptools::readShapePoly(
-   fn = shapefile_name,
-   ID = "FIPSNO",
-   proj4string = proj4string
+   fn = shapefile_name, ID = "FIPSNO", proj4string = proj4string
    )
-names(nc_sids)
+
+# Blank map
+map_variable(nc_sids)
+
+# Map SIDS rate
 nc_sids$RATE74 <- nc_sids$SID74/nc_sids$BIR74
 nc_map <- map_variable(nc_sids, "RATE74")
 nc_map

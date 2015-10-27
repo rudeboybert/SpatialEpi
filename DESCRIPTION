@@ -16,7 +16,8 @@ Imports:
     dplyr,
     sp,
     maptools,
-    ggplot2
+    ggplot2,
+    RColorBrewer
 Depends:
     R (>= 2.10)
 URL: 

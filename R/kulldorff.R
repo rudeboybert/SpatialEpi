@@ -160,4 +160,47 @@ kulldorff <- function(centroids, cases, population, expected_cases = NULL,
 
 
 
+#' Plot results of \code{kulldorff} method
+#' 
+#' Wrapper function for \code{\link{map_variable}} to plot the results of a kulldorff analysis.  
+#'
+#' @param kulldorff_output List output of \code{\link{kulldorff}}
+#' @param ... other arguments passed on to  \code{\link{map_variable}}
+#' @inheritParams map_variable
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples
+#' data("NYleukemia")
+#' centroids <- sp::coordinates(NYleukemia)
+#' output <- kulldorff(centroids = centroids, 
+#'    cases = NYleukemia$cases, population = NYleukemia$population, 
+#'    expected_cases = NULL, pop_upper_bound = 0.15, alpha_level=0.05,
+#'    n_sim=999)
+#' map_kulldorff(NYleukemia, output)
+map_kulldorff <- function(sp_obj, kulldorff_output, ...){
+  # Get cluster information
+  clusters <- c(
+    list(kulldorff_output$most_likely_cluster),
+    kulldorff_output$secondary_clusters
+  )
+  p_values <- sapply(clusters, function(x){x$p_value})
+  
+  # Insert p-values
+  sp_obj$p_values <- rep(NA, length(sp_obj))
+  for(i in 1:length(p_values)){
+    areas <- clusters[[i]]$location_IDs_included
+    sp_obj$p_values[areas] <- p_values[i]
+  }
+  map_ggplot <- map_variable(sp_obj, variable_name = "p_values", type="discrete", ...)
+  
+  return(map_ggplot)
+}
+
+
+
+
+
+
 
