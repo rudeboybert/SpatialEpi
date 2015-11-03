@@ -60,6 +60,9 @@ map_variable <- function(sp_obj, variable_name = NULL, type = "continuous", n_in
       sp_obj$variable <- cut_number(sp_obj$variable, n=n_int)
     } else if (type == "equidistant") {
       sp_obj$variable <- cut_interval(sp_obj$variable, n=n_int)
+    } else if (type == "jenks"){
+      breaks <- classIntervals(sp_obj$variable, n_int, style="jenks")$brks
+      sp_obj$variable <- cut(sp_obj$variable, breaks, include.lowest = TRUE)
     }
   }
   
@@ -93,7 +96,7 @@ map_variable <- function(sp_obj, variable_name = NULL, type = "continuous", n_in
       }
       names(colours) <- rev(levels(sp_obj$variable))
       map_ggplot <- map_ggplot + scale_fill_manual(values=colours, name=legend_title)
-    } else if (type %in% c("quantile", "equidistant")) {
+    } else if (type %in% c("quantile", "equidistant", "jenks")) {
       map_ggplot <- map_ggplot + scale_fill_brewer(palette="Greys", name=legend_title)
     }
   }
