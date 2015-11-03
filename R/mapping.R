@@ -22,6 +22,7 @@ utils::globalVariables(c("lat", "long", "group", ".", "variable"))
 #' @param legend_title label for legend. Defaults to \code{variable_name}.
 #'
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom gpclib gpclibPermit
 #'
 #' @return a ggplot object
 #' @export
@@ -44,6 +45,8 @@ utils::globalVariables(c("lat", "long", "group", ".", "variable"))
 map_variable <- function(sp_obj, variable_name = NULL, type = "continuous", n_int=5,
                          x_label = "eastings", y_label = "northings", lwd=0.5,
                          title = NULL, legend_title = NULL){
+  gpclibPermit()
+  
   if(is.null(legend_title)){
     legend_title <- variable_name
   }

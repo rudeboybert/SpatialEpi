@@ -4,3 +4,5 @@
 * Cite SIDS data 
 * Add Scotland data
 * NYleukemia, scotland source
+* mapproj, gpclib packages
+* Fix gpclibPermit()
