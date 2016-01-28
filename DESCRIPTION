@@ -1,6 +1,6 @@
 Package: SpatialEpi
 Type: Package
-Title: Methods and Data for Spatial Epidemiology.
+Title: Methods and Data for Spatial Epidemiology
 Version: 1.2.1
 Date: 2014-06-03
 Depends: R (>= 3.0.2), sp
@@ -13,8 +13,7 @@ Author:
     Jon Wakefield <jonno@u.washington.edu>
 Maintainer: Albert Y. Kim <albert@stat.washington.edu>
 Description: 
-    Cluster Detection,
-    Disease Mapping
+    Methods and data for cluster detection and disease mapping.
 License: GPL-2
 LazyLoad: true
 Packaged: 2014-06-04 19:37:34 UTC; rudeboybert
