@@ -63,7 +63,7 @@ population <- population[-remove]
 cases[add] <- cases[add] + cases[remove]
 cases <- cases[-remove]
 sp.obj <-
-  SpatialPolygons(sp.obj@polygons[-remove], proj4string=CRS("+proj=longlat"))
+  SpatialPolygons(sp.obj@polygons[-remove], proj4string=CRS("+proj=longlat +ellps=WGS84"))
 centroids <- centroids[-remove, ]
 
 

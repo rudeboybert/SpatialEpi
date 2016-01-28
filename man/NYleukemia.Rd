@@ -41,7 +41,7 @@ cases[add] <- cases[add] + cases[remove]
 cases <- cases[-remove]
 
 ## Modify geographical objects accordingly
-map <- SpatialPolygons(map@polygons[-remove], proj4string=CRS("+proj=longlat"))
+map <- SpatialPolygons(map@polygons[-remove], proj4string=CRS("+proj=longlat +ellps=WGS84"))
 centroids <- centroids[-remove, ]
 
 ## Plot incidence in latitude/longitude
