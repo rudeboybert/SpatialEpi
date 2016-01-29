@@ -1,6 +1,6 @@
 Package: SpatialEpi
 Title: Methods and Data for Spatial Epidemiology
-Version: 1.2.2
+Version: 1.2.2.1
 Depends: R (>= 3.0.2), sp
 Imports: Rcpp, MASS, maptools, spdep, methods, grDevices, graphics, stats
 LinkingTo: Rcpp, RcppArmadillo
