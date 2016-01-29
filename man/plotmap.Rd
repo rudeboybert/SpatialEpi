@@ -4,7 +4,7 @@
 \description{Plot levels of a variable in a colour-coded map.}
 \usage{
 plotmap(values, map, log = FALSE, nclr = 7, include.legend = TRUE, lwd = 0.5, 
-round = 3, brks = NULL, legend = NULL, location = "topright", rev = FALSE)
+round = 3, brks = NULL, legend = NULL, location = "topright", rev = FALSE, leg.cex = 1)
 }
 \arguments{
   \item{values}{variable to plot}
@@ -18,6 +18,7 @@ round = 3, brks = NULL, legend = NULL, location = "topright", rev = FALSE)
   \item{legend}{if desired, a pre-specified legend}
   \item{location}{location of legend}
   \item{rev}{boolean of whether to reverse colour scheme (darker colours for smaller values)}
+  \item{leg.cex}{factor for legend font size}
 }
 \value{A map colour-coded to indicate the different levels of \code{values}.}
 \seealso{ 
