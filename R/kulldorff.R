@@ -46,6 +46,14 @@ cluster <- cluster[1:which(cluster == end)]
 # Simulate cases under null hypothesis of no area effects i.e. conditioned on E
 perm <- rmultinom(n.simulations, round(sum(cases)), prob=denominator)
 
+# Ensure that # of cases is less than population size of each area. If not,
+# resample
+for(i in 1:ncol(perm)){
+  while(any(perm[,i] > population))
+    perm[,i] <- rmultinom(1, round(sum(cases)), prob=denominator)
+}
+
+
 # Compute simulated lambda's:  max log-lkhd in region
 sim.lambda <- kulldorffMC(perm, denominator, nearest.neighbors, n.zones, type)
 
