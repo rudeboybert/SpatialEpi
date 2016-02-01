@@ -4,19 +4,35 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 double binomialLogLkhd(double cz, double nz, double N, double C) {
-	double logLkhd = 0;
-
-	if(cz / nz <= (C - cz)/(N - nz)) {
-		logLkhd = 0;
-	} else {
-		logLkhd  =	
-		N * ( log( N-nz-C+cz ) - log( N-C )  + log( N ) - log( N-nz ) ) +
-		nz * ( log( nz-cz ) - log( N-nz-C+cz )  + log( N-nz ) - log( nz ) )+
-		cz * ( log( cz ) - log( nz-cz ) + log( N-nz-C+cz ) - log( C-cz ) )+
-		C * ( log( C-cz ) - log( C ) + log( N-C ) - log( N-nz-C+cz ) );
-	}
-
-	return logLkhd;
+  double logLkhd = 0;
+  
+  if(cz / nz <= (C - cz)/(N - nz)) {
+    logLkhd = 0;
+  } else if (cz == nz){
+    // Special case: log(0)*0 should = 0, so remove last term
+    logLkhd = 
+      log(N-nz-C+cz) * (N-nz-C+cz) + 
+      log(N-C) * (C-N) +
+      log(N-nz) * (nz-N) + 
+      log(C) * (-C) +
+      log( nz ) *(-nz) +
+      log(N) * N +
+      log(cz) * cz +
+      log(C-cz) *(C-cz);
+  } else {
+    logLkhd  =	
+      log(N-nz-C+cz) * (N-nz-C+cz) + 
+      log(N-C) * (C-N) +
+      log(N-nz) * (nz-N) + 
+      log(C) * (-C) +
+      log( nz ) *(-nz) +
+      log(N) * N +
+      log(cz) * cz +
+      log(C-cz) *(C-cz) +
+      log(nz-cz)*(nz-cz);
+  }
+  
+  return logLkhd;
 }
 
 
