@@ -1,26 +1,25 @@
 Package: SpatialEpi
 Title: Methods and Data for Spatial Epidemiology
-Version: 1.2.2
-Depends: R (>= 3.0.2), sp
-Imports: Rcpp, MASS, maptools, spdep, methods, grDevices, graphics,
-        stats
-LinkingTo: Rcpp, RcppArmadillo
+Version: 1.2.2.9000
 Authors@R: c(
     person("Cici", "Chen", email = "cicichen@u.washington.edu", role = "ctb"),
     person("Albert Y.", "Kim", email = "albert@stat.washington.edu", role = c("aut", "cre")),
     person("Michelle", "Ross", email = "micher3@u.washington.edu", role = "ctb"),
     person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = c("aut", "wdc"))
     )
-Maintainer: Albert Y. Kim <albert@stat.washington.edu>
-Description: 
-    Methods and data for cluster detection and disease mapping.
+Description: Methods and data for disease mapping and cluster detection.
+Depends:
+    R (>= 3.1.0)
 License: GPL-2
+Encoding: UTF-8
 LazyData: true
-NeedsCompilation: yes
-Packaged: 2016-01-28 20:33:39 UTC; rudeboybert
-Author: Cici Chen [ctb],
-  Albert Y. Kim [aut, cre],
-  Michelle Ross [ctb],
-  Jon Wakefield [aut]
-Repository: CRAN
-Date/Publication: 2016-01-29 01:02:40
+RoxygenNote: 5.0.1
+LinkingTo: Rcpp, RcppArmadillo
+Imports: Rcpp
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+URL:
+  https://github.com/rudeboybert/SpatialEpi
+BugReports:
+  https://github.com/rudeboybert/SpatialEpi/issues

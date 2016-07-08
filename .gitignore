@@ -1,9 +1,4 @@
 .Rproj.user
 .Rhistory
 .RData
-.Rprofile
-src/*.o
-src/*.so
-src/*.dll
-README.Rmd
 inst/doc
