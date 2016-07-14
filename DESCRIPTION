@@ -7,7 +7,9 @@ Authors@R: c(
     person("Michelle", "Ross", email = "micher3@u.washington.edu", role = "ctb"),
     person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = c("aut", "wdc"))
     )
-Description: Methods and data for disease mapping and cluster detection.
+Description: This package provides commonly studied data in spatial epidemiology 
+    and methods for disease mapping, cluster detection, and other spatial 
+    epidemiology methods.
 Depends:
     R (>= 3.1.0)
 License: GPL-2
