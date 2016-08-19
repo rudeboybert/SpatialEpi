@@ -1,0 +1,40 @@
+\name{eBayes}
+\alias{eBayes}
+\title{Empirical Bayes Estimates of Relative Risk}
+\description{
+The computes empirical Bayes estimates of relative risk of study region with \code{n} areas, given observed and expected numbers of counts of disease and covariate information.  
+}
+\usage{
+eBayes(Y, E, Xmat = NULL)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{Y}{a length \code{n} vector of observed cases}
+  \item{E}{a length \code{n} vector of expected number of cases}
+  \item{Xmat}{\code{n x p} dimension matrix of covariates}
+}
+%\details{}
+\value{
+A list with 5 elements:
+  \item{RR}{the ecological relative risk posterior mean estimates}
+  \item{RRmed}{the ecological relative risk posterior mean estimates}
+  \item{beta}{the MLE's of the regression coefficients}
+  \item{alpha}{the MLE of negative binomial dispersion parameter}
+  \item{SMR}{the standardized mortality/morbidity ratio Y/E}
+}
+\references{
+Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \bold{43}, 671--681
+}
+\seealso{\code{\link{scotland}}, \code{\link{mapvariable}}}
+\examples{
+data(scotland)
+data <- scotland$data
+
+x <- data$AFF
+Xmat <- cbind(x,x^2)
+results <- eBayes(data$cases,data$expected,Xmat)
+
+scotland.map <- scotland$spatial.polygon
+mapvariable(results$RR, scotland.map)
+}
+\keyword{file}
