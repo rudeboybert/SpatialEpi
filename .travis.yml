@@ -1,5 +1,5 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+# Sample .travis.yml for R projects
 
-language: R
-sudo: false
-cache: packages
+language: r
+warnings_are_errors: true
+sudo: required

@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README\.md$
 ^README\.Rmd$
-^cran-comments\.md$ # Comments for CRAN submission
-^\.travis\.yml$     # Used for continuous integration testing with travis
 ^\.travis\.yml$
 ^data-raw$
+^cran-comments\.md$
