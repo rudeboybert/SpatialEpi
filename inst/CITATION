@@ -1,0 +1,17 @@
+citHeader("To cite this package in publications use:")
+
+citEntry(entry = "Book",
+  title        = "Mathematical Statistics with Resampling and R",
+  author       = personList(as.person("Laura M. Chihara"),
+                   as.person("Tim C. Hesterberg")),
+  year         = "2011",
+  publisher    = "John Wiley & Sons",
+  address      = "Hoboken, NJ",
+  url          = "https://sites.google.com/site/chiharahesterberg/home",
+  isbn         = "978-1118029855",
+
+  textVersion  =
+  paste("Chihara, Laura M., Hesterberg, Tim C. (2011).",
+        "Mathematical Statistics with Resampling and R.",
+        "Hoboken, NJ: John Wiley & Sons.")
+)

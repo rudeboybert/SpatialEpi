@@ -1,7 +1,9 @@
-SpatialEpi
-================
 
-[![Travis-CI Build Status](https://travis-ci.org/rudeboybert/SpatialEpi.svg?branch=master)](https://travis-ci.org/rudeboybert/SpatialEpi) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi)
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+SpatialEpi
+==========
+
+[![Travis-CI Build Status](https://travis-ci.org/rudeboybert/SpatialEpi.svg?branch=master)](https://travis-ci.org/rudeboybert/SpatialEpi) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
 
 Package of data and methods for spatial epidemiology.
 
