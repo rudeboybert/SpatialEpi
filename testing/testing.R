@@ -1,19 +1,27 @@
-# TODO
-# * Write better package description
-# * Add URL to Journal of Statistical Software!
-# * Add county names to NYleukemia
-# * Cite SIDS data
-# * Add Scotland data
-# * NYleukemia, scotland source
-# * mapproj, gpclib packages
-# * Fix gpclibPermit()
+# Testing bayes_cluster
+data(NYleukemia)
+sp.obj <- NYleukemia$spatial.polygon
+centroids <- latlong2grid(NYleukemia$geo[, 2:3])
+population <- NYleukemia$data$population
+cases <- NYleukemia$data$cases
+y <- cases
+E <- expected(population, cases, 1)
+max.prop <- 0.15
+shape <- c(2976.3, 2.31)
+rate <- c(2977.3, 1.31)
+J <- 7
+pi0 <- 0.95
+n.sim.lambda <- 10^4
+n.sim.prior <- 10^5
+n.sim.post <- 10^5
+burnin.prop <- 0.1
+theta.init <- vector(mode="numeric", length=0)
+
+n_sim <- n.sim.lambda
 
 
 
-
-
-
-
+blah(n.sim.prior, pattern, theta.init, overlap, cluster_coords, p_moves, J, prior_z, lambda)
 
 
 

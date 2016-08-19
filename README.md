@@ -48,6 +48,8 @@ plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
 
+![](README_figure/README-unnamed-chunk-6-1.png)
+
 We run the Bayesian Cluster Detection method from Wakefield and Kim (2013)
 
 ``` r
@@ -63,10 +65,13 @@ n.sim.prior <- 10^5
 n.sim.post <- 10^5
 
 # Compute output
-output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop, 
- shape, rate, J, pi0, n.sim.lambda, n.sim.prior, n.sim.post)
+# output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
+#                         shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
+#                         n.sim.post)
 ```
 
 ``` r
 plotmap(output$post.map$high.area, sp.obj)
 ```
+
+![](README_figure/README-unnamed-chunk-7-1.png)

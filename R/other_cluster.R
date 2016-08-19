@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param geo 
+#' @param population 
+#' @param cases 
+#' @param expected.cases 
+#' @param k 
+#' @param alpha.level 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 besag_newell <-
   function(geo, population, cases, expected.cases=NULL, k, alpha.level){
     
@@ -78,6 +91,16 @@ besag_newell <-
 
 
 
+#' Title
+#'
+#' @param population 
+#' @param cases 
+#' @param n.strata 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 expected <-
   function(population, cases, n.strata){
     
@@ -108,6 +131,21 @@ expected <-
 
 
 
+#' Title
+#'
+#' @param geo 
+#' @param cases 
+#' @param population 
+#' @param expected.cases 
+#' @param pop.upper.bound 
+#' @param n.simulations 
+#' @param alpha.level 
+#' @param plot 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 kulldorff <-
   function(geo, cases, population, expected.cases=NULL, pop.upper.bound, 
            n.simulations, alpha.level, plot=TRUE){

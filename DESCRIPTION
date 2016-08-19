@@ -17,9 +17,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
 LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp
-Suggests: knitr,
-    rmarkdown
+Imports: Rcpp, spdep, dplyr, maptools, sp, magrittr
+Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 URL:
   https://github.com/rudeboybert/SpatialEpi

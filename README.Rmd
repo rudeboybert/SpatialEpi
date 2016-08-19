@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "README_figure/README-"
 )
 ```
 
@@ -46,7 +46,7 @@ grid-based system.
 library(SpatialEpi)
 ```
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, message=FALSE, warning=FALSE}
 data(NYleukemia)
 sp.obj <- NYleukemia$spatial.polygon
 centroids <- latlong2grid(NYleukemia$geo[, 2:3])
@@ -56,14 +56,14 @@ cases <- NYleukemia$data$cases
 
 We plot the incidence of leukemia for each census tract.  
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, message=FALSE, warning=FALSE}
 plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
 
 We run the Bayesian Cluster Detection method from Wakefield and Kim (2013)
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r bayes_cluster, message=FALSE, warning=FALSE, cache=TRUE}
 y <- cases
 E <- expected(population, cases, 1)
 max.prop <- 0.15
@@ -76,12 +76,13 @@ n.sim.prior <- 10^5
 n.sim.post <- 10^5
 
 # Compute output
-output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop, 
- shape, rate, J, pi0, n.sim.lambda, n.sim.prior, n.sim.post)
+# output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
+#                         shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
+#                         n.sim.post)
 ```
 
 
-```{r, eval=FALSE}
+```{r, cache=TRUE}
 plotmap(output$post.map$high.area, sp.obj)
 ```
 

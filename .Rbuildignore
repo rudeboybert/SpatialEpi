@@ -5,4 +5,6 @@
 ^\.travis\.yml$
 ^data-raw$
 ^cran-comments\.md$
+^README-.*\.png$
+^README_cache$
 ^testing$

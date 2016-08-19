@@ -31,8 +31,8 @@ utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
 #'   
 #' @examples 
 #' data(NYleukemia)
-#' centroids <- sp::coordinates(NYleukemia)
-#' single_zones <- define_single_zones(centroids, NYleukemia$population, 0.15)
+#' centroids <- sp::coordinates(NYleukemia$spatial.polygon)
+#' single_zones <- define_single_zones(centroids, NYleukemia$data$population, 0.15)
 define_single_zones <- function(centroids, population, pop_upper_bound) {
   
   # Number of areas

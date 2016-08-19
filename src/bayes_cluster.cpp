@@ -3,7 +3,6 @@
 using namespace Rcpp;
 
 
-
 // [[Rcpp::export]]
 NumericVector normalize(NumericVector x) {
   int n = x.size();
@@ -132,8 +131,8 @@ int ProbSampleReplace(NumericVector prob) {
 	}
 	
 	RNGScope scope;
-	int sample = RcppArmadillo::sample(x, 1, FALSE, prob)[0];  
-	return sample;
+	int sample_vector = RcppArmadillo::sample(x, 1, FALSE, prob)[0];  
+	return sample_vector;
 }
 
 
@@ -141,7 +140,7 @@ int ProbSampleReplace(NumericVector prob) {
 // [[Rcpp::export]]
 NumericVector check_overlap(NumericMatrix config, List overlap) {
   List presence = as<List>(overlap["presence"]);
-  List cluster_list = as<List>(overlap["cluster.list"]);
+  List cluster_list = as<List>(overlap["cluster_list"]);
   int nSim = config.nrow();
   int k = config.ncol(), index, index2;
   int nZones = cluster_list.size();
@@ -257,7 +256,7 @@ NumericMatrix return_death_moves(NumericVector theta) {
 // [[Rcpp::export]]
 NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
 	List presence = as<List>(overlap["presence"]);
-	List cluster_list = as<List>(overlap["cluster.list"]);
+	List cluster_list = as<List>(overlap["cluster_list"]);
 
 	int k = theta.size(), n_zones = cluster_list.size(), counter, zone, zone_area, 
 	n_birth_moves;//, move_possible;
@@ -354,7 +353,7 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 	cluster_coords) {
 
 	List presence = as<List>(overlap["presence"]);
-	List cluster_list = as<List>(overlap["cluster.list"]);
+	List cluster_list = as<List>(overlap["cluster_list"]);
 
 	int k = theta.size(), n_zones = cluster_list.size(), zone, start, end, zone_sub,
 	zone_sub2, center;
@@ -487,7 +486,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 
 	// Store Outputs Here
 	NumericVector move_trace(n_sim), accpt_trace(n_sim), ratio(n_sim);
-	List sample(n_sim);
+	List sample_vector(n_sim);
 
 	//----------------------------------------------------------
 	// Sampling
@@ -504,8 +503,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 	// Main Loop
 	//----------------------------------------------------------
   // initial value
-	sample[0] = theta_init;
-  
+	sample_vector[0] = theta_init;
 	for(int sim=1; sim<n_sim; ++sim) {
  
 		// Select Sampling Type:  Remove Later?
@@ -520,7 +518,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		}
 
     // Get theta info 
-    NumericVector theta = sample[sim-1];
+    NumericVector theta = sample_vector[sim-1];
     k = theta.size();
 
 
@@ -742,10 +740,10 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     // Accept/Reject:  As ratio goes up, more chance of accepting
 		u = runif(1)[0];
 		if( u < ratio[sim-1] ){
-			sample[sim] = theta_star;
+			sample_vector[sim] = theta_star;
 			accpt_trace[sim-1] = 1;
 		} else {
-			sample[sim] = theta;
+			sample_vector[sim] = theta;
 		}
 		
 		// Watch R vs C indexing
@@ -755,8 +753,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
   } // end overall n_sim
   
   return List::create(
-    _["sample"] = sample, _["move_trace"] = move_trace,
+    _["sample"] = sample_vector, _["move_trace"] = move_trace,
     _["accpt_trace"] = accpt_trace, _["ratio"] = ratio
     ); 
 }
-
