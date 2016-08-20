@@ -56,7 +56,7 @@ cases <- NYleukemia$data$cases
 
 We plot the incidence of leukemia for each census tract.  
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.height=8}
 plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
@@ -76,14 +76,14 @@ n.sim.prior <- 10^5
 n.sim.post <- 10^5
 
 # Compute output
-# output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
-#                         shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
-#                         n.sim.post)
+output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
+                        shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
+                        n.sim.post)
 ```
 
 
-```{r, cache=TRUE}
-plotmap(output$post.map$high.area, sp.obj)
+```{r, cache=TRUE, fig.height=8}
+plotmap(output$post_map$high_area, sp.obj)
 ```
 
 
