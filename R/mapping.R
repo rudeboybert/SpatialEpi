@@ -1,19 +1,36 @@
-#' Title
+#' Plot Levels of a Variable in a Colour-Coded Map
+#' 
+#' Plot levels of a variable in a colour-coded map along with a legend.
 #'
-#' @param y 
-#' @param spatial.polygon 
-#' @param ncut 
-#' @param nlevels 
-#' @param lower 
-#' @param upper 
-#' @param main 
-#' @param xlab 
-#' @param ylab 
+#' @param y variable to plot
+#' @param spatial.polygon an object of class SpatialPolygons (See 
+#' \link[sp]{SpatialPolygons-class})
+#' @param ncut number of cuts in colour levels to plot
+#' @param nlevels number of levels to include in legend
+#' @param lower lower bound of levels
+#' @param upper upper bound of levels
+#' @param main an overall title for the plot
+#' @param xlab a title for the x axis
+#' @param ylab a title for the y axis
 #'
-#' @return
+#' @return A choropleth map of \code{y}
 #' @export
-#'
+#' @author Jon Wakefield
+#' @author Nicky Best
+#' @author Sebastien Haneuse
+#' @author Albert Y. Kim
+#' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) 
+#' \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics.
+#' @references E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for 
+#' spatial data in R. \emph{R News}, \bold{5}, 9--13.  
+#' @seealso \code{\link{plotmap}}
 #' @examples
+#' data(scotland)
+#' map <- scotland$spatial.polygon
+#' y <- scotland$data$cases
+#' E <- scotland$data$expected
+#' SMR <- y/E
+#' mapvariable(SMR,map,main="Scotland",xlab="Eastings (km)",ylab="Northings (km)")
 mapvariable <- function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL, 
                         upper=NULL, main=NULL, xlab=NULL, ylab=NULL){
   #-------------------------------------------------------------------------------
@@ -102,29 +119,37 @@ mapvariable <- function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL,
 }
 
 
-
-#' Title
+#' Plot Levels of a Variable in a Choropleth Map
+#' 
+#' Plot levels of a variable in a choropleth map
 #'
-#' @param values 
-#' @param map 
-#' @param log 
-#' @param nclr 
-#' @param include.legend 
-#' @param lwd 
-#' @param round 
-#' @param brks 
-#' @param legend 
-#' @param location 
-#' @param rev 
-#' @param leg.cex 
+#' @param values variable to plot
+#' @param map an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})
+#' @param log boolean of whether to plot values on log scale
+#' @param nclr number of colour-levels to use
+#' @param include.legend boolean of whether to include legend
+#' @param lwd line width of borders of areas
+#' @param round number of digits to round to in legend
+#' @param brks if desired, pre-specified breaks for legend
+#' @param legend if desired, a pre-specified legend
+#' @param location location of legend
+#' @param rev boolean of whether to reverse colour scheme (darker colours for smaller values)
+#' @param leg.cex scale factor for legend text
 #' 
 #' @importFrom maptools leglabs
 #'
-#' @return
+#' @return A choropleth map of \code{values}.
 #' @export
-#'
+#' @seealso \code{\link{mapvariable}}
 #' @examples
-#' 
+#' # Load data
+#' data(scotland)
+#' map <- scotland$spatial.polygon
+#' y <- scotland$data$cases
+#' E <- scotland$data$expected
+#' SMR <- y/E
+#' # Plot SMR
+#' plotmap(SMR, map, nclr=9, location="topleft")
 plotmap <- function(values, map, log=FALSE, nclr=7, include.legend=TRUE, 
                     lwd=0.5, round=3, brks=NULL, legend=NULL, 
                     location='topright', rev=FALSE, leg.cex=1){

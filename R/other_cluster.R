@@ -1,16 +1,60 @@
-#' Title
+#' Besag-Newell Cluster Detection Method
+#' 
+#' Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
 #'
-#' @param geo 
-#' @param population 
-#' @param cases 
-#' @param expected.cases 
-#' @param k 
-#' @param alpha.level 
+#' @param geo an \code{n x 2} table of the (x,y)-coordinates of the area centroids
+#' @param population aggregated case counts for all \code{n} areas
+#' @param cases aggregated population counts for all \code{n} areas
+#' @param expected.cases expected numbers of disease for all \code{n} areas
+#' @param k number of cases to consider
+#' @param alpha.level alpha-level threshold used to declare significanc
 #'
-#' @return
+#' @details For the \code{population} and \code{cases} tables, the rows are 
+#' bunched by areas first, and then for each area, the counts for each strata 
+#' are listed.  It is important that the tables are balanced:  the strata 
+#' information are in the same order for each area, and counts for each 
+#' area/strata combination appear exactly once (even if zero
+#' @return List containing
+#' \item{clusters}{information on all clusters that are \eqn{\alpha}-level 
+#' significant, in decreasing order of the \eqn{p}-value}
+#' \item{p.values}{for each of the \eqn{n} areas, \eqn{p}-values of each cluster 
+#' of size at least \eqn{k}}
+#' \item{m.values}{for each of the \eqn{n} areas, the number of areas need to 
+#' observe at least \eqn{k} cases}
+#' \item{observed.k.values}{based on \code{m.values}, the actual number of cases 
+#' used to compute the \eqn{p}-values}
 #' @export
+#' @seealso \code{\link{pennLC}}
+#' @seealso \code{\link{expected}}
+#' @references Besag J. and Newell J. (1991) The Detection of Clusters in Rare 
+#' Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics 
+#' in Society)}, \bold{154}, 143--155
 #'
 #' @examples
+#' # Load Pennsylvania Lung Cancer Data
+#' data(pennLC)
+#' data <- pennLC$data
+#' 
+#' # Process geographical information and convert to grid
+#' geo <- pennLC$geo[,2:3]
+#' geo <- latlong2grid(geo)
+#' 
+#' # Get aggregated counts of population and cases for each county
+#' population <- tapply(data$population,data$county,sum)
+#' cases <- tapply(data$cases,data$county,sum)
+#' 
+#' # Based on the 16 strata levels, computed expected numbers of disease
+#' n.strata <- 16
+#' expected.cases <- expected(data$population, data$cases, n.strata)
+#' 
+#' # Set Parameters
+#' k <- 1250
+#' alpha.level <- 0.05
+#' 
+#' # not controlling for stratas
+#' results <- besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+#' # controlling for stratas
+#' results <- besag_newell(geo, population, cases, expected.cases, k, alpha.level)
 besag_newell <-
   function(geo, population, cases, expected.cases=NULL, k, alpha.level){
     
@@ -91,16 +135,30 @@ besag_newell <-
 
 
 
-#' Title
+#' Compute Expected Numbers of Disease
+#' 
+#' Compute the internally indirect standardized expected numbers of disease. 
+#' The \code{population} and \code{cases} vectors must be \emph{balanced}: all 
+#' counts are sorted by area first, and then within each area the counts for all 
+#' strata are listed (even if 0 count) in the same order.
+#' 
+#' @param population a vector of population counts for each strata in each area
+#' @param cases a vector of the corresponding number of cases
+#' @param n.strata number of strata considered
 #'
-#' @param population 
-#' @param cases 
-#' @param n.strata 
-#'
-#' @return
+#' @return A vector of expected counts
+#' \item{expected.cases}{a vector of the expected numbers of disease for each area}
 #' @export
-#'
+#' @references Elliot, P. et al. (2000) \emph{Spatial Epidemiology:  
+#' Methods and Applications}.  Oxford Medical Publications.
 #' @examples
+#' data(pennLC)
+#' population <- pennLC$data$population
+#' cases <- pennLC$data$cases
+#' # In each county in Pennsylvania, there are 2 races, gender and 4 age bands 
+#' # considered = 16 strata levels
+#' pennLC$data[1:16,]
+#' expected(population, cases, 16)
 expected <-
   function(population, cases, n.strata){
     

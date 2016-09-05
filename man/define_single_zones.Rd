@@ -17,12 +17,10 @@ counts.}
 region's population the single zones can contain.}
 }
 \value{
-A list with two objects \describe{ 
-  \item{\code{nearest_neighbors}}{A list of length n of the single zones 
-  for each area} 
-  \item{\code{cluster_coords}}{A data frame with 2 columns of the centering 
-  and radial area for each single zone.} 
-  }
+A list with two objects
+\item{nearest_neighbors}{A list of length n of the single zones for each area} 
+\item{cluster_coords}{A data frame with 2 columns of the centering 
+and radial area for each single zone.}
 }
 \description{
 Using the centroids of the n areas in a study region, define the set of 
@@ -36,8 +34,7 @@ single_zones <- define_single_zones(centroids, NYleukemia$data$population, 0.15)
 }
 \references{
 Kulldorff, M. (1997) A spatial scan statistic. 
-  \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 
-  1481--1496.
+\emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
 }
 \seealso{
 \code{\link{create_geo_objects}}

@@ -1,33 +1,84 @@
-#' Title
+#' Bayesian Cluster Detection Method
+#' 
+#' Implementation of the Bayesian Cluster detection model of Wakefield and Kim 
+#' (2013) for a study region with \code{n} areas. The prior and posterior 
+#' probabilities of each of the \code{n.zones} single zones being a 
+#' cluster/anti-cluster are estimated using Markov chain Monte Carlo. Furthermore,
+#' the posterior probability of k clusters/anti-clusters is computed.  
 #'
-#' @param y 
-#' @param E 
-#' @param population 
-#' @param sp.obj 
-#' @param centroids 
-#' @param max.prop 
-#' @param shape 
-#' @param rate 
-#' @param J 
-#' @param pi0 
-#' @param n_sim.lambda 
-#' @param n_sim.prior 
-#' @param n_sim_post 
-#' @param burnin.prop 
-#' @param theta.init 
+#' @param y vector of length \code{n} of the observed number of disease in each area
+#' @param E vector of length \code{n} of the expected number of disease in each area
+#' @param population vector of length \code{n} of the population in each area
+#' @param sp.obj an object of class SpatialPolygons (See 
+#' \link[sp]{SpatialPolygons-class}) representing the study region
+#' @param centroids \code{n x 2} table of the (x,y)-coordinates of the area 
+#' centroids.  The coordinate system must be grid-based
+#' @param max.prop maximum proportion of the study region's population each 
+#' single zone can contain
+#' @param shape vector of length 2 of narrow/wide shape parameter for gamma 
+#' prior on relative risk
+#' @param rate vector of length 2 of narrow/wide rate parameter for gamma prior 
+#' on relative risk
+#' @param J maximum number of clusters/anti-clusters
+#' @param pi0 prior probability of no clusters/anti-clusters
+#' @param n_sim.lambda number of importance sampling iterations to estimate 
+#' lambda
+#' @param n_sim.prior number of MCMC iterations to estimate prior probabilities 
+#' associated with each single zone
+#' @param n_sim_post number of MCMC iterations to estimate posterior 
+#' probabilities associated with each single zon
+#' @param burnin.prop proportion of MCMC samples to use as burn-in. Defaults to 
+#' 10 percent
+#' @param theta.init Initial configuration used for MCMC sampling. Defaults to 
+#' \code{NULL}
 #' 
 #' @importFrom magrittr %>%
 #'
-#' @return
+#' @return List containing
+#' \item{prior.map}{A list containing, for each area: 1) \code{high.area} the 
+#' prior probability of cluster membership, 2) \code{low.area} anti-cluster 
+#' membership, and 3) \code{RR.est.area} smoothed prior estimates of relative risk}
+#' \item{post.map}{A list containing, for each area: 1) \code{high.area} the 
+#' posterior probability of cluster membership, 2) \code{low.area} anti-cluster 
+#' membership, and 3) \code{RR.est.area} smoothed posterior estimates of the 
+#' relative risk}
+#' \item{pk.y}{posterior probability of k clusters/anti-clusters given y for 
+#' k=0,...,J}
 #' @export
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster 
+#' detection. \emph{Biostatistics}, \bold{14}, 752--765.
+#' @seealso \code{\link{kuldorff}}
 #'
 #' @examples
+#' # Load data
+#' data(NYleukemia)
+#' sp.obj <- NYleukemia$spatial.polygon
+#' centroids <- latlong2grid(NYleukemia$geo[, 2:3])
+#' population <- NYleukemia$data$population
+#' cases <- NYleukemia$data$cases
+#' 
+#' # Set parameters
+#' y <- cases
+#' E <- expected(population, cases, 1)
+#' max.prop <- 0.15
+#' shape <- c(2976.3, 2.31)
+#' rate <- c(2977.3, 1.31)
+#' J <- 7
+#' pi0 <- 0.95
+#' n.sim.lambda <- 10^4
+#' n.sim.prior <- 10^5
+#' n.sim.post <- 10^5
+#' 
+#' # Run method (uncomment first)
+#' # output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
+#' #   shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
+#' #   n.sim.post)
+#' # plotmap(output$post_map$high_area, sp.obj)
 bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape, 
                           rate, J, pi0,
                           n.sim.lambda, n.sim.prior, n.sim_post, 
                           burnin.prop = 0.1,
                           theta.init = vector(mode="numeric", length=0)){
-  
   print(paste("Algorithm started on:", date()))
   
   # MCMC parameters
@@ -35,10 +86,6 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
   p_moves <- c(1, 1, 1, 1, 1) %>% normalize()
   
   # Geographic info and create geographical objects to use
-  # geo.objects <- create_geo_objects(max.prop, population, centroids, sp.obj)
-  # overlap <- geo.objects$overlap
-  # cluster_coords <- geo.objects$cluster_coords 
-  # single_zones <- define_single_zones(centroids, NYleukemia$data$population, 0.15)
   geo_objects <- create_geo_objects(centroids, NYleukemia$data$population, 0.15)
   cluster_coords <- geo_objects$cluster_coords
   overlap <- geo_objects$overlap
@@ -130,18 +177,28 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
 
 
 
-#' Title
+
+
+#' Estimate lambda values
+#' 
+#' Internal function to estimate values of lambda needed for 
+#' \code{\link{MCMC_simulation}} and prior probability of k 
+#' clusters/anti-clusters for k=0,...,J
 #'
-#' @param n_sim 
-#' @param J 
-#' @param prior_z 
-#' @param overlap 
-#' @param pi0 
-#'
-#' @return
+#' @param n_sim number of importance sampling iterations
+#' @param maximum number of clusters/anti-clusters to consider
+#' @param prior_z prior probability of each single zone
+#' @param overlap output of \code{\link{create_geo_objects}}: list with two 
+#' elements: \code{presence} which lists for each area all the single zones it 
+#' is present in and \code{cluster_list} for each single zone its component areas
+#' @param pi0 prior probability of no clusters
+#' @return Estimates of lambda and prior.j
 #' @export
-#'
+#' @seealso \code{\link{MCMC_simulation}}
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster 
+#' detection. \emph{Biostatistics}, \bold{14}, 752--765.
 #' @examples
+#' 1+1
 estimate_lambda <- function(n_sim, J, prior_z, overlap, pi0){
   n_zones <- length(prior_z)
   
@@ -189,18 +246,31 @@ estimate_lambda <- function(n_sim, J, prior_z, overlap, pi0){
 
 
 
-#' Title
+#' Process Markov Chain Monte Carlo Sample
+#' 
+#' Take the output of sampled configurations from \code{\link{MCMC_simulation}} 
+#' and produce area-by-area summaries
 #'
-#' @param sample 
-#' @param param 
-#' @param RR_area 
-#' @param cluster_list 
-#' @param cutoffs 
+#' @param sample list objects of sampled configurations
+#' @param param mean relative risk associted with each of the \code{n.zones} 
+#' single zones considering the wide prior
+#' @param RR_area mean relative risk associated with each of the \code{n} areas 
+#' considering the narrow prior
+#' @param cluster_list list of length \code{n.zones} listing, for each single 
+#' zone, its component areas
+#' @param cutoffs cutoffs used to declare highs (clusters) and lows (anti-clusters)
 #'
-#' @return
+#' @return A list containing
+#' \item{high.area}{Probability of cluster membership for each area}
+#' \item{low.area}{Probability of anti-cluster membership for each area}
+#' \item{RR.est.area}{Smoothed relative risk estimates for each area}
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster 
+#' etection. 
+#' \emph{Biostatistics}, \bold{14}, 752--765.
 #' @export
-#'
+#' @seealso \code{\link{MCMC_simulation}}
 #' @examples
+#' 1+1
 process_MCMC_sample <- function(sample, param, RR_area, cluster_list, cutoffs){
   n <- length(RR_area)
   n_sim <- length(sample)
@@ -260,36 +330,60 @@ process_MCMC_sample <- function(sample, param, RR_area, cluster_list, cutoffs){
 
 
 
-#' Title
+
+
+
+
+
+
+#' Compute Parameters to Calibrate a Gamma Distribution
+#' 
+#' Compute parameters to calibrate the prior distribution of a relative risk 
+#' that has a gamma distribution.
 #'
-#' @param theta 
-#' @param prob 
-#' @param d 
+#' @param theta upper quantile
+#' @param prob upper quantile
+#' @param d mode
 #'
-#' @return
+#' @return A list containing
+#' \item{a}{shape parameter}
+#' \item{b}{rate parameter}
 #' @export
-#'
+#' @author Jon Wakefield
+#' @seealso \code{\link{LogNormalPriorCh}}
 #' @examples
+#' param <- GammaPriorCh(5, 0.975, 1)
+#' curve(dgamma(x,shape=param$a,rate=param$b),from=0,to=6,n=1000,ylab="density")
 GammaPriorCh <- function(theta, prob, d){
   a <- d/2
   b <- 0.5*2*a*theta^2/qt(p=prob,df=2*a)^2
-  cat("Gamma Parameters: ",a,b,"\n")
-  list(a=a,b=b)
+  cat("Gamma Parameters: ", a, b, "\n")
+  list(a=a, b=b)
 }
 
 
 
-#' Title
+#' Compute Parameters to Calibrate a Log-normal Distribution
+#' 
+#' Compute parameters to calibrate the prior distribution of a relative risk 
+#' that has a log-normal distribution.
 #'
-#' @param theta1 
-#' @param theta2 
-#' @param prob1 
-#' @param prob2 
+#' @param theta1 lower quantile
+#' @param theta2 upper quantile
+#' @param prob1 lower probability
+#' @param prob2 upper probability
 #'
-#' @return
+#' @return A list containing:
+#' \item{mu}{mean of log-normal distribution}
+#' \item{sigma}{variance of log-normal distribution}
 #' @export
-#'
+#' @author Jon Wakefield
+#' @seealso \code{\link{GammaPriorCh}}
 #' @examples
+#' # Calibrate the log-normal distribution s.t. the 95 percent confidence 
+#' interval is [0.2, 5]
+#' param <- LogNormalPriorCh(0.2, 5, 0.025, 0.975)
+#' curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab="density")
 LogNormalPriorCh <- function(theta1, theta2, prob1, prob2){	
   zq1 <- qnorm(prob1)
   zq2 <- qnorm(prob2)

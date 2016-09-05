@@ -2,24 +2,78 @@
 % Please edit documentation in R/other_cluster.R
 \name{besag_newell}
 \alias{besag_newell}
-\title{Title}
+\title{Besag-Newell Cluster Detection Method}
 \usage{
 besag_newell(geo, population, cases, expected.cases = NULL, k, alpha.level)
 }
 \arguments{
-\item{geo}{}
+\item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
 
-\item{population}{}
+\item{population}{aggregated case counts for all \code{n} areas}
 
-\item{cases}{}
+\item{cases}{aggregated population counts for all \code{n} areas}
 
-\item{expected.cases}{}
+\item{expected.cases}{expected numbers of disease for all \code{n} areas}
 
-\item{k}{}
+\item{k}{number of cases to consider}
 
-\item{alpha.level}{}
+\item{alpha.level}{alpha-level threshold used to declare significanc}
+}
+\value{
+List containing
+\item{clusters}{information on all clusters that are \eqn{\alpha}-level 
+significant, in decreasing order of the \eqn{p}-value}
+\item{p.values}{for each of the \eqn{n} areas, \eqn{p}-values of each cluster 
+of size at least \eqn{k}}
+\item{m.values}{for each of the \eqn{n} areas, the number of areas need to 
+observe at least \eqn{k} cases}
+\item{observed.k.values}{based on \code{m.values}, the actual number of cases 
+used to compute the \eqn{p}-values}
 }
 \description{
-Title
+Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
+}
+\details{
+For the \code{population} and \code{cases} tables, the rows are 
+bunched by areas first, and then for each area, the counts for each strata 
+are listed.  It is important that the tables are balanced:  the strata 
+information are in the same order for each area, and counts for each 
+area/strata combination appear exactly once (even if zero
+}
+\examples{
+# Load Pennsylvania Lung Cancer Data
+data(pennLC)
+data <- pennLC$data
+
+# Process geographical information and convert to grid
+geo <- pennLC$geo[,2:3]
+geo <- latlong2grid(geo)
+
+# Get aggregated counts of population and cases for each county
+population <- tapply(data$population,data$county,sum)
+cases <- tapply(data$cases,data$county,sum)
+
+# Based on the 16 strata levels, computed expected numbers of disease
+n.strata <- 16
+expected.cases <- expected(data$population, data$cases, n.strata)
+
+# Set Parameters
+k <- 1250
+alpha.level <- 0.05
+
+# not controlling for stratas
+results <- besag_newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+# controlling for stratas
+results <- besag_newell(geo, population, cases, expected.cases, k, alpha.level)
+}
+\references{
+Besag J. and Newell J. (1991) The Detection of Clusters in Rare 
+Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics 
+in Society)}, \bold{154}, 143--155
+}
+\seealso{
+\code{\link{pennLC}}
+
+\code{\link{expected}}
 }
 

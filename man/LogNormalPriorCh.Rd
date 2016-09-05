@@ -2,20 +2,38 @@
 % Please edit documentation in R/bayes_cluster.R
 \name{LogNormalPriorCh}
 \alias{LogNormalPriorCh}
-\title{Title}
+\title{Compute Parameters to Calibrate a Log-normal Distribution}
 \usage{
 LogNormalPriorCh(theta1, theta2, prob1, prob2)
 }
 \arguments{
-\item{theta1}{}
+\item{theta1}{lower quantile}
 
-\item{theta2}{}
+\item{theta2}{upper quantile}
 
-\item{prob1}{}
+\item{prob1}{lower probability}
 
-\item{prob2}{}
+\item{prob2}{upper probability}
+}
+\value{
+A list containing:
+\item{mu}{mean of log-normal distribution}
+\item{sigma}{variance of log-normal distribution}
 }
 \description{
-Title
+Compute parameters to calibrate the prior distribution of a relative risk 
+that has a log-normal distribution.
+}
+\examples{
+# Calibrate the log-normal distribution s.t. the 95 percent confidence 
+interval is [0.2, 5]
+param <- LogNormalPriorCh(0.2, 5, 0.025, 0.975)
+curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab="density")
+}
+\author{
+Jon Wakefield
+}
+\seealso{
+\code{\link{GammaPriorCh}}
 }
 

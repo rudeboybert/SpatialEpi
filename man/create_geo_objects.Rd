@@ -2,7 +2,7 @@
 % Please edit documentation in R/geographic_objects.R
 \name{create_geo_objects}
 \alias{create_geo_objects}
-\title{Create geo objects needed for Bayesian method}
+\title{Create geographic objects needed for Bayesian method}
 \usage{
 create_geo_objects(centroids, population, pop_upper_bound)
 }
@@ -17,17 +17,13 @@ counts.}
 region's population the single zones can contain.}
 }
 \value{
-A list with three objects \describe{ 
-  \item{\code{presence}}{List of length n, for each area, the single zones it
-  is present in.}
-  \item{\code{cluster_list}}{List of length n_zones indicating the areas
-  included in each single zone}
-  \item{\code{cluster_coords}}{A data frame with 2 columns of the centering 
-  and radial area for each single zone.}
-  }
+A list with three objects
+\item{presence}{List of length n, for each area, the single zones it is present in.}
+\item{cluster_list}{List of length n_zones indicating the areas included in each single zone}
+\item{cluster_coords}{A data frame with 2 columns of the centering and radial area for each single zone.}
 }
 \description{
-Create geo objects needed for Bayesian method
+Create geographic objects needed for Bayesian method
 }
 \examples{
 data(NYleukemia)

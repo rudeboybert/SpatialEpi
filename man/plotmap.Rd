@@ -2,41 +2,54 @@
 % Please edit documentation in R/mapping.R
 \name{plotmap}
 \alias{plotmap}
-\title{Title}
+\title{Plot Levels of a Variable in a Choropleth Map}
 \usage{
 plotmap(values, map, log = FALSE, nclr = 7, include.legend = TRUE,
   lwd = 0.5, round = 3, brks = NULL, legend = NULL,
   location = "topright", rev = FALSE, leg.cex = 1)
 }
 \arguments{
-\item{values}{}
+\item{values}{variable to plot}
 
-\item{map}{}
+\item{map}{an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})}
 
-\item{log}{}
+\item{log}{boolean of whether to plot values on log scale}
 
-\item{nclr}{}
+\item{nclr}{number of colour-levels to use}
 
-\item{include.legend}{}
+\item{include.legend}{boolean of whether to include legend}
 
-\item{lwd}{}
+\item{lwd}{line width of borders of areas}
 
-\item{round}{}
+\item{round}{number of digits to round to in legend}
 
-\item{brks}{}
+\item{brks}{if desired, pre-specified breaks for legend}
 
-\item{legend}{}
+\item{legend}{if desired, a pre-specified legend}
 
-\item{location}{}
+\item{location}{location of legend}
 
-\item{rev}{}
+\item{rev}{boolean of whether to reverse colour scheme (darker colours for smaller values)}
 
-\item{leg.cex}{}
+\item{leg.cex}{scale factor for legend text}
+}
+\value{
+A choropleth map of \code{values}.
 }
 \description{
-Title
+Plot levels of a variable in a choropleth map
 }
 \examples{
-
+# Load data
+data(scotland)
+map <- scotland$spatial.polygon
+y <- scotland$data$cases
+E <- scotland$data$expected
+SMR <- y/E
+# Plot SMR
+plotmap(SMR, map, nclr=9, location="topleft")
+}
+\seealso{
+\code{\link{mapvariable}}
 }
 
