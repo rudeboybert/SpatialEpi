@@ -40,10 +40,9 @@ ebresults <- eBayes(Y,E)
 thresh3 <- EBpostthresh(Y, E, alpha=ebresults$alpha, beta=ebresults$beta, rrthresh=3)
 mapvariable(thresh3, scotland$spatial.polygon)
 }
-\author{
-Jon Wakefield
-}
 \seealso{
 \code{\link{eBayes}}
 }
-
+\author{
+Jon Wakefield
+}

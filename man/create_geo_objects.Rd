@@ -33,4 +33,3 @@ geo_objects <- create_geo_objects(centroids, NYleukemia$population, 0.15)
 \seealso{
 \code{\link{define_single_zones}}
 }
-

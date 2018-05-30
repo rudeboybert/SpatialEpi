@@ -1,13 +1,14 @@
 #' Besag-Newell Cluster Detection Method
 #' 
-#' Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
+#' Besag-Newell cluster detection method.  There are differences with the 
+#' original paper and our implementation:
 #'
 #' @param geo an \code{n x 2} table of the (x,y)-coordinates of the area centroids
 #' @param population aggregated case counts for all \code{n} areas
 #' @param cases aggregated population counts for all \code{n} areas
 #' @param expected.cases expected numbers of disease for all \code{n} areas
 #' @param k number of cases to consider
-#' @param alpha.level alpha-level threshold used to declare significanc
+#' @param alpha.level alpha-level threshold used to declare significance
 #'
 #' @details For the \code{population} and \code{cases} tables, the rows are 
 #' bunched by areas first, and then for each area, the counts for each strata 
@@ -189,21 +190,66 @@ expected <-
 
 
 
-#' Title
-#'
-#' @param geo 
-#' @param cases 
-#' @param population 
-#' @param expected.cases 
-#' @param pop.upper.bound 
-#' @param n.simulations 
-#' @param alpha.level 
-#' @param plot 
-#'
-#' @return
+#' Kulldorff Cluster Detection Method
+#' 
+#' @param geo an \code{n x 2} table of the (x,y)-coordinates of the area centroids
+#' @param cases aggregated population counts for all \code{n} areas
+#' @param population aggregated case counts for all \code{n} areas
+#' @param expected.cases expected numbers of disease for all \code{n} areas
+#' @param pop.upper.bound upper bound on proportion of total population each zone can contain
+#' @param n.simulations Number of Monte Carlo simulations used
+#' @param alpha.level alpha-level threshold used to declare significance
+#' @param plot Boolean of whether to output plot
+#' @import graphics
+#' @return List containing
+#' \item{most.likely.cluster}{information on most likely cluster}
+#' \item{secondary.clusters}{list of secondary clusters}
+#' \item{type}{Likelihood type used}
+#' \item{log.lkhd}{observed log likelihood}
+#' \item{simulated.log.lkhd}{n.simulations simulated log likelihoods}
 #' @export
-#'
 #' @examples
+#' ## Load Pennsylvania Lung Cancer Data
+#' data(pennLC)
+#' data <- pennLC$data
+#' 
+#' ## Process geographical information and convert to grid
+#' geo <- pennLC$geo[,2:3]
+#' geo <- latlong2grid(geo)
+#' 
+#' ## Get aggregated counts of population and cases for each county
+#' population <- tapply(data$population,data$county,sum)
+#' cases <- tapply(data$cases,data$county,sum)
+#' 
+#' ## Based on the 16 strata levels, computed expected numbers of disease
+#' n.strata <- 16
+#' expected.cases <- expected(data$population, data$cases, n.strata)
+#' 
+#' ## Set Parameters
+#' pop.upper.bound <- 0.5
+#' n.simulations <- 999
+#' alpha.level <- 0.05
+#' plot <- TRUE
+#' 
+#' ## Kulldorff using Binomial likelihoods
+#' binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, 
+#'                       alpha.level, plot)
+#' cluster <- binomial$most.likely.cluster$location.IDs.included
+#' 
+#' ## plot
+#' plot(pennLC$spatial.polygon,axes=TRUE)
+#' plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+#' title("Most Likely Cluster")
+#' 
+#' ## Kulldorff using Poisson likelihoods
+#' poisson <- kulldorff(geo, cases, population, expected.cases, pop.upper.bound, 
+#'                      n.simulations, alpha.level, plot)
+#' cluster <- poisson$most.likely.cluster$location.IDs.included
+#' 
+#' ## plot
+#' plot(pennLC$spatial.polygon,axes=TRUE)
+#' plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+#' title("Most Likely Cluster Controlling for Strata")
 kulldorff <-
   function(geo, cases, population, expected.cases=NULL, pop.upper.bound, 
            n.simulations, alpha.level, plot=TRUE){
@@ -347,11 +393,11 @@ kulldorff <-
     # Output results
     #-------------------------------------------------------------------------------
     results <- list(
-      most.likely.cluster=most.likely.cluster,
-      secondary.clusters=secondary.clusters,
+      most.likely.cluster = most.likely.cluster,
+      secondary.clusters = secondary.clusters,
       type = type,
-      log.lkhd=lkhd,
-      simulated.log.lkhd=sim.lambda
+      log.lkhd = lkhd,
+      simulated.log.lkhd = sim.lambda
     )
     return(results)
   }

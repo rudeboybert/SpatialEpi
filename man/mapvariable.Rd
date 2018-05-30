@@ -41,15 +41,6 @@ E <- scotland$data$expected
 SMR <- y/E
 mapvariable(SMR,map,main="Scotland",xlab="Eastings (km)",ylab="Northings (km)")
 }
-\author{
-Jon Wakefield
-
-Nicky Best
-
-Sebastien Haneuse
-
-Albert Y. Kim
-}
 \references{
 Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) 
 \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics.
@@ -60,4 +51,12 @@ spatial data in R. \emph{R News}, \bold{5}, 9--13.
 \seealso{
 \code{\link{plotmap}}
 }
+\author{
+Jon Wakefield
 
+Nicky Best
+
+Sebastien Haneuse
+
+Albert Y. Kim
+}

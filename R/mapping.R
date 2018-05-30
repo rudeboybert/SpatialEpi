@@ -24,6 +24,8 @@
 #' @references E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for 
 #' spatial data in R. \emph{R News}, \bold{5}, 9--13.  
 #' @seealso \code{\link{plotmap}}
+#' @import grDevices
+#' @import graphics
 #' @examples
 #' data(scotland)
 #' map <- scotland$spatial.polygon
@@ -137,6 +139,8 @@ mapvariable <- function(y, spatial.polygon, ncut=1000, nlevels=10, lower=NULL,
 #' @param leg.cex scale factor for legend text
 #' 
 #' @importFrom maptools leglabs
+#' @import grDevices
+#' @import graphics
 #'
 #' @return A choropleth map of \code{values}.
 #' @export

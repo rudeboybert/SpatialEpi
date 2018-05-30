@@ -5,7 +5,7 @@
 \title{Bayesian Cluster Detection Method}
 \usage{
 bayes_cluster(y, E, population, sp.obj, centroids, max.prop, shape, rate, J,
-  pi0, n.sim.lambda, n.sim.prior, n.sim_post, burnin.prop = 0.1,
+  pi0, n_sim_lambda, n_sim_prior, n_sim_post, burnin.prop = 0.1,
   theta.init = vector(mode = "numeric", length = 0))
 }
 \arguments{
@@ -34,20 +34,20 @@ on relative risk}
 
 \item{pi0}{prior probability of no clusters/anti-clusters}
 
+\item{n_sim_lambda}{number of importance sampling iterations to estimate 
+lambda}
+
+\item{n_sim_prior}{number of MCMC iterations to estimate prior probabilities 
+associated with each single zone}
+
+\item{n_sim_post}{number of MCMC iterations to estimate posterior 
+probabilities associated with each single zon}
+
 \item{burnin.prop}{proportion of MCMC samples to use as burn-in. Defaults to 
 10 percent}
 
 \item{theta.init}{Initial configuration used for MCMC sampling. Defaults to 
 \code{NULL}}
-
-\item{n_sim.lambda}{number of importance sampling iterations to estimate 
-lambda}
-
-\item{n_sim.prior}{number of MCMC iterations to estimate prior probabilities 
-associated with each single zone}
-
-\item{n_sim_post}{number of MCMC iterations to estimate posterior 
-probabilities associated with each single zon}
 }
 \value{
 List containing
@@ -84,14 +84,14 @@ shape <- c(2976.3, 2.31)
 rate <- c(2977.3, 1.31)
 J <- 7
 pi0 <- 0.95
-n.sim.lambda <- 10^4
-n.sim.prior <- 10^5
-n.sim.post <- 10^5
+n_sim_lambda <- 10^4
+n_sim_prior <- 10^5
+n_sim_post <- 10^5
 
 # Run method (uncomment first)
 # output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
-#   shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
-#   n.sim.post)
+#   shape, rate, J, pi0, n_sim_lambda, n_sim_prior,
+#   n_sim_post)
 # plotmap(output$post_map$high_area, sp.obj)
 }
 \references{
@@ -101,4 +101,3 @@ detection. \emph{Biostatistics}, \bold{14}, 752--765.
 \seealso{
 \code{\link{kuldorff}}
 }
-

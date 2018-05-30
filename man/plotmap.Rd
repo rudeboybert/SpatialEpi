@@ -52,4 +52,3 @@ plotmap(SMR, map, nclr=9, location="topleft")
 \seealso{
 \code{\link{mapvariable}}
 }
-

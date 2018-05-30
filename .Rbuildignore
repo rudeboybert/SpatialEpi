@@ -8,3 +8,4 @@
 ^README-.*\.png$
 ^README_cache$
 ^testing$
+^README_figure$

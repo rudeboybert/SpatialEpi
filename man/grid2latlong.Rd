@@ -39,10 +39,9 @@ c(-122.6042, 45.6605)
 ))
 grid2latlong(coord)
 }
-\author{
-Lance A. Waller
-}
 \seealso{
 \code{\link{latlong2grid}}
 }
-
+\author{
+Lance A. Waller
+}

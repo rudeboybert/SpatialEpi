@@ -26,4 +26,3 @@ Waller, L. and C. Gotway (2004) Applied Spatial Statistics for
 Public Health Data. New York: John Wiley and Sons.
 }
 \keyword{datasets}
-

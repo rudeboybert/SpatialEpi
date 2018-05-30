@@ -21,4 +21,3 @@ Obtain all areas included in a single zone
 \examples{
 1+1
 }
-

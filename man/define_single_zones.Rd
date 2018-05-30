@@ -39,4 +39,3 @@ Kulldorff, M. (1997) A spatial scan statistic.
 \seealso{
 \code{\link{create_geo_objects}}
 }
-

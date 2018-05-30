@@ -42,4 +42,3 @@ Kulldorff, M. (1997) A spatial scan statistic.
 Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: 
 Detection and Inference. \emph{Statistics in Medicine}, \bold{14}, 799--810.
 }
-

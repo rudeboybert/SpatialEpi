@@ -30,4 +30,3 @@ plot(geo, type='n')
 text(geo, labels=1:nrow(geo))
 lines(circle(geo, 23, 46), col = "red") 
 }
-

@@ -46,4 +46,3 @@ age-standardized relative risks for use in disease mapping.\emph{Biometrics},
 
 \code{\link{mapvariable}}
 }
-

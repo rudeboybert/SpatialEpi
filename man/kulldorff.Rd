@@ -2,29 +2,79 @@
 % Please edit documentation in R/other_cluster.R
 \name{kulldorff}
 \alias{kulldorff}
-\title{Title}
+\title{Kulldorff Cluster Detection Method}
 \usage{
 kulldorff(geo, cases, population, expected.cases = NULL, pop.upper.bound,
   n.simulations, alpha.level, plot = TRUE)
 }
 \arguments{
-\item{geo}{}
+\item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
 
-\item{cases}{}
+\item{cases}{aggregated population counts for all \code{n} areas}
 
-\item{population}{}
+\item{population}{aggregated case counts for all \code{n} areas}
 
-\item{expected.cases}{}
+\item{expected.cases}{expected numbers of disease for all \code{n} areas}
 
-\item{pop.upper.bound}{}
+\item{pop.upper.bound}{upper bound on proportion of total population each zone can contain}
 
-\item{n.simulations}{}
+\item{n.simulations}{Number of Monte Carlo simulations used}
 
-\item{alpha.level}{}
+\item{alpha.level}{alpha-level threshold used to declare significance}
 
-\item{plot}{}
+\item{plot}{Boolean of whether to output plot}
+}
+\value{
+List containing
+\item{most.likely.cluster}{information on most likely cluster}
+\item{secondary.clusters}{list of secondary clusters}
+\item{type}{Likelihood type used}
+\item{log.lkhd}{observed log likelihood}
+\item{simulated.log.lkhd}{n.simulations simulated log likelihoods}
 }
 \description{
-Title
+Kulldorff Cluster Detection Method
 }
+\examples{
+## Load Pennsylvania Lung Cancer Data
+data(pennLC)
+data <- pennLC$data
 
+## Process geographical information and convert to grid
+geo <- pennLC$geo[,2:3]
+geo <- latlong2grid(geo)
+
+## Get aggregated counts of population and cases for each county
+population <- tapply(data$population,data$county,sum)
+cases <- tapply(data$cases,data$county,sum)
+
+## Based on the 16 strata levels, computed expected numbers of disease
+n.strata <- 16
+expected.cases <- expected(data$population, data$cases, n.strata)
+
+## Set Parameters
+pop.upper.bound <- 0.5
+n.simulations <- 999
+alpha.level <- 0.05
+plot <- TRUE
+
+## Kulldorff using Binomial likelihoods
+binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, 
+                      alpha.level, plot)
+cluster <- binomial$most.likely.cluster$location.IDs.included
+
+## plot
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+title("Most Likely Cluster")
+
+## Kulldorff using Poisson likelihoods
+poisson <- kulldorff(geo, cases, population, expected.cases, pop.upper.bound, 
+                     n.simulations, alpha.level, plot)
+cluster <- poisson$most.likely.cluster$location.IDs.included
+
+## plot
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+title("Most Likely Cluster Controlling for Strata")
+}

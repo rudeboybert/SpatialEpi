@@ -26,4 +26,3 @@ County-level (n=67) population/case data for lung cancer in Pennsylvania in
 40-59, 60-69 and 70+).  Additionally, county-specific smoking rates.
 }
 \keyword{datasets}
-

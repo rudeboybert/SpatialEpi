@@ -33,9 +33,9 @@ eBayes <-
   function(Y, E, Xmat=NULL){
     # Check for covariates
     if (is.null(Xmat)) {
-      mod <- glm.nb(Y ~ 1+offset(log(E)), link=log)
+      mod <- MASS::glm.nb(Y ~ 1+offset(log(E)), link=log)
     }else{
-      mod <- glm.nb(Y ~ Xmat+offset(log(E)), link=log)
+      mod <- MASS::glm.nb(Y ~ Xmat+offset(log(E)), link=log)
     }
     
     # Get MLE's of parameters
@@ -75,6 +75,7 @@ eBayes <-
 #' @author Jon Wakefield
 #' @seealso \code{\link{EBpostthresh}}
 #' @seealso \code{\link{eBayes}}
+#' @import graphics
 #' @examples
 #' data(scotland)
 #' Y <- scotland$data$cases

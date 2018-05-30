@@ -42,12 +42,11 @@ E <- scotland$data$expected
 ebresults <- eBayes(Y,E)
 EBpostdens(Y[1], E[1], ebresults$alpha, ebresults$beta, lower=0, upper=15, main="Area 1")
 }
-\author{
-Jon Wakefield
-}
 \seealso{
 \code{\link{EBpostthresh}}
 
 \code{\link{eBayes}}
 }
-
+\author{
+Jon Wakefield
+}

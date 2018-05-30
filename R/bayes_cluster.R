@@ -21,9 +21,9 @@
 #' on relative risk
 #' @param J maximum number of clusters/anti-clusters
 #' @param pi0 prior probability of no clusters/anti-clusters
-#' @param n_sim.lambda number of importance sampling iterations to estimate 
+#' @param n_sim_lambda number of importance sampling iterations to estimate 
 #' lambda
-#' @param n_sim.prior number of MCMC iterations to estimate prior probabilities 
+#' @param n_sim_prior number of MCMC iterations to estimate prior probabilities 
 #' associated with each single zone
 #' @param n_sim_post number of MCMC iterations to estimate posterior 
 #' probabilities associated with each single zon
@@ -45,6 +45,7 @@
 #' \item{pk.y}{posterior probability of k clusters/anti-clusters given y for 
 #' k=0,...,J}
 #' @export
+#' @import stats
 #' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster 
 #' detection. \emph{Biostatistics}, \bold{14}, 752--765.
 #' @seealso \code{\link{kuldorff}}
@@ -65,18 +66,18 @@
 #' rate <- c(2977.3, 1.31)
 #' J <- 7
 #' pi0 <- 0.95
-#' n.sim.lambda <- 10^4
-#' n.sim.prior <- 10^5
-#' n.sim.post <- 10^5
+#' n_sim_lambda <- 10^4
+#' n_sim_prior <- 10^5
+#' n_sim_post <- 10^5
 #' 
 #' # Run method (uncomment first)
 #' # output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
-#' #   shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
-#' #   n.sim.post)
+#' #   shape, rate, J, pi0, n_sim_lambda, n_sim_prior,
+#' #   n_sim_post)
 #' # plotmap(output$post_map$high_area, sp.obj)
 bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape, 
                           rate, J, pi0,
-                          n.sim.lambda, n.sim.prior, n.sim_post, 
+                          n_sim_lambda, n_sim_prior, n_sim_post, 
                           burnin.prop = 0.1,
                           theta.init = vector(mode="numeric", length=0)){
   print(paste("Algorithm started on:", date()))
@@ -109,7 +110,7 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
   log_prior_z <- log(prior_z) - log(sum(prior_z))
   
   # Estimate q and lambda
-  results <- estimate_lambda(n.sim.lambda, J, prior_z, overlap, pi0)
+  results <- estimate_lambda(n_sim_lambda, J, prior_z, overlap, pi0)
   lambda <- results$lambda
   prior_j <- results$prior_j
   print(paste("Importance sampling of lambda complete on:", date()))
@@ -119,12 +120,12 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
   # Obtain prior map
   #-------------------------------------------------------------------------------
   # Generate MCMC samples from prior
-  prior_chain <- MCMC_simulation(n.sim.prior, pattern, theta.init, overlap, 
+  prior_chain <- MCMC_simulation(n_sim_prior, pattern, theta.init, overlap, 
                                  as.matrix(cluster_coords), p_moves, J, prior_z, 
                                  lambda)
   
   # Trim burn-in
-  burnin <- n.sim.prior * burnin.prop
+  burnin <- n_sim_prior * burnin.prop
   prior_sample <- prior_chain$sample[-c(1:burnin)]
   
   # Prior Probs of Cluster Membership for each Area
@@ -148,12 +149,12 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
   post_z <- exp(log_post_z)
   
   # Generate MCMC samples from prior
-  post_chain <- MCMC_simulation(n.sim.post, pattern, theta.init, overlap, 
+  post_chain <- MCMC_simulation(n_sim_post, pattern, theta.init, overlap, 
                                 as.matrix(cluster_coords), p_moves, J, post_z, 
                                 lambda)
   
   # Trim burn-in
-  burnin <- n.sim.post * burnin.prop
+  burnin <- n_sim_post * burnin.prop
   post_sample <- post_chain$sample[-c(1:burnin)]
   
   # Prior Probs of Cluster Membership for each area
@@ -186,7 +187,7 @@ bayes_cluster <- function(y, E, population, sp.obj, centroids, max.prop, shape,
 #' clusters/anti-clusters for k=0,...,J
 #'
 #' @param n_sim number of importance sampling iterations
-#' @param maximum number of clusters/anti-clusters to consider
+#' @param J number of clusters/anti-clusters to consider
 #' @param prior_z prior probability of each single zone
 #' @param overlap output of \code{\link{create_geo_objects}}: list with two 
 #' elements: \code{presence} which lists for each area all the single zones it 
@@ -380,8 +381,7 @@ GammaPriorCh <- function(theta, prob, d){
 #' @author Jon Wakefield
 #' @seealso \code{\link{GammaPriorCh}}
 #' @examples
-#' # Calibrate the log-normal distribution s.t. the 95 percent confidence 
-#' interval is [0.2, 5]
+#' # Calibrate the log-normal distribution s.t. the 95 percent confidence interval is (0.2, 5)
 #' param <- LogNormalPriorCh(0.2, 5, 0.025, 0.975)
 #' curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab="density")
 LogNormalPriorCh <- function(theta1, theta2, prob1, prob2){	

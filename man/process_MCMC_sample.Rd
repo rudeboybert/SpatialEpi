@@ -41,4 +41,3 @@ etection.
 \seealso{
 \code{\link{MCMC_simulation}}
 }
-

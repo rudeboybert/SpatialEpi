@@ -36,4 +36,3 @@ expected(population, cases, 16)
 Elliot, P. et al. (2000) \emph{Spatial Epidemiology:  
 Methods and Applications}.  Oxford Medical Publications.
 }
-

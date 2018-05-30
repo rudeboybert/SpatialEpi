@@ -50,10 +50,9 @@ title("Lat/Long")
 plot(new,axes=TRUE)
 title("Grid (in km)")
 }
-\author{
-Lance A. Waller
-}
 \seealso{
 \code{\link{grid2latlong}}
 }
-
+\author{
+Lance A. Waller
+}

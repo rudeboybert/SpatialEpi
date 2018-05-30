@@ -17,7 +17,7 @@ besag_newell(geo, population, cases, expected.cases = NULL, k, alpha.level)
 
 \item{k}{number of cases to consider}
 
-\item{alpha.level}{alpha-level threshold used to declare significanc}
+\item{alpha.level}{alpha-level threshold used to declare significance}
 }
 \value{
 List containing
@@ -31,7 +31,8 @@ observe at least \eqn{k} cases}
 used to compute the \eqn{p}-values}
 }
 \description{
-Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
+Besag-Newell cluster detection method.  There are differences with the 
+original paper and our implementation:
 }
 \details{
 For the \code{population} and \code{cases} tables, the rows are 
@@ -76,4 +77,3 @@ in Society)}, \bold{154}, 143--155
 
 \code{\link{expected}}
 }
-

@@ -6,10 +6,16 @@
 \alias{SpatialEpi-package}
 \title{SpatialEpi: Data and methods for spatial epidemiology.}
 \description{
-This package provides...
+This package provides methods and Data for Spatial Epidemiology.
 }
-\section{Foo functions}{
-
-The foo functions ...
+\examples{
+# Example usage
+library(SpatialEpi)
+data(scotland)
+map <- scotland$spatial.polygon
+y <- scotland$data$cases
+E <- scotland$data$expected
+SMR <- y/E
+# Plot SMR
+plotmap(SMR, map, nclr=9, location="topleft") 
 }
-

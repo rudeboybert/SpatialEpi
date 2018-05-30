@@ -30,4 +30,3 @@ age-standardized relative risks for use in disease mapping.
 \emph{Biometrics}, \bold{43}, 671--681
 }
 \keyword{datasets}
-

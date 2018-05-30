@@ -26,10 +26,9 @@ that has a gamma distribution.
 param <- GammaPriorCh(5, 0.975, 1)
 curve(dgamma(x,shape=param$a,rate=param$b),from=0,to=6,n=1000,ylab="density")
 }
-\author{
-Jon Wakefield
-}
 \seealso{
 \code{\link{LogNormalPriorCh}}
 }
-
+\author{
+Jon Wakefield
+}

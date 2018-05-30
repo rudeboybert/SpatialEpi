@@ -9,6 +9,8 @@ estimate_lambda(n_sim, J, prior_z, overlap, pi0)
 \arguments{
 \item{n_sim}{number of importance sampling iterations}
 
+\item{J}{number of clusters/anti-clusters to consider}
+
 \item{prior_z}{prior probability of each single zone}
 
 \item{overlap}{output of \code{\link{create_geo_objects}}: list with two 
@@ -16,8 +18,6 @@ elements: \code{presence} which lists for each area all the single zones it
 is present in and \code{cluster_list} for each single zone its component areas}
 
 \item{pi0}{prior probability of no clusters}
-
-\item{maximum}{number of clusters/anti-clusters to consider}
 }
 \value{
 Estimates of lambda and prior.j
@@ -37,4 +37,3 @@ detection. \emph{Biostatistics}, \bold{14}, 752--765.
 \seealso{
 \code{\link{MCMC_simulation}}
 }
-

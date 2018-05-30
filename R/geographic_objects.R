@@ -23,6 +23,7 @@ utils::globalVariables(c("distance", "prop_pop", "cum_prop", "."))
 #' @references Kulldorff, M. (1997) A spatial scan statistic. 
 #' \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
 #' @seealso \code{\link{create_geo_objects}}
+#' @importFrom stats dist
 #' @export
 #' @importFrom magrittr %>%
 #'   
@@ -237,6 +238,7 @@ circle <- function(geo, cluster.center, cluster.end){
 #' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics.
 #' @references E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \bold{5}, 9--13.  
 #' @return An object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class} from the \pkg{sp} package).
+#' @import sp
 #' @export
 #' @examples
 #' data(scotland)
@@ -346,6 +348,8 @@ polygon2spatial_polygon <- function(poly, coordinate.system, area.names = NULL, 
 #' @return Either a data frame with the corresponding longitude and latitude, or 
 #' a SpatialPolygons object with the coordinates changed.
 #' @export
+#' @import sp
+#' @importFrom methods is
 #' @note Rough conversion of US lat/long to km (used by GeoBUGS):  (see also 
 #' forum.swarthmore.edu/dr.math/problems/longandlat.html).  Radius of earth: 
 #' r = 3963.34 (equatorial) or 3949.99 (polar) mi = 6378.2 or 6356.7 km, which 
@@ -430,6 +434,8 @@ grid2latlong <- function(input){
 #' coordinates, or a SpatialPolygons object with the coordinates changed.
 #' @author Lance A. Waller
 #' @seealso \code{\link{grid2latlong}}
+#' @import sp
+#' @importFrom methods is
 #' @export
 #' @note Rough conversion of US lat/long to km (used by GeoBUGS):  (see also 
 #' forum.swarthmore.edu/dr.math/problems/longandlat.html).  Radius of earth: 
@@ -440,7 +446,6 @@ grid2latlong <- function(input){
 #' radius of earth. On the other hand, a change of 1 degree in longitude 
 #' corresponds to a different distance, depending on latitude.  (at N pole, the 
 #' change is essentially 0.  at the equator, use equatorial radius.
-
 #' @examples
 #' # Convert coordinates
 #' coord <- data.frame(rbind(
@@ -531,6 +536,7 @@ latlong2grid <- function(input){
 #' area for each zone}
 #' \item{dist}{\code{n x n} inter-point distance matrix of the centroids}
 #' @export
+#' @importFrom stats dist
 #' @references Kulldorff, M. (1997) A spatial scan statistic. 
 #' \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
 #' @references Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: 
