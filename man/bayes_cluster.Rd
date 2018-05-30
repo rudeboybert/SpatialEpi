@@ -99,5 +99,5 @@ Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster
 detection. \emph{Biostatistics}, \bold{14}, 752--765.
 }
 \seealso{
-\code{\link{kuldorff}}
+\code{\link{kulldorff}}
 }

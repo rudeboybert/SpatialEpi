@@ -44,11 +44,11 @@
 #' relative risk}
 #' \item{pk.y}{posterior probability of k clusters/anti-clusters given y for 
 #' k=0,...,J}
+#' @seealso \code{\link{kulldorff}}
 #' @export
 #' @import stats
 #' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster 
 #' detection. \emph{Biostatistics}, \bold{14}, 752--765.
-#' @seealso \code{\link{kuldorff}}
 #'
 #' @examples
 #' # Load data
