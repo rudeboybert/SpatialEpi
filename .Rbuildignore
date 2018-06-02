@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README\.md$
 ^README\.Rmd$
-^NEWS\.md$
 ^\.travis\.yml$
 ^data-raw$
 ^cran-comments\.md$
