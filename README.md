@@ -68,17 +68,14 @@ n.sim.post <- 10^5
 output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
                         shape, rate, J, pi0, n.sim.lambda, n.sim.prior,
                         n.sim.post)
-#> [1] "Algorithm started on: Fri Jun  1 20:39:45 2018"
-#> [1] "Importance sampling of lambda complete on: Fri Jun  1 20:40:45 2018"
-#> [1] "Prior map MCMC complete on: Fri Jun  1 20:48:43 2018"
-#> [1] "Posterior estimation complete on: Fri Jun  1 21:01:57 2018"
+#> [1] "Algorithm started on: Sat Aug 20 11:35:52 2016"
+#> [1] "Importance sampling of lambda complete on: Sat Aug 20 11:36:28 2016"
+#> [1] "Prior map MCMC complete on: Sat Aug 20 11:42:45 2016"
+#> [1] "Posterior estimation complete on: Sat Aug 20 11:53:11 2016"
 ```
 
 ``` r
-range(output$post_map$high_area)
-#> Warning in min(x, na.rm = na.rm): no non-missing arguments to min;
-#> returning Inf
-#> Warning in max(x, na.rm = na.rm): no non-missing arguments to max;
-#> returning -Inf
-#> [1]  Inf -Inf
+plotmap(output$post_map$high_area, sp.obj)
 ```
+
+![](README_figure/README-unnamed-chunk-7-1.png)
