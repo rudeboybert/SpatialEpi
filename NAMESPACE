@@ -1,4 +1,4 @@
-useDynLib(SpatialEpi)
+useDynLib(SpatialEpi, .registration = TRUE)
 import(sp)
 importFrom(Rcpp, evalCpp)
 importFrom(MASS, glm.nb)
