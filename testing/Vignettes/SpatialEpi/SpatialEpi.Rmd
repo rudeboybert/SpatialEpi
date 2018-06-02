@@ -1,0 +1,40 @@
+---
+title: "`SpatialEpi`: Data and Methods for Spatial Epidemiology"
+author: "Albert Y. Kim"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## North Carolina SIDS Data
+
+The ``nc.sids`` data frame has 100 rows and 21 columns and can be found in the 
+``spdep`` package. It contains data given in Cressie (1991, pp. 386-9), Cressie 
+and Read (1985) and Cressie and Chan (1989) on sudden infant deaths in North 
+Carolina for 1974--78 and 1979--84. The data set also contains the neighbour
+list given by Cressie and Chan (1989) omitting self-neighbours (`ncCC89.nb`),
+and the neighbour list given by Cressie and Read (1985) for contiguities
+(``ncCR85.nb``). Data is available on the numbers of cases and on the number of
+births, both dichotomized by a binary indicator of race. The data are ordered by
+county ID number, not alphabetically as in the source tables.
+
+The code below plots the county boundaries along with the observed SMRs. The
+expected numbers are based on internal standardization with a single stratum.
+
+```{r, message=FALSE, collapse=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=40)}
+# library(SpatialEpi)
+# shapefile_name <- system.file("extdata/sids/sids.shp", package="SpatialEpi")
+# proj4string <- sp::CRS("+proj=longlat +ellps=clrk66")
+# nc_sids <- maptools::readShapePoly(fn = shapefile_name, ID = "FIPSNO",
+#     proj4string = proj4string)
+# map_variable(nc_sids)
+# names(nc_sids)
+# nc_sids$RATE74 <- nc_sids$SID74/nc_sids$BIR74
+```
+
+
+
