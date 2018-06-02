@@ -61,7 +61,7 @@ plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
 
-We run the Bayesian Cluster Detection method from Wakefield and Kim (2013)
+We run the Bayesian Cluster Detection method from [Wakefield and Kim (2013)](https://www.researchgate.net/publication/235896508_A_Bayesian_model_for_cluster_detection)
 
 ```{r bayes_cluster, message=FALSE, warning=FALSE, cache=TRUE}
 y <- cases
