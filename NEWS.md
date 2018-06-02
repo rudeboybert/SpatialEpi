@@ -1,6 +1,6 @@
 # SpatialEpi 1.2.3
 
-* Removed SpatialEpi-package.Rd file as per 
+* Fixed SpatialEpi-package.Rd file formatting issues
 
 
 
