@@ -17,7 +17,7 @@ eBayes(Y, E, Xmat = NULL)
 \value{
 A list with 5 elements:
   \item{RR}{the ecological relative risk posterior mean estimates}
-  \item{RRmed}{the ecological relative risk posterior mean estimates}
+  \item{RRmed}{the ecological relative risk posterior median estimates}
   \item{beta}{the MLE's of the regression coefficients}
   \item{alpha}{the MLE of negative binomial dispersion parameter}
   \item{SMR}{the standardized mortality/morbidity ratio Y/E}
