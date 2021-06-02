@@ -7,6 +7,6 @@
 ^cran-comments\.md$
 ^README-.*\.png$
 ^README_cache$
-^testing$
+^other$
 ^README_figure$
 ^CRAN-RELEASE$
