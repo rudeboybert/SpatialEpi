@@ -9,7 +9,7 @@ double binomialLogLkhd(double cz, double nz, double N, double C) {
 	if(cz / nz <= (C - cz)/(N - nz)) {
 		logLkhd = 0;
 	} else {
-		logLkhd  =	
+		logLkhd  =
 		N * ( log( N-nz-C+cz ) - log( N-C )  + log( N ) - log( N-nz ) ) +
 		nz * ( log( nz-cz ) - log( N-nz-C+cz )  + log( N-nz ) - log( nz ) )+
 		cz * ( log( cz ) - log( nz-cz ) + log( N-nz-C+cz ) - log( C-cz ) )+
@@ -32,18 +32,18 @@ double poissonLogLkhd(double cz, double nz, double N, double C) {
 		cz * log(  ( (N - nz)/( C - cz) ) )  +
 		C * log(  ( (C-cz)/(N-nz) )  ) +
 		C * log(  ( N/ C )  );
-	}  
+	}
 	return logLkhd;
 }
 
 
 // [[Rcpp::export]]
 NumericVector computeAllLogLkhd(
-	NumericVector observedCases, NumericVector expectedCases, 
+	NumericVector observedCases, NumericVector expectedCases,
 	List nearestNeighborsList, int nZones, String logLkhdType) {
 
 	NumericVector allLogLkhd(nZones);
-	int nAreas = expectedCases.size(), C = sum(observedCases), 
+	int nAreas = expectedCases.size(), C = sum(observedCases),
 	N = sum(expectedCases), index = 0;
 	int nNeighbors = 0;
 	double cz = 0.0, nz = 0.0;
@@ -56,7 +56,7 @@ NumericVector computeAllLogLkhd(
 		nNeighbors =  nearestNeighbors.size();
 
 		// For each area's nearest neighbors
-		for(int j = 0; j < nNeighbors; ++j) { 
+		for(int j = 0; j < nNeighbors; ++j) {
 			// Watch off by 1 vector indexing in C as opposed to R
 			cz += observedCases[nearestNeighbors[j]-1];
 			nz += expectedCases[nearestNeighbors[j]-1];
@@ -76,7 +76,7 @@ NumericVector computeAllLogLkhd(
 
 // [[Rcpp::export]]
 NumericVector kulldorffMC(
-	NumericMatrix permutedCaseMatrix, NumericVector expectedCases, 
+	NumericMatrix permutedCaseMatrix, NumericVector expectedCases,
 	List nearestNeighbors, int nZones, String logLkhdType) {
 
 	// Define variables
@@ -84,7 +84,7 @@ NumericVector kulldorffMC(
 	int nSimulations = permutedCaseMatrix.ncol();
 
 	NumericVector allLogLkhd(nZones);
-	NumericVector permutedCases(nAreas); 
+	NumericVector permutedCases(nAreas);
 	NumericVector maxLogLkhd(nSimulations);
 
 	/*
@@ -98,7 +98,7 @@ NumericVector kulldorffMC(
 		}
 
 		// compute max log likelihood
-		allLogLkhd = computeAllLogLkhd(permutedCases, expectedCases, nearestNeighbors, 
+		allLogLkhd = computeAllLogLkhd(permutedCases, expectedCases, nearestNeighbors,
 			nZones, logLkhdType);
 		maxLogLkhd[j] =  max(allLogLkhd);
 	}
@@ -110,15 +110,15 @@ NumericVector kulldorffMC(
 
 
 // [[Rcpp::export]]
-List besag_newell_internal(NumericVector observedCases, NumericVector 
+List besag_newell_internal(NumericVector observedCases, NumericVector
   expectedCases, List nearestNeighborsList, int nZones, int k) {
 
-	double sumObserved, sumExpected;  
+	double sumObserved, sumExpected;
 	int nAreas = observedCases.size(), nNeighbors = 0;
 	int j = 0;
-	NumericVector x(1);  
-	NumericVector observedPValues(nAreas), observedMValues(nAreas), 
-	observedKValues(nAreas);  
+	NumericVector x(1);
+	NumericVector observedPValues(nAreas), observedMValues(nAreas),
+	observedKValues(nAreas);
 
 	for(int i=0; i < nAreas; ++i) {
 		sumObserved = 0.0;
@@ -127,7 +127,7 @@ List besag_newell_internal(NumericVector observedCases, NumericVector
 		Rcpp::NumericVector nearestNeighbors = nearestNeighborsList[i];
 		nNeighbors =  nearestNeighbors.size();
 
-		for(j = 0; j < nNeighbors; ++j) { 
+		for(j = 0; j < nNeighbors; ++j) {
 			// Watch off by 1 vector indexing in C as opposed to R
 			sumObserved += observedCases[nearestNeighbors[j]-1];
 			sumExpected += expectedCases[nearestNeighbors[j]-1];
@@ -148,7 +148,7 @@ List besag_newell_internal(NumericVector observedCases, NumericVector
 	}
 
 	return List::create(
-		_["observed.p.values"] = observedPValues, 
+		_["observed.p.values"] = observedPValues,
 		_["observed.m.values"] = observedMValues,
 		_["observed.k.values"] = observedKValues
 		);

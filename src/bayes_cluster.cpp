@@ -18,7 +18,7 @@ NumericVector normalize(NumericVector x) {
 
 
 // [[Rcpp::export]]
-int NumericVectorEquality(NumericVector x, NumericVector y){  
+int NumericVectorEquality(NumericVector x, NumericVector y){
   if(x.size() != y.size()) {
     return 0;
   }
@@ -30,7 +30,7 @@ int NumericVectorEquality(NumericVector x, NumericVector y){
       break;
     }
   }
- 
+
  return vector_equal;
 }
 
@@ -71,9 +71,9 @@ double ldmultinom(NumericVector x, NumericVector prob) {
 
 
 // [[Rcpp::export]]
-NumericVector coeff(NumericVector y_vector, NumericVector E_vector, 
+NumericVector coeff(NumericVector y_vector, NumericVector E_vector,
 	NumericVector a_values, NumericVector b_values, List cluster_list) {
-	
+
 	double yz, Ez, sum_log_fy_inside;
 	int n = y_vector.size(), n_zones = cluster_list.size(), index;
 	NumericVector log_fy_n(n), coeff(n_zones), y_temp(n), E_temp(n), inside(n);
@@ -86,7 +86,7 @@ NumericVector coeff(NumericVector y_vector, NumericVector E_vector,
 	// Main loop
 	for(int j=0; j<n_zones; ++j) {
 		// Reset Variables to 0
-		yz = 0;  
+		yz = 0;
 		Ez = 0;
 		for(int i=0; i<n; ++i){
 			y_temp[i] = 0;
@@ -113,7 +113,7 @@ NumericVector coeff(NumericVector y_vector, NumericVector E_vector,
 			}
 		}
 
-		coeff[j] = ldmultinom(y_temp, E_temp) + 
+		coeff[j] = ldmultinom(y_temp, E_temp) +
 		ldnbinom(yz, Ez, a_values[1], b_values[1]) - sum_log_fy_inside ;
 	}
 
@@ -126,13 +126,13 @@ NumericVector coeff(NumericVector y_vector, NumericVector E_vector,
 int ProbSampleReplace(NumericVector prob) {
 	int n = prob.size();
 	NumericVector x(n);
-	
+
 	for(int i=0; i<n; ++i) {
 		x[i] = i;
 	}
-	
+
 	RNGScope scope;
-	int sample = RcppArmadillo::sample(x, 1, FALSE, prob)[0];  
+	int sample = RcppArmadillo::sample(x, 1, FALSE, prob)[0];
 	return sample;
 }
 
@@ -151,30 +151,30 @@ NumericVector check_overlap(NumericMatrix config, List overlap) {
   for(int i=0; i<nSim; ++i) {
     indicator[i] = 1;
   }
-  
+
   for(int i=0; i<nSim; ++i){
     // reset overlap vector
     for(int j=0; j<nZones; ++j){
       overlap_vector[j] = 0;
     }
-    
+
     for(int j=0; j<k; ++j) {
       index = config(i, j) - 1;  // Watch R vs C Indexing
       if(overlap_vector[index]==1){
         indicator[i] = 0;
         break;
       }
-      
+
       Rcpp::NumericVector areas = cluster_list[index];
       for(int m=0; m<areas.size(); ++m){
        // Watch R vs C Indexing
         index2 = areas[m] - 1;
-        
+
         Rcpp::NumericVector stuff = presence[index2];
         for(int l=0; l<stuff.size(); ++l)
          overlap_vector[ stuff[l] - 1 ] = 1;
      }
-   } 
+   }
  }
  return indicator;
 }
@@ -185,7 +185,7 @@ NumericVector check_overlap(NumericMatrix config, List overlap) {
 NumericMatrix clean_moves_matrix(NumericVector theta, NumericMatrix moves, int n_zones) {
   int n_moves = sum(moves), k = theta.size(), counter;
   NumericMatrix moves_reduced(k, n_moves);
-  
+
   // Fill in old theta
   for(int i=0; i<n_moves; ++i) {
     for(int j=0; j<k; ++j) {
@@ -199,12 +199,12 @@ NumericMatrix clean_moves_matrix(NumericVector theta, NumericMatrix moves, int n
     for(int z=0; z<n_zones; ++z) {
       if(moves(j, z) == 1){
         // Watch R vs C indexing
-        moves_reduced(j, counter) = z + 1; 
+        moves_reduced(j, counter) = z + 1;
         counter++;
       }
     }
   }
-  
+
   /*
    * Sort values in each column
    */
@@ -220,7 +220,7 @@ NumericMatrix clean_moves_matrix(NumericVector theta, NumericMatrix moves, int n
    }
 
   return moves_reduced;
-}    
+}
 
 
 
@@ -259,9 +259,9 @@ NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
 	List presence = as<List>(overlap["presence"]);
 	List cluster_list = as<List>(overlap["cluster.list"]);
 
-	int k = theta.size(), n_zones = cluster_list.size(), counter, zone, zone_area, 
+	int k = theta.size(), n_zones = cluster_list.size(), counter, zone, zone_area,
 	n_birth_moves;//, move_possible;
-	
+
 	NumericVector overlap_vector(n_zones);
   NumericMatrix birth_moves(1, n_zones);
 
@@ -274,25 +274,25 @@ NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
 	for(int j=0; j<k; ++j) {
 		// Identify zone within config, and all areas in the zone
     // Watch R vs C indexing
-		zone = theta[j] - 1;  
+		zone = theta[j] - 1;
 		Rcpp::NumericVector zone_areas = cluster_list[zone];
 
       // Reset the vector that tracks if other zones overlap the current zone
 		for(int z=0; z<n_zones; ++z) {
 			overlap_vector[z] = 0;
 		}
-		
+
       // For all areas in zone, identify which other zones it is present in
 		for(int m=0; m<zone_areas.size(); ++m) {
 				// Watch R vs C indexing
 			zone_area = zone_areas[m] - 1;
-			
+
 			Rcpp::NumericVector other_zones = presence[zone_area];
 			for(int l=0; l<other_zones.size(); ++l) {
 				overlap_vector[other_zones[l] - 1 ] = 1;
 			}
-			
-        // Update which moves are possible using boolean algebra 
+
+        // Update which moves are possible using boolean algebra
 			for(int z=0; z<n_zones; ++z) {
 				birth_moves(0, z) *= 1-overlap_vector[z];
 			}
@@ -305,25 +305,25 @@ NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
   n_birth_moves = sum(birth_moves);
   //move_possible = n_birth_moves > 0;
   NumericMatrix birth_moves_reduced(k+1, n_birth_moves);
-  
+
   // Fill in old theta
   for(int i=0; i<n_birth_moves; ++i) {
     for(int j=0; j<k; ++j) {
       birth_moves_reduced(j, i) = theta[j];
     }
   }
-  
+
   // Adjust configs to include new single zone
   counter=0;
   for(int z=0; z<n_zones; ++z) {
     if(birth_moves(0, z) == 1){
       // Watch R vs C indexing
-      birth_moves_reduced(k, counter) = z + 1; 
+      birth_moves_reduced(k, counter) = z + 1;
       counter++;
     }
   }
-    
-    
+
+
   /*
    * Sort values in each column
    */
@@ -342,15 +342,15 @@ NumericMatrix return_birth_moves(NumericVector theta, List overlap) {
    * Output results
    */
    return birth_moves_reduced;
-//   List results = List::create(_["birth_moves"] = birth_moves_reduced, 
+//   List results = List::create(_["birth_moves"] = birth_moves_reduced,
 //   	_["move_possible"] = move_possible);
 //   return results;
 }
-    
-    
-    
+
+
+
 // [[Rcpp::export]]
-List return_local_moves(NumericVector theta, List overlap, NumericMatrix 
+List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 	cluster_coords) {
 
 	List presence = as<List>(overlap["presence"]);
@@ -359,26 +359,26 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 	int k = theta.size(), n_zones = cluster_list.size(), zone, start, end, zone_sub,
 	zone_sub2, center;
 
-	NumericVector overlap_vector(n_zones), diff_center(n_zones), 
-  same_center(n_zones), 
+	NumericVector overlap_vector(n_zones), diff_center(n_zones),
+  same_center(n_zones),
   move_possible(3);
 
   NumericMatrix growth_moves(k, n_zones), trim_moves(k, n_zones),
-  replace_moves(k, n_zones), 
+  replace_moves(k, n_zones),
   growth_moves_reduced, trim_moves_reduced, replace_moves_reduced;
 
 
   /*
-   * Loop over all component single zones in config 
+   * Loop over all component single zones in config
    */
 	for(int j=0; j<k; ++j){
 		// Identify single zone in question and its center
 		// Watch R vs C indexing
-		zone = theta[j] - 1; 
-   	center = cluster_coords(zone, 0);  
+		zone = theta[j] - 1;
+   	center = cluster_coords(zone, 0);
 
-		// Identify all single zones that the same/different centering area.  
-		// Note: [start, end) are the indices of all single zones with the same 
+		// Identify all single zones that the same/different centering area.
+		// Note: [start, end) are the indices of all single zones with the same
 		// center
 		for(int i=0; i<n_zones; ++i) {
 			if(cluster_coords(i, 0) == center) {
@@ -409,7 +409,7 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
 
 				// Reset the vector that tracks if other zones overlap the current zone
    			for(int z=0; z<n_zones; ++z) {
-   				overlap_vector[z] = 0;   
+   				overlap_vector[z] = 0;
    			}
 
    			Rcpp::NumericVector areas = cluster_list[zone_sub];
@@ -452,7 +452,7 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
   move_possible[0] = sum(growth_moves) > 0;
   move_possible[1] = sum(trim_moves) > 0;
   move_possible[2] = sum(replace_moves) > 0;
-   
+
   growth_moves_reduced = clean_moves_matrix(theta, growth_moves, n_zones);
   trim_moves_reduced = clean_moves_matrix(theta, trim_moves, n_zones);
   replace_moves_reduced = clean_moves_matrix(theta, replace_moves, n_zones);
@@ -461,28 +461,28 @@ List return_local_moves(NumericVector theta, List overlap, NumericMatrix
    * Output results
    */
    List results = List::create(
-   	_["growth_moves"] = growth_moves_reduced, 
-    _["trim_moves"] = trim_moves_reduced, 
-    _["replace_moves"] = replace_moves_reduced, 
+   	_["growth_moves"] = growth_moves_reduced,
+    _["trim_moves"] = trim_moves_reduced,
+    _["replace_moves"] = replace_moves_reduced,
     _["move_possible"] = move_possible
    	);
 
-   return results;  
+   return results;
 }
 
 
 
 // [[Rcpp::export]]
-List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init, 
-	List overlap, NumericMatrix cluster_coords, NumericVector p_moves_orig, 
+List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
+	List overlap, NumericMatrix cluster_coords, NumericVector p_moves_orig,
 	int J, NumericVector lkhd_z, NumericVector lambda){
-	
+
 	int n_zones = cluster_coords.nrow(), z_star, z,
-  k, k_rev, 
+  k, k_rev,
   move, move_rev,
   n_moves, n_moves_rev;
 
-	NumericVector reverse = NumericVector::create(1, 0, 2, 4, 3);  
+	NumericVector reverse = NumericVector::create(1, 0, 2, 4, 3);
 	double p_num, p_denom, u;
 
 	// Store Outputs Here
@@ -505,9 +505,9 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 	//----------------------------------------------------------
   // initial value
 	sample[0] = theta_init;
-  
+
 	for(int sim=1; sim<n_sim; ++sim) {
- 
+
 		// Select Sampling Type:  Remove Later?
     NumericVector p(n_zones);
 		int sampling_type = pattern[ sim % pattern.size() ];
@@ -519,23 +519,23 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
         p[i] = prop_p[i];
 		}
 
-    // Get theta info 
+    // Get theta info
     NumericVector theta = sample[sim-1];
     k = theta.size();
 
 
     //---------------------------------------------------------------------
     // Forward moves
-    //--------------------------------------------------------------------- 
+    //---------------------------------------------------------------------
     // Reset forward values
     p_num = 1;
     NumericVector p_moves(p_moves_orig.size());
     for(int i=0; i<p_moves_orig.size(); ++i)
   	  p_moves[i] = p_moves_orig[i];
-    
-    //-----------------------------------------------------    
+
+    //-----------------------------------------------------
 		// Figure out legal forward moves, get their probs, sample
-    //-----------------------------------------------------    
+    //-----------------------------------------------------
     // k==0: only birth move
 		if(k==0){
       for(int i=0; i<p_moves.size(); ++i)
@@ -545,15 +545,15 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     // k==J: no birth move
 		if(k==J){
 			p_moves[4] = 0;
-		}  
+		}
     // Figure out if local moves are possible
-    List local_moves = return_local_moves(theta, overlap, cluster_coords);    
+    List local_moves = return_local_moves(theta, overlap, cluster_coords);
     Rcpp::NumericVector local_move_possible = local_moves["move_possible"];
     for(int i=0; i<local_move_possible.size(); ++i) {
       if(local_move_possible[i] == 0) {
         p_moves[i] = 0;
       }
-    }  
+    }
     // Figure out if birth moves are possible
     NumericMatrix birth_moves = return_birth_moves(theta, overlap);
     if(birth_moves.ncol() == 0) {
@@ -561,13 +561,13 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     }
 
 		// Renormalize prob and sample move
-    p_moves = normalize(p_moves); 
-    
+    p_moves = normalize(p_moves);
+
 		move = ProbSampleReplace(p_moves);
 		p_num *= p_moves[move];
 
-    
-    //-----------------------------------------------------    
+
+    //-----------------------------------------------------
 		// Set up sampling space of configurations
     NumericMatrix moves;
 		// Local moves
@@ -580,12 +580,12 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		}
 		// Birth moves
 		if(move == 4) {
-      moves = birth_moves;        
+      moves = birth_moves;
 		}
 
 
     //--------------------------------------------------
-		// Sample configs: 
+		// Sample configs:
 		//--------------------------------------------------
     k_rev = moves.nrow();
     NumericVector theta_star(k_rev);
@@ -606,16 +606,16 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 				}
 			}
 			probs = normalize(probs);
-      
+
 			// Sample a new configuration theta_star and sort it
       z_star = ProbSampleReplace(probs);
 			for(int j=0; j<k_rev; ++j){
-				theta_star[j] = moves(j, z_star); 
+				theta_star[j] = moves(j, z_star);
 			}
-      
+
       // Update prob
       p_num *= probs[z_star];
-      
+
 		} // end if/else if(move==3 && k==1)
 
 
@@ -628,7 +628,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
     NumericVector p_moves_rev(p_moves_orig.size());
     for(int i=0; i<p_moves_orig.size(); ++i)
       p_moves_rev[i] = p_moves_orig[i];
-    
+
   	//------------------------------------------------------
 		// Figure out legal backward moves and get their probs
 		//------------------------------------------------------
@@ -643,24 +643,24 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 			p_moves_rev[4] = 0;
 		}
     // Figure out if local moves are possible
-    List local_rev_moves = return_local_moves(theta_star, overlap, cluster_coords);    
+    List local_rev_moves = return_local_moves(theta_star, overlap, cluster_coords);
     Rcpp::NumericVector local_rev_move_possible = local_rev_moves["move_possible"];
     for(int i=0; i<3; ++i) {
       if(local_rev_move_possible[i] == 0) {
         p_moves_rev[i] = 0;
       }
-    }  
+    }
     // Figure out if birth moves are possible
     NumericMatrix birth_rev_moves = return_birth_moves(theta_star, overlap);
     if(birth_rev_moves.ncol() == 0){
       p_moves_rev[4] = 0;
     }
-    
+
 		// Renormalize prob, set determined reverse move
-    p_moves_rev = normalize(p_moves_rev);  
+    p_moves_rev = normalize(p_moves_rev);
 		move_rev = reverse[move];
 		p_denom *= p_moves_rev[move_rev];
-    
+
 		//--------------------------------------------------
 		// Set up sampling space of configurations
 		//--------------------------------------------------
@@ -675,7 +675,7 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		}
 		// Birth moves
 		if(move_rev == 4) {
-      moves_rev = birth_rev_moves;        
+      moves_rev = birth_rev_moves;
 		}
 
 
@@ -702,40 +702,40 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 
 			// Find original configuration theta FIX THIS
   	  for(z=0; z<n_moves_rev; ++z){
-        NumericVector config = moves_rev( _, z);    
+        NumericVector config = moves_rev( _, z);
         if(NumericVectorEquality(config, theta))
           break;
 		  }
-      
+
       // Update prob
-      p_denom *= probs[z]; 
+      p_denom *= probs[z];
 
 		} // end if/else if(move==3 && k==1)
 
-//    printf("%u %u %u \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f\n", 
+//    printf("%u %u %u \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f %4.6f %4.6f %4.6f \n%4.6f %4.6f\n",
 //    move+1, z_star, move_rev+1,
 //    p_moves[0], p_moves[1], p_moves[2], p_moves[3], p_moves[4],
 //    p_moves_rev[0], p_moves_rev[1], p_moves_rev[2], p_moves_rev[3], p_moves_rev[4],
 //    p_num, p_denom
 //    );
-    
+
   	//-----------------------------------------------------------------
     // M-H Ratio
-  	//-----------------------------------------------------------------    
+  	//-----------------------------------------------------------------
     ratio[sim-1] = p_denom/p_num;
 		ratio[sim-1] *= lambda[k_rev];
-  	ratio[sim-1] /= lambda[k]; 
-        
+  	ratio[sim-1] /= lambda[k];
+
 		if(k_rev != 0) {
 			for(int j=0; j<k_rev; ++j) {
 				// Watch R vs C indexing
-				ratio[sim-1] *= lkhd_z[theta_star[j]-1]; 
+				ratio[sim-1] *= lkhd_z[theta_star[j]-1];
 			}
 		}
 		if(k != 0) {
 			for(int j=0; j<k; ++j) {
 				// Watch R vs C indexing
-				ratio[sim-1] /= lkhd_z[theta[j]-1]; 
+				ratio[sim-1] /= lkhd_z[theta[j]-1];
 			}
 		}
 
@@ -747,16 +747,15 @@ List MCMC_simulation(int n_sim, NumericVector pattern, NumericVector theta_init,
 		} else {
 			sample[sim] = theta;
 		}
-		
+
 		// Watch R vs C indexing
 		move_trace[sim-1] = move + 1;
 
-  
+
   } // end overall n_sim
-  
+
   return List::create(
     _["sample"] = sample, _["move_trace"] = move_trace,
     _["accpt_trace"] = accpt_trace, _["ratio"] = ratio
-    ); 
+    );
 }
-
