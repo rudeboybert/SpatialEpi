@@ -1,12 +1,6 @@
 expected <- 
   function(population, cases, n.strata){
     
-  if(!is.data.frame(population))
-    stop()
-  
-  if(!is.data.frame(cases))
-    stop()
-  
   
 
 n <- length(population)/n.strata
