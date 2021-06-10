@@ -23,3 +23,6 @@ Imports: Rcpp, MASS, maptools, spdep, methods, grDevices, graphics,
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
