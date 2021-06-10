@@ -1,5 +1,7 @@
 #include <RcppArmadilloExtensions/sample.h>
+#include <Rcpp.h>
 // [[Rcpp::depends(RcppArmadillo)]]
+//[[Rcpp::plugins(cpp11)]]
 using namespace Rcpp;
 
 
