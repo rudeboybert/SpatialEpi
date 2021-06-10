@@ -18,8 +18,24 @@ License: GPL-2
 LazyData: true
 URL: https://github.com/rudeboybert/SpatialEpi
 BugReports: https://github.com/rudeboybert/SpatialEpi/issues
-Imports: Rcpp, MASS, maptools, spdep, methods, grDevices, graphics,
-        stats
-LinkingTo: Rcpp, RcppArmadillo
+Imports:
+    Rcpp, 
+    MASS, 
+    maptools, 
+    spdep, 
+    methods, 
+    grDevices, 
+    graphics,
+    stats
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 NeedsCompilation: yes
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Encoding: UTF-8
