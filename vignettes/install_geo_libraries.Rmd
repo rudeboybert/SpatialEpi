@@ -1,5 +1,5 @@
 ---
-title: "`SpatialEpi`: Installing Geospatial Libraries"
+title: "Installing Geospatial Libraries"
 author: "Albert Y. Kim"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,6 +8,17 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SpatialEpi)
+```
 
 The next steps will install the open source geospatial libaries necessary for
 your computer to read in ESRI shapefiles. Fortunately you only have to do this
