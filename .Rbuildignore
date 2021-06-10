@@ -10,3 +10,6 @@
 ^other$
 ^README_figure$
 ^CRAN-RELEASE$
+^doc$
+^Meta$
+^\.github$

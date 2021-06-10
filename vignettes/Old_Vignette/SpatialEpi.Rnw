@@ -44,6 +44,7 @@ the {\tt SpatialEpi} Package }
 
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \maketitle
 \tableofcontents
 \newpage
@@ -59,9 +60,9 @@ All the {\tt R} code is this vignette can be extracted into a single script file
 %------------------------------------------------
 <<echo=TRUE,print=FALSE,fig=FALSE>>= 
 library(SpatialEpi)
-Rcode <- system.file("doc","SpatialEpi.Rnw",package="SpatialEpi")
-options(device.ask.default=FALSE)
-Stangle(Rcode)
+# Rcode <- system.file("doc","SpatialEpi.Rnw",package="SpatialEpi")
+# options(device.ask.default=FALSE)
+# Stangle(Rcode)
 @
 %------------------------------------------------
 
@@ -759,7 +760,7 @@ Informative priors can be independently specified on each of the fixed effects. 
 \mu &=& \frac{z_{2}\log(\theta_{1})-z_{1}\log(\theta_{2})}{z_{2}-z_{1}}\\
 \sigma &=& \frac{\log(\theta_{2})-\log(\theta_{1})}{z_{2}-z_{1}}
 \end{eqnarray*}   
-where $z_{1}$, $z_{2}$ are the $p_{1}, p_{2}$ quantiles of a standard normal distribution. For example, in an epidemiological context, we may wish to specify a prior on a relative risk parameter, $\exp(\beta_{1})$, which has a median of $1$ and a $95\%$ point of $3$ (if we think it is unlikely that the relative risk associated with a unit increase in exposure exceeds $3$). These speciÞcations lead to $\beta_{1} \sim N(0, 0.6682^{2})$.\\
+where $z_{1}$, $z_{2}$ are the $p_{1}, p_{2}$ quantiles of a standard normal distribution. For example, in an epidemiological context, we may wish to specify a prior on a relative risk parameter, $\exp(\beta_{1})$, which has a median of $1$ and a $95\%$ point of $3$ (if we think it is unlikely that the relative risk associated with a unit increase in exposure exceeds $3$). These speci?cations lead to $\beta_{1} \sim N(0, 0.6682^{2})$.\\
  
 
 %------------------------------------------------

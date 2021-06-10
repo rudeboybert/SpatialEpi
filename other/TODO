@@ -1,5 +1,0 @@
--Finish kulldorff R functions and roxygenating documentation!
--Finish copying over documentation to besag_newell
--Remove sp.obj from input to bayes_cluster
--Make . and _ consistent. Ex: n.sim to n_sim
--Package Vignette

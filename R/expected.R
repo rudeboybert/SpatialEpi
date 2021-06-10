@@ -1,5 +1,7 @@
-expected <-
-function(population, cases, n.strata){
+expected <- 
+  function(population, cases, n.strata){
+    
+  
 
 n <- length(population)/n.strata
 E <- rep(0, n)
@@ -25,3 +27,8 @@ for(i in 1:n) {
 
 return(E)
 }
+
+
+
+
+
