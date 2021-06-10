@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
 
 # SpatialEpi
 
-[![Travis-CI Build Status](https://travis-ci.org/rudeboybert/SpatialEpi.svg?branch=master)](https://travis-ci.org/rudeboybert/SpatialEpi) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
+[![R-CMD-check](https://github.com/rudeboybert/SpatialEpi/workflows/R-CMD-check/badge.svg)](https://github.com/rudeboybert/SpatialEpi/actions)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
 
 Package of data and methods for spatial epidemiology.
 
@@ -34,20 +35,7 @@ Or the development version from GitHub:
 devtools::install_github("rudeboybert/SpatialEpi")
 ```
 
-Additional Requirements:
-
-
-- Add the C++11 plugin for the Rcpp package
-```{r}
-install.packages(cpp11)
-library(cpp11)
-```
-
-- Add plugin to C code 
-```{Rcpp}
- //[[Rcpp::plugins(cpp11)]]
-```
-
+Note: You may need to install the `cpp11` for all C++ code to compile correctly.
 
 
 
@@ -95,5 +83,5 @@ output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
 ```
 
 ```{r, fig.height=6.5}
-plotmap(output$post_map$high_area, sp.obj)
+plotmap(output$post.map$high.area, sp.obj)
 ```
