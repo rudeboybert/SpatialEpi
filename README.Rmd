@@ -12,12 +12,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # SpatialEpi
 
-[![Travis-CI Build Status](https://travis-ci.org/rudeboybert/SpatialEpi.svg?branch=master)](https://travis-ci.org/rudeboybert/SpatialEpi)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
+[![Travis-CI Build Status](https://travis-ci.org/rudeboybert/SpatialEpi.svg?branch=master)](https://travis-ci.org/rudeboybert/SpatialEpi) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
 
 Package of data and methods for spatial epidemiology.
 
@@ -37,10 +34,26 @@ Or the development version from GitHub:
 devtools::install_github("rudeboybert/SpatialEpi")
 ```
 
+Additional Requirements:
+
+
+- Add the C++11 plugin for the Rcpp package
+```{r}
+install.packages(cpp11)
+library(cpp11)
+```
+
+- Add plugin to C code 
+```{Rcpp}
+ //[[Rcpp::plugins(cpp11)]]
+```
+
+
+
+
 ## Example
 
-We load the data and convert the coordinate system from latitude/longitude to a 
-grid-based system.  
+We load the data and convert the coordinate system from latitude/longitude to a grid-based system.
 
 ```{r, message=FALSE, warning=FALSE}
 library(SpatialEpi)
@@ -54,7 +67,7 @@ population <- NYleukemia$data$population
 cases <- NYleukemia$data$cases
 ```
 
-We plot the incidence of leukemia for each census tract.  
+We plot the incidence of leukemia for each census tract.
 
 ```{r, message=FALSE, warning=FALSE, fig.height=6.5}
 plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
@@ -81,10 +94,6 @@ output <- bayes_cluster(y, E, population, sp.obj, centroids, max.prop,
                         n.sim.post)
 ```
 
-
 ```{r, fig.height=6.5}
 plotmap(output$post_map$high_area, sp.obj)
 ```
-
-
-
