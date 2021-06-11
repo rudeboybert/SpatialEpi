@@ -2,17 +2,27 @@
 title: Template for preparing your research report submission to PeerJ using RMarkdown
 preprint: false
 author: 
-  - name: Barbara McClintock
+  - name: Cici Chen
     affiliation: 1
-    corresponding: true
-    email: mcclintockb@cshl.edu
-  - name: Charles E. Darwin
+    email: cicichen@u.washington.edu
+  - name: Albert Y. Kim
+    affiliation: 1
+    email: albert@stat.washington.edu
+  - name: Michelle Ross
+    affiliation: 1
+    email: micher3@u.washington.edu
+  - name: Jon Wakefield
+    affiliation: 1
+    email: jonno@u.washington.edu
+  - name: Mikael Moise
     affiliation: 2
+    email: amoise@smith.edu
 affiliation:
   - code: 1
-    address: Cold Spring Harbor Laboratory, One Bungtown Road Cold Spring Harbor, NY 11724
+    address: Dept of Biostatistics, University of Washington, Box 357232, Seattle WA, 98195-7232
   - code: 2
-    address: Down House, Luxted Rd, Downe, Orpington BR6 7JT, UK
+    address: Dept of Statistical and Data Science, Smith College,  10 Elm St, Northampton, MA 01060, United States
+  
 abstract: >
   The abstract of the article.
   It can also be on *multiple* lines.
@@ -146,7 +156,9 @@ We hope you find write\LaTeX useful for your PeerJ submission, and please let u
 
 \lipsum[7]
 
-\paragraph{Paragraph} \\lipsum[8]
+\paragraph{Paragraph}
+
+\\lipsum[8]
 
 ## Subsection {.unnumbered}
 
