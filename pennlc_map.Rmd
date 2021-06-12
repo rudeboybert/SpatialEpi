@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+author: "Arris Moise"
+date: "6/11/2021"
+output: html_document
+---
+
+
+```{r}
+library(ggplot2)
+library(leaflet)
+library(SpatialEpi)
+library(sf)
+x <- st_as_sf(pennLC$spatial.polygon)
+
+bins <- c(100, 200, 500, 1000)
+pal <- colorBin("YlOrRd", domain = pennLC$data, bins = bins)
+
+y <- pennLC$data
+
+w <- merge(x,y)
+
+m <- leaflet(x) %>% 
+  addPolygons(
+    fillColor = ~pal(w$cases),
+    weight = 2,
+  opacity = 1,
+  color = "white",
+  dashArray = "3",
+  fillOpacity = 0.7)
+
+m
+
+```
+
