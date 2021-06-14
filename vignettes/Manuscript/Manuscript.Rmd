@@ -7,7 +7,7 @@ author:
     email: cicichen@u.washington.edu
   - name: Albert Y. Kim
     affiliation: 1
-    email: albert@stat.washington.edu
+    email: akim04@smith.edu
   - name: Michelle Ross
     affiliation: 1
     email: micher3@u.washington.edu
