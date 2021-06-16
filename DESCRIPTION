@@ -26,7 +26,8 @@ Imports:
     methods, 
     grDevices, 
     graphics,
-    stats
+    stats,
+    sf
 LinkingTo:
     Rcpp,
     RcppArmadillo
