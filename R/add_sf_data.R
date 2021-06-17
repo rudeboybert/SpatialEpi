@@ -8,6 +8,9 @@ library(SpatialEpi)
 
 # Adding pennLC Pennsylvania lung cancer data as shapefile
 pennLC_sf <- read_csv("data-raw/pennLC_sf.csv")
+usethis::use_data(pennLC_sf,overwrite = TRUE)
+
+
 pennLC_sf <- st_as_sf(pennLC$spatial.polygon)
 
 # add all of the cases together by county
@@ -93,4 +96,5 @@ pennLC_sf <- left_join(pennLC_sf, pennLC_df)
 pennLC_sf <- pennLC_sf[c(3,2,1)]
 
 
-usethis::use_data(pennLC_sf,overwrite = TRUE)
+#usethis::use_data(pennLC_sf,overwrite = TRUE)
+
