@@ -40,13 +40,18 @@ Your introduction goes here! Some examples of commonly used commands and feature
 
 If you have a question, please use the help menu in the top right of the screen to get in touch. When your article or pre-print is complete, use the "Submit to PeerJ" button in the topbar to send your files to PeerJ.
 
-
 ## Pennsylvania Lung Cancer data
 
 ARRIS! WRITE HERE!
 
 
-
+#### How to make a static choropleth map of lung cancer cases
+```{r}
+library(SpatialEpi)
+library(ggplot2)
+ggplot() +
+  geom_sf(data = pennLC_sf, aes(fill = cases))
+```
 
 ## About PeerJ {.unnumbered}
 
