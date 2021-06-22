@@ -42,7 +42,8 @@ If you have a question, please use the help menu in the top right of the screen 
 
 ## Pennsylvania Lung Cancer data
 
-ARRIS! WRITE HERE!
+Population data was obtained from the 2000 decennial census, lung cancer 
+and smoking data were obtained from the Pennsylvania Department of Health website: https://www.health.pa.gov/Pages/default.aspx
 
 
 #### How to make a static choropleth map of lung cancer cases
