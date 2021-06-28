@@ -7,19 +7,14 @@ library(readr)
 library(SpatialEpi)
 
 # Adding pennLC Pennsylvania lung cancer data as shapefile
-pennLC_sf <- read_csv("data-raw/pennLC_sf.csv")
-#usethis::use_data(pennLC_sf,overwrite = TRUE)
-
-
 pennLC_sf <- st_as_sf(pennLC$spatial.polygon)
 
-# add all of the cases together by county
-pennLC_df <- pennLC$data %>%
-  group_by(county) %>%
-  summarise(cases = sum(cases))
+#load pennLC$data 
+pennLC_df <- pennLC$data 
 
 # add quotes to each county 
-county <- Hmisc::Cs(adams, allegheny,
+county <- Hmisc::Cs(adams, 
+                    allegheny,
                     armstrong,
                     beaver,
                     bedford,
@@ -92,9 +87,8 @@ pennLC_sf$county <- county
 # now that we have a common value we can join
 pennLC_sf <- left_join(pennLC_sf, pennLC_df)
 
-# reorder columns so that geometry is first
-pennLC_sf <- pennLC_sf[c(3,2,1)]
-
+# reorder columns so that geometry is first (VOID)
+#pennLC_sf <-pennLC_sf[c(geometry, county, cases, population, race, gender, age)]
 
 usethis::use_data(pennLC_sf,overwrite = TRUE)
 

@@ -1,8 +1,6 @@
-#' 
-#' @title Pennsylvania Lung Cancer SF Object
-#' @name pennLC_sf
-#' @description 
-#' pennLC_sf is a spatial object that can be used to create static or interactive maps.
+#' Pennsylvania Lung Cancer SF Object
+#'
+#' pennLC_sf is a spatial object that is used to create static or interactive maps.
 #' 
 #' @examples
 #' Static Map
@@ -15,5 +13,4 @@
 #' leaflet(pennLC_sf) %>%
 #' addPolygons()
 #' 
-#' @return \code{pennLC_sf}
-NULL
+"pennLC_sf"
