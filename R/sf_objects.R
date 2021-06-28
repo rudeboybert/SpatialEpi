@@ -14,11 +14,7 @@
 #' 
 #' }
 #' 
-#' 
-#' 
-#' 
-#' 
-#' @examples
+#' @examples 
 #' Static Map
 #' 
 #' library(ggplot2)
@@ -31,4 +27,5 @@
 #' leaflet(pennLC_sf) %>%
 #' addPolygons()
 #' 
+#' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{http://www.dsf.health.state.pa.us/}.
 "pennLC_sf"
