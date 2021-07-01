@@ -87,6 +87,9 @@ pennLC_sf$county <- county
 # now that we have a common value we can join
 pennLC_sf <- left_join(pennLC_sf, pennLC_df)
 
+# Adding smoking variable
+pennLC_sf <- left_join(pennLC_sf, tibble(pennLC$smoking), by = "county")
+
 # reorder columns so that geometry is first (VOID)
 #pennLC_sf <-pennLC_sf[c(geometry, county, cases, population, race, gender, age)]
 

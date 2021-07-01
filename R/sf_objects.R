@@ -14,6 +14,7 @@
 #'  \item{race}{Race (w = white and o = non-white)}
 #'  \item{gender}{Gender (f = female and m = male)}
 #'  \item{age}{Age (4 bands)}
+#'  \item{smoking}{Overall county smoking rate (not broken down by strata)}
 #'  \item{geometry}{Geometric representation of counties in Pennsylvania}
 #' }
 #' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{http://www.dsf.health.state.pa.us/}.
