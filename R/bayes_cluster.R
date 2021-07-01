@@ -101,14 +101,13 @@
 #' # MCMC parameters
 # pattern <- c(0, 1)
 # p.moves <- normalize(c(1, 1, 1, 1, 1))
--------------------------------------------------------------------------------
 #' # Geographic info and create geographical objects to use
 #' geo.objects <- create_geo_objects(max.prop, population, centroids, sp.obj)
 #' overlap <- geo.objects$overlap
 #' cluster.coords <- geo.objects$cluster.coords
 #' n <- length(E)
 #' n.zones <- nrow(cluster.coords)
--------------------------------------------------------------------------------
+
 #' # Set cutoffs of the relative risk to determine low and high risk
 #' RR.range <- seq(0.7, 1/0.7, length=100000)
 #' pN <- dgamma(RR.range, shape[1], rate[1])
@@ -121,7 +120,6 @@
 #' # Set uniform prior on single zones.
 #' prior.z <- rep(1/n.zones, n.zones)
 #' log_prior.z <- log(prior.z) - log(sum(prior.z))
--------------------------------------------------------------------------------
 #' # Estimate q and lambda
 #' results <- estimate_lambda(n.sim.lambda, J, prior.z, overlap, pi0)
 #' lambda <- results$lambda
@@ -153,15 +151,12 @@
 #' log_post.z <- log_prior.z + log_BF.z
 #' # Do NOT normalize this quantity
 #' post.z <- exp(log_post.z)
-
 #' # Generate MCMC samples from prior
 #' post.chain <- MCMC_simulation(n.sim.post, pattern, theta.init, overlap, 
 #'                              cluster.coords, p.moves, J, post.z, lambda)
-
 #' # Trim burn-in
 #' burnin <- n.sim.post * burnin.prop
 #' post.sample <- post.chain$sample[-c(1:burnin)]
-
 #' # Prior Probs of Cluster Membership for each area
 #' param.post.zone <- list(shape=c(yz+shape[2]), rate=c(Ez+rate[2]))
 #' RR.post.area <- (y+shape[1])/(E+rate[1])
