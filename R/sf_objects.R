@@ -1,6 +1,9 @@
-#' Pennsylvania Lung Cancer SF Object
+#' Pennsylvania Lung Cancer
 #'
-#' pennLC_sf is a spatial object that is used to create static or interactive maps for lunch cancer in Pennsylvania in 2002.
+#' County-level (n=67) population/case data for lung cancer in 
+#' Pennsylvania in 2002, stratified on race (white vs non-white), 
+#' gender and age (Under 40, 40-59, 60-69 and 70+). Additionally, 
+#' county-specific smoking rates.
 #' 
 #' @format 
 #' \describe{
