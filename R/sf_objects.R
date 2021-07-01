@@ -5,7 +5,8 @@
 #' gender and age (Under 40, 40-59, 60-69 and 70+). Additionally, 
 #' county-specific smoking rates.
 #' 
-#' @format An sf `POLYGON` data frame with 1072 rows = 67 counties x 2 race x 2 gender x 4 age bands
+#' @format An sf `POLYGON` data frame with 1072 rows = 67 counties x 2 race 
+#' x 2 gender x 4 age bands
 #' \describe{
 #'  \item{county}{Pennsylvania county}
 #'  \item{cases}{Number of cases per county split by strata}
@@ -15,7 +16,7 @@
 #'  \item{age}{Age (4 bands)}
 #'  \item{geometry}{Geometric representation of counties in Pennsylvania}
 #' }
-#' 
+#' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{http://www.dsf.health.state.pa.us/}.
 #' @examples 
 #' Static Map
 #' 
@@ -28,6 +29,4 @@
 #' library(leaflet)
 #' leaflet(pennLC_sf) %>%
 #' addPolygons()
-#' 
-#' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{http://www.dsf.health.state.pa.us/}.
 "pennLC_sf"
