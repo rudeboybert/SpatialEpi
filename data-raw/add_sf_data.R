@@ -1,9 +1,7 @@
 library(sf)
-library(plyr)
 library(dplyr)
 library(Hmisc)
 library(usethis)
-library(readr)
 library(SpatialEpi)
 
 # Adding pennLC Pennsylvania lung cancer data as shapefile
@@ -85,13 +83,11 @@ county <- Hmisc::Cs(adams,
 pennLC_sf$county <- county
 
 # now that we have a common value we can join
-pennLC_sf <- left_join(pennLC_sf, pennLC_df)
+pennLC_sf <- left_join(pennLC_sf, pennLC_df, by = "county")
 
 # Adding smoking variable
 pennLC_sf <- left_join(pennLC_sf, tibble(pennLC$smoking), by = "county")
 
-# reorder columns so that geometry is first (VOID)
-#pennLC_sf <-pennLC_sf[c(geometry, county, cases, population, race, gender, age)]
 
 usethis::use_data(pennLC_sf,overwrite = TRUE)
 
