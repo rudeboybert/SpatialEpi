@@ -5,16 +5,15 @@
 #' gender and age (Under 40, 40-59, 60-69 and 70+). Additionally, 
 #' county-specific smoking rates.
 #' 
-#' @format 
+#' @format An sf `POLYGON` data frame with 1072 rows = 67 counties x 2 race x 2 gender x 4 age bands
 #' \describe{
-#'  \item{geometry}{Counties in Pennsylvania}
-#'  \item{cases}{Number of cases}
 #'  \item{county}{Pennsylvania county}
-#'  \item{population}{Population of the county}
-#'  \item{race}{Race of the person (w = white and o = non-white) }
-#'  \item{gender}{Gender of the person (f = female and m = male)}
-#'  \item{age}{Age of the person}
-#' 
+#'  \item{cases}{Number of cases per county split by strata}
+#'  \item{population}{Population per county split by strata}
+#'  \item{race}{Race (w = white and o = non-white)}
+#'  \item{gender}{Gender (f = female and m = male)}
+#'  \item{age}{Age (4 bands)}
+#'  \item{geometry}{Geometric representation of counties in Pennsylvania}
 #' }
 #' 
 #' @examples 
