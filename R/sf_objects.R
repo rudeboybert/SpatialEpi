@@ -18,15 +18,15 @@
 #' }
 #' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{http://www.dsf.health.state.pa.us/}.
 #' @examples 
-#' Static Map
-#' 
 #' library(ggplot2)
-#' ggplot() + 
-#' geom_sf(data = pennLC_sf)
+#' library(dplyr)
+#' # Sum cases & population for each county
+#' lung_cancer_rate <- pennLC_sf %>% 
+#'   group_by(county) %>% 
+#'   summarize(cases = sum(cases), population = sum(population)) %>% 
+#'   mutate(rate = cases/population)
 #' 
-#' Interactive Map using Leaflet
-#' 
-#' library(leaflet)
-#' leaflet(pennLC_sf) %>%
-#' addPolygons()
+#' # Static map of Pennsylvania lung cancer rates for each county
+#' ggplot() +
+#'   geom_sf(data = lung_cancer_rate, aes(fill = rate))
 "pennLC_sf"
