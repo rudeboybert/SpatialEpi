@@ -67,6 +67,13 @@ pk.y=pk.y))
 Implementation of the Bayesian Cluster detection model of Wakefield and Kim (2013) for a study region with \code{n} areas. The prior and posterior probabilities of each of the \code{n.zones} single zones being a cluster/anti-cluster are estimated using Markov chain Monte Carlo. Furthermore, the posterior probability of k clusters/anti-clusters is computed.
 }
 \examples{
+
+bayes_cluster <-
+ function(y, E, population, sp.obj, centroids, max.prop, shape, rate, J, pi0,
+          n.sim.lambda, n.sim.prior, n.sim.post, burnin.prop = 0.1,
+          theta.init = vector(mode="numeric", length=0))
+print(paste("Algorithm started on:", date()))
+
  
 # Note for the NYleukemia example, 4 census tracts were completely 
 # surrounded by another unique census tract; when applying the Bayesian cluster detection 
@@ -182,6 +189,7 @@ param.post.zone <- list(shape=c(yz+shape[2]), rate=c(Ez+rate[2]))
 RR.post.area <- (y+shape[1])/(E+rate[1])
 post.map <- process_MCMC_sample(post.sample, param.post.zone, RR.post.area, 
                                overlap$cluster.list, cutoffs)
+                               
 # Posterior probs of k cluster/anti-clusters for k=0,...,J
 k.vector <- table(sapply(post.chain$sample,length))
 k.names <- as.numeric(names(k.vector))
@@ -189,6 +197,7 @@ k.vector <- normalize(k.vector)
 pk.y <- rep(0, J+1)
 pk.y[k.names+1] <- k.vector
 print(paste("Posterior estimation complete on:", date()))
+
 #-------------------------------------------------------------------------------
 # Output
 #-------------------------------------------------------------------------------
