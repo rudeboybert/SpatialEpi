@@ -3,15 +3,15 @@
 \docType{data}
 \name{scotland_sf}
 \alias{scotland_sf}
-\title{Scotland SF Object}
+\title{Lip Cancer in Scotland}
 \format{
 A data frame with 56 rows representing counties and 5 variables:
 \describe{
-  \item{geometry}{Scotland counties}
-  \item{cases}{indicates that regional subsidiaries are included}
-  \item{county.names}{available seat kilometers flown every week}
-  \item{AFF}{available seat kilometers flown every week}
-  \item{expected}{available seat kilometers flown every week}
+  \item{geometry}{Geometric representation of counties in Scotland}
+  \item{cases}{Number of Lip Cancer cases per county}
+  \item{county.names}{Scotland County name}
+  \item{AFF}{Proportion of the population who work in agricultural fishing and farming}
+  \item{expected}{Expected number of lip cancer cases}
 }
 }
 \source{
@@ -21,6 +21,6 @@ Kemp I., Boyle P., Smans M. and Muir C. (1985) Atlas of cancer in Scotland, 1975
 scotland_sf
 }
 \description{
-scotland_sf is a spatial object that can be used to create static or interactive maps for lip cancer among males in Scotland between 1975-1980.
+County-level (n=56) data for lip cancer among males in Scotland between 1975-1980
 }
 \keyword{datasets}
