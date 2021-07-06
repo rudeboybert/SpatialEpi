@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/rudeboybert/SpatialEpi/workflows/R-CMD-check/badge.svg)](https://github.com/rudeboybert/SpatialEpi/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
 
-Package of data and methods for spatial epidemiology.
+Package of data and methods for spatial epidemiology. 
 
 ## Installation
 

@@ -26,7 +26,10 @@ Imports:
     methods, 
     grDevices, 
     graphics,
-    stats
+    stats,
+    sf,
+    dplyr,
+    ggplot2
 LinkingTo:
     Rcpp,
     RcppArmadillo
