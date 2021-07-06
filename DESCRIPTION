@@ -27,7 +27,9 @@ Imports:
     grDevices, 
     graphics,
     stats,
-    sf
+    sf,
+    dplyr,
+    ggplot2
 LinkingTo:
     Rcpp,
     RcppArmadillo
