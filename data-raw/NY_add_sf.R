@@ -1,9 +1,7 @@
 library(sf)
-library(plyr)
 library(dplyr)
 library(Hmisc)
 library(usethis)
-library(readr)
 library(SpatialEpi)
 
 

@@ -1,14 +1,24 @@
-#' Upstate New York Leukemia SF Object
+#' Upstate New York Leukemia 
 #' 
-#' NYleukemia_sf is a spatial object that can be used to create static or interactive maps of Upstate New York Leukemia Data. 
 #' 
-#' @format A data frame with 281 rows representing airlines and 4 variables:
+#' Census tract level (\code{n=281}) leukemia data for the 8 counties in upstate New York from 1978-1982, paired with population data from the 1980 census.  
+#' Note that 4 census tracts were completely surrounded by another unique census tract; 
+#' when applying the Bayesian cluster detection model in \code{\link{bayes_cluster}},
+#' we merge them with the surrounding census tracts yielding \code{n=277} areas.
+#' 
+#' 
+#' @format An sf 'POLYGON' data frame with 281 rows  and 4 variables:
 #' \describe{
-#'   \item{geometry}{counties}
-#'   \item{cases}{number of cases}
-#'   \item{population}{number of people}
-#'   \item{censustract.FIPS}{unsure}
+#'   \item{geometry}{Geometric representation of 8 counties in upstate New York }
+#'   \item{cases}{Number of cases per county}
+#'   \item{population}{Population of each census tract}
+#'   \item{censustract.FIPS}{11-digit identification number for each county}
 #'   
 #' }
 #' @source Turnbull, B. W. et al (1990) Monitoring for clusters of disease: application to leukemia incidence in upstate New York \emph{American Journal of Epidemiology}, \bold{132}, 136--143
+#' 
+#' @examples 
+#' # Static map of NY Leukemia per county 
+#' ggplot() +
+#' geom_sf(data = NYleukemia_sf, aes(fill = cases))
 "NYleukemia_sf"
