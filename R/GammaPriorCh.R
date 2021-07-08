@@ -1,3 +1,13 @@
+#' Compute Parameters to Calibrate a Gamma Distribution
+#'
+#' @param theta 
+#' @param prob 
+#' @param d 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 GammaPriorCh <-
 function(theta, prob, d){
 	a <- d/2
