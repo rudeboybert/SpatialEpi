@@ -10,7 +10,7 @@ An sf 'POLYGON' data frame with 281 rows  and 4 variables:
   \item{geometry}{Geometric representation of 8 counties in upstate New York }
   \item{cases}{Number of cases per county}
   \item{population}{Population of each census tract}
-  \item{censustract.FIPS}{11-digit identification number for each county}
+  \item{censustract.FIPS}{11-digit Federal Information Processing System identification number for each county}
   
 }
 }
@@ -27,9 +27,9 @@ when applying the Bayesian cluster detection model in \code{\link{bayes_cluster}
 we merge them with the surrounding census tracts yielding \code{n=277} areas.
 }
 \examples{
-
-# Static map of NY Leukemia per county 
-ggplot() +
-geom_sf(data = NYleukemia_sf, aes(fill = cases))
+# Static map of NY Leukemia rate per county 
+ggplot(NYleukemia_sf) + 
+  geom_sf(aes(fill= cases/population)) + 
+  scale_fill_gradient(low = "white", high = "red")
 }
 \keyword{datasets}

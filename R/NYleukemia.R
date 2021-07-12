@@ -12,13 +12,14 @@
 #'   \item{geometry}{Geometric representation of 8 counties in upstate New York }
 #'   \item{cases}{Number of cases per county}
 #'   \item{population}{Population of each census tract}
-#'   \item{censustract.FIPS}{11-digit identification number for each county}
+#'   \item{censustract.FIPS}{11-digit Federal Information Processing System identification number for each county}
 #'   
 #' }
 #' @source Turnbull, B. W. et al (1990) Monitoring for clusters of disease: application to leukemia incidence in upstate New York \emph{American Journal of Epidemiology}, \bold{132}, 136--143
 #' 
 #' @examples 
-#' # Static map of NY Leukemia per county 
-#' ggplot() +
-#' geom_sf(data = NYleukemia_sf, aes(fill = cases))
+#' # Static map of NY Leukemia rate per county 
+#' ggplot(NYleukemia_sf) + 
+#'   geom_sf(aes(fill= cases/population)) + 
+#'   scale_fill_gradient(low = "white", high = "red")
 "NYleukemia_sf"
