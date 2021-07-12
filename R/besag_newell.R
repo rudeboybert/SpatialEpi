@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param geo 
+#' @param population 
+#' @param cases 
+#' @param expected.cases 
+#' @param k 
+#' @param alpha.level 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 besag_newell <-
 function(geo, population, cases, expected.cases=NULL, k, alpha.level){
 
