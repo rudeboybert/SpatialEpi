@@ -4,3 +4,7 @@
 inst/doc
 README_cache
 .DS_Store
+*.log
+doc
+Meta
+*.log

@@ -1,0 +1,858 @@
+%\VignetteIndexEntry{R Data and Methods for Spatial Epidemiology:  the SpatialEpi Package } 
+\documentclass{article}
+\usepackage[in]{fullpage}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage{color}
+\usepackage{Sweave}
+\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\let\pkg=\strong
+\newcommand{\boldsymbol}[1]{ \mbox{\boldmath $#1$ } }
+
+
+
+\title{ {\tt R} Data and Methods for Spatial Epidemiology:\\
+the {\tt SpatialEpi} Package }
+\author{
+	Cici Chen \footnote{Dept of Statistics, University of Washington, Box 354322, Seattle WA, 98195-4322} \and 
+	Albert Y. Kim\footnote{Dept of Statistics, University of Washington, Box 354322, Seattle WA, 98195-4322} \and 
+	Michelle Ross\footnote{Dept of Biostatistics, University of Washington, Box 357232, Seattle WA, 98195-7232} \and 
+	Jon Wakefield\footnote{Dept of Biostatistics, University of Washington, Box 357232, Seattle WA, 98195-7232}
+	\renewcommand{\thefootnote}{}
+	\footnote{
+		\href{mailto:cicichen@u.washington.edu}{cicichen@u.washington.edu},
+		\href{mailto:albert@stat.washington.edu}{albert@stat.washington.edu}, 
+		\href{mailto:micher3@u.washington.edu}{micher3@u.washington.edu},
+		\href{mailto:jonno@u.washington.edu}{jonno@u.washington.edu}
+	} 
+}
+%\author{
+%	Albert Y. Kim\footnote{Dept of Statistics, University of Washington, Box 354322, Seattle WA, 98195-4322} 	
+%	\and 
+%	Michelle Ross\footnote{Dept of Biostatistics, University of Washington, Box 357232, Seattle WA, 98195-7232} 		\and 
+%	Jon Wakefield\footnotemark[1] \footnotemark[2]
+%	\renewcommand{\thefootnote}{}
+%	\footnote{
+%		\href{mailto:albert@stat.washington.edu}{albert@stat.washington.edu}, 
+%		\href{mailto:micher3@u.washington.edu}{micher3@u.washington.edu}, 
+%		\href{mailto:jonno@u.washington.edu}{jonno@u.washington.edu}
+%	} 
+%}
+\date{\today}
+
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+\tableofcontents
+\newpage
+
+%-------------------------------------------------------------------------------------------------
+\section{Introduction}
+%-------------------------------------------------------------------------------------------------
+
+Spatial epidemiology is the description and analysis of geographically indexed health data with respect to demographic, environmental, behavioral, socioeconomic, genetic, and infectious risk factors~\cite{Elliott04}.  Broadly speaking, the field of spatial epidemiology can be divided into three principal subfields:  disease mapping, spatial regression/geographic correlation studies, and analysis of disease clusters.  The \pkg{SpatialEpi} package implements methods for these subfields.
+
+All the {\tt R} code is this vignette can be extracted into a single script file via the {\tt Stangle} command:
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+library(SpatialEpi)
+# Rcode <- system.file("doc","SpatialEpi.Rnw",package="SpatialEpi")
+# options(device.ask.default=FALSE)
+# Stangle(Rcode)
+@
+%------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------
+\section{Producing Maps}
+%-------------------------------------------------------------------------------------------------
+The production of disease atlases is one of the chief tasks in spatial epidemiology.  In order to facilitate producing such maps, the \pkg{SpatialEpi} package uses the \pkg{sp} package to process objects of class {\tt SpatialPolygons}~\cite{Pebesma05}.  Further information on the \pkg{sp} package can be found in \textit{Applied Spatial Data Analysis with R}~\cite{Bivand08}.
+
+
+
+%-----------------------------------------------------------
+\subsection{Converting Different Map Formats into \pkg{SpatialPolygons}}
+%-----------------------------------------------------------
+Several different formats of maps can be converted into objects of class {\tt SpatialPolygons}.  
+
+%-------------------------------------------
+\subsubsection{Converting Polygons to \pkg{SpatialPolygons}}
+%-------------------------------------------
+A polygon file consists of a 2-column matrix of coordinates, where each complete subpolygon representing some subarea of the study region (counties, census tracts, zip/postal codes) is separated by {\tt NA} values.  All subpolygons are assumed to be closed by joining the last point to the first point.
+
+Using the {\tt polygon2spatial.polygon()} function, we can convert the polygon file into an object of class {\tt SpatialPolygons}.  In the case when certain subareas consist of more than one contiguous land mass, we specify the {\tt nrepeats} vector where each element represents the number of subpolygons corresponding to that subarea. 
+
+The advantages of plotting maps as a {\tt SpatialPolygon} rather than a simple polygon are:
+\begin{enumerate}
+\item[a)] the aspect ratio of the x and y axes in plots is preserved to reflect geography
+\item[b)] specific subareas can be highlighted easily
+\item[c)] subareas that consist of more than one contiguous land mass can be treated as one unit
+\end{enumerate}
+
+%------------------------------------------------
+<<echo=FALSE,print=FALSE,fig=FALSE>>= 
+data(scotland)
+@
+%------------------------------------------------
+
+
+As an demonstration of these three advantages, in Figure \ref{polygonVSspatialpolygon} we plot a map of Scotland with all $\Sexpr{n = length(scotland$polygon$nrepeats)}$ counties of Scotland in 1975 both as a polygon (using the {\tt R polygon()} function) and as a {\tt SpatialPolygons} object.  Several of the counties of Scotland consist of more than one contiguous land mass, e.g. the county Argyll-Bute consists of $\Sexpr{scotland$polygon$nrepeats[23]}$ separate land masses.  
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(scotland)
+polygon <- scotland$polygon$polygon; nrepeats <- scotland$polygon$nrepeats
+names <- scotland$data$county.names
+
+spatial.polygon <- polygon2spatial.polygon(polygon,coordinate.system='+proj=utm',names,nrepeats)
+
+par(mfrow=c(1,2))
+plot(polygon,type='n',xlab="Eastings (km)",ylab="Northings (km)",main="Polygon File")
+polygon(polygon)
+
+plot(spatial.polygon,axes=TRUE)
+title(xlab="Eastings (km)",ylab="Northings (km)",main="Spatial Polygon")
+plot(spatial.polygon[23],add=TRUE,col="red")
+@
+%------------------------------------------------
+%------------------------------------------------
+\setkeys{Gin}{width=0.75\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+par(mfrow=c(1,2))
+plot(polygon,type='n',xlab="Eastings (km)",ylab="Northings (km)",main="Polygon File")
+polygon(polygon)
+
+plot(spatial.polygon,axes=TRUE)
+title(xlab="Eastings (km)",ylab="Northings (km)",main="Spatial Polygon")
+plot(spatial.polygon[23],add=TRUE,col="red")
+@
+\end{center}
+\caption{Plots of Scotland as a polygon and a {\tt SpatialPolygon}}
+\label{polygonVSspatialpolygon}
+\end{figure}
+%------------------------------------------------
+
+
+
+%-------------------------------------------
+\subsubsection{Converting \pkg{maps} objects to \pkg{SpatialPolygons}}\label{PA_VT}
+%-------------------------------------------
+The \pkg{maps} {\tt R} package includes several commonly used maps, which can be converted into {\tt SpatialPolygons} objects using the {\tt map2SpatialPolygons} command.  For instance, a county-level map of just the states Pennsylvania and Vermont with red borders, along with the boundaries of neighboring states with slightly thicker black borders can be produced with the resulting plot shown in Figure \ref{PA_VTplot}).
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+library(maps)
+county.map <- map('county',c('pennsylvania','vermont'),fill=TRUE,plot=FALSE)
+county.names <- as.character(county.map$names)
+county <- map2SpatialPolygons(county.map,IDs=county.names,proj4string=CRS("+proj=longlat"))
+state.map <- map('state',c(),fill=TRUE,plot=FALSE)
+state.names <- as.character(state.map$names)
+state <- map2SpatialPolygons(state.map,IDs=state.names,proj4string=CRS("+proj=longlat"))
+plot(county,axes=TRUE,border="red")
+plot(state,add=TRUE,lwd=2)
+@
+%------------------------------------------------
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+plot(county,axes=TRUE,border="red")
+plot(state,add=TRUE,lwd=2)
+@
+\end{center}
+\caption{County-Level Map of Pennsylvania and Vermont}
+\label{PA_VTplot}
+\end{figure}
+%------------------------------------------------
+
+
+
+%%-------------------------------------------
+%\subsubsection{Converting Shapefiles to \pkg{SpatialPolygons}}
+%%-------------------------------------------
+%ESRI shapefiles from ArcMap Geographical Infomation Systems (GIS) application can be loaded into {\tt R} and converted into {\tt Spatial Polygons} objects using the \pkg{shapefiles} package.  For example, say in the current working directory 6 files called ``{\tt ww\_county}'' exist with extensions {\tt .dbf}, {\tt .prj}, {\tt .sbn}, {\tt .sbx}, {\tt .shp} and {\tt .shx} represent a map of the 13 counties in Western Washington.  These shapefiles can be converted into a {\tt SpatialPolygons} object {\tt ww} with the resulting plot shown in Figure \ref{ww}.  
+
+%%
+%%
+%% CHANGE THIS!
+%%
+%%------------------------------------------------
+%<<echo=FALSE,print=FALSE,fig=FALSE>>= 
+%temp <- getwd()
+%setwd("/Users/rudeboybert/Documents/SC/SEER/ww")
+%@
+%%------------------------------------------------
+
+%%------------------------------------------------
+%<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+%library(shapefiles)
+
+%ww <- read.shapefile("ww_county")
+%df <- ww$dbf$dbf
+%row.names(df) <- 1:nrow(df)
+
+%wwpl <- shape2poly(ww)
+%wwSpP <- maptools:::.polylist2SpP(wwpl)
+%wwSPDF <- SpatialPolygonsDataFrame(wwSpP,df)
+
+%ww <- SpatialPolygons(wwSPDF@polygons,proj4string=CRS("+proj=longlat"))
+%# change this!
+%setwd(temp)
+%plot(ww,axes=TRUE)
+%@
+%%------------------------------------------------
+%%------------------------------------------------
+%\setkeys{Gin}{width=0.5\textwidth}
+%\begin{figure}
+%\begin{center}
+%<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+%plot(ww,axes=TRUE,lwd=0.75)
+%@
+%\end{center}
+%\caption{County-Level Map of Western Washington}
+%\label{ww}
+%\end{figure}
+%%------------------------------------------------
+
+
+
+
+
+%-----------------------------------------------------------
+\subsection{Converting Between Coordinate Systems}
+%-----------------------------------------------------------
+In the Pennsylvania and Vermont example in Section \ref{PA_VT}, all coordinates are in longitude/latitude.  However, this coordinate system is not appropriate for many distance-based methods as degrees of longitude are not equidistant, and must be converted to a grid based system.  
+
+The function {\tt latlong2grid()} can convert either 
+\begin{enumerate}
+\item[a)] an {\tt n$\times$\tt 2} matrix of coordinates 
+\item[b)] a {\tt SpatialPolygons} object
+\end{enumerate}
+based on longitude/latitude (expressed in decimal values) into kilometer-based grid coordinates.  Figure \ref{PA_VTplotgrid} shows the resulting transformed map.  
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+county.grid <- latlong2grid(county)
+state.grid <-  latlong2grid(state)
+plot(county.grid,axes=TRUE,border="red")
+plot(state.grid,add=TRUE,lwd=2)
+@
+%------------------------------------------------
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+plot(county.grid,axes=TRUE,border="red")
+plot(state.grid,add=TRUE,lwd=2)
+@
+\end{center}
+\caption{County-Level Map of Pennsylvania Using UTM Coordinate System}
+\label{PA_VTplotgrid}
+\end{figure}
+%------------------------------------------------
+
+Or a simple 2-column matrix of coordinates can be converted as well.  As an example, consider the latitude and longitudes of Montreal QC (latitude: 45deg 28' 0" N (deg min sec), longitude: 73deg 45' 0" W) and Vancouver BC (latitude: 45deg 39' 38" N (deg min sec), longitude: 122deg 36' 15" W) in decimal format.  These also can be converted to a grid-based coordinate system.  
+%------------------------------------------------
+<<echo=TRUE,print=TRUE,fig=FALSE>>= 
+coord <- rbind(
+c(-73.7500, 45.4667),
+c(-122.6042, 45.6605)
+)
+latlong2grid(coord)
+@
+%------------------------------------------------
+
+
+
+
+
+%-----------------------------------------------------------
+\subsection{Plotting a Variable}
+%-----------------------------------------------------------
+In spatial epidemiology, the production of disease atlases (a geographic map along with some scheme to illustrate the different levels of a disease) are often used as visual summaries of geographic disease patterns.  The {\tt mapvariable()} command simplifies the production of such atlases by taking in a {\tt SpatialPolygons} object and a vector as inputs.  For example, consider plotting random Uniform(0,1) random variables on a map of Scotland in Figure \ref{randomScotland}.
+
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(scotland)
+scotland.map <- scotland$spatial.polygon
+y <- runif(nrow(scotland$data))
+mapvariable(y, scotland.map)
+@
+%------------------------------------------------
+
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="scotland.pdf"
+pdf(file=file)  
+mapvariable(y, scotland.map, xlab="Eastings (km)", ylab="Northings (km)")
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{Random Values in Scotland between 1975-1980}
+\label{randomScotland}
+\end{figure}
+%------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------
+\section{Data Examples}
+%-------------------------------------------------------------------------------------------------
+A spatial epidemiology data set typically consists of:
+\begin{itemize}
+\item Geographically indexed disease case and population data
+\item Geographic data
+\item (if available) Covariate data
+\end{itemize}
+
+
+%-----------------------------------------------------------
+\subsection{Pennsylvania Lung Cancer \& Smoking Data}
+%-----------------------------------------------------------
+This dataset consists of counts of \href{http://www.dsf.health.state.pa.us/health/cwp/view.asp?a=175\&Q=201519}{lung cancer incidence} in Pennsylvania for the year 2002 as reported by the \href{http://www.dsf.health.state.pa.us/health/cwp/view.asp?a=175\&Q=201519}{Pennsylvania Department of Health}.  This case data was paired with the corresponding population data from the \href{http://www.census.gov}{2000 Census}.   Furthermore, smoking data is provided from a behavioral risk study conducted by the \href{http://www.dsf.health.state.pa.us/health/lib/health/brfss/regional96-00/tobacco_use_1996_to_2000.pdf}{Pennsylvania Department of Health} and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000.  Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels.  We plot lung cancer incidence per 1000 individuals in Figure \ref{pennLCIncidence}:
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(pennLC)
+penn.map <- pennLC$spatial.polygon
+penn.map <- latlong2grid(penn.map)
+
+population <- tapply(pennLC$data$population,pennLC$data$county,sum)
+cases <- tapply(pennLC$data$cases,pennLC$data$county,sum) 
+geo <- latlong2grid(pennLC$geo[,2:3])
+
+incidence <- (cases/population)*1000
+
+mapvariable(incidence,penn.map)
+#par(new=TRUE)
+#layout(matrix(c(1, 2), ncol = 2, nrow = 1), heights = c(0.3, 0.3), widths = c(0.1, 0.4))
+#plot.new()
+#plot(penn.map)
+#plot(SpatialPoints(geo, penn.map@proj4string),pch="x",col="red",add=T)
+@
+%------------------------------------------------
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="pennLCIncidence.pdf"
+pdf(file=file)  
+mapvariable(incidence,penn.map)
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{Lung cancer incidence per 1000 in Pennsylvania in 2002}
+\label{pennLCIncidence}
+\end{figure}
+%------------------------------------------------
+%The original data considered 18 age strata (0-4, 5-9, 10-14, $\ldots$, 80-84, 85+) and 3 race strata (``white'', ``black'' and ``other'').  In order to reduce the number of age strata considered, we collapsed the 18 age bands into the 4 standard age bands considered by the \href{http://www.cancer.org/downloads/stt/CAFF06Prob.pdf}{American Cancer Society} (0-39, 40-59, 60-69 and 70+) and due to sparse counts for non-white individuals, we combined the ``black'' and ``other'' race strata into a single ``other'' strata.  A total of $2 \times 4 \times 2 = 16$ strata were thus considered.  
+
+
+
+
+
+%-----------------------------------------------------------
+\subsection{Scotland Lip Cancer among Males in 1975-1980}
+%-----------------------------------------------------------
+AFF agriculture farming and fishing
+
+
+The expected numbers of disease were calculated by the method of Mantel and Stark~\cite{Mantel68}.  
+
+
+~\cite{Kemp85}
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(scotland)
+scotland.map <- scotland$spatial.polygon
+y <- scotland$data$cases
+E <- scotland$data$expected
+SMR <- y/E
+mapvariable(SMR, scotland.map)
+@
+%------------------------------------------------
+
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="scotlandSMR.pdf"
+pdf(file=file)  
+mapvariable(SMR, scotland.map, xlab="Eastings (km)", ylab="Northings (km)")
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{SMR of lung cancer among males in Scotland between 1975-1980}
+\label{scotlandSMR}
+\end{figure}
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------
+\subsection{Infant Mortality in North Carolina}
+%-----------------------------------------------------------
+This data consists of counts of infant births and deaths in North Carolina for the years 2000-2004 as reported by the Howard W. Odum Institute for Research in Social Science at the University of North Carolina at Chapel Hill \href{http://www.irss.unc.edu/}{http://www.irss.unc.edu/}. The data are stratified by race (white and non-white), gender and low birth weight status (defined to be a birth weight of less than 2,500 g) for a total of 8 strata levels~\cite{Wakefield08:2}.  
+
+Data on both a county level and aggregated to the 10 regions of North Carolina (as described in Wakefield and Haneuse 2008~\cite{Wakefield08:2}), are included.  We plot the number infant births between 2000-2004 in Figure \ref{NC_county_population} and infant mortality per 1,000 infants in Figure \ref{NC_incidence}
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(NC)
+NC.county.map <- NC$county$spatial.polygon
+NC.region.map <- NC$region$spatial.polygon
+
+county.population <- tapply(NC$county$data$population, NC$county$data$county,sum)
+
+region.population <- tapply(NC$region$data$population, NC$region$data$region,sum)
+region.cases <- tapply(NC$region$data$cases, NC$region$data$region,sum)
+incidence <- (region.cases/region.population)*1000
+
+mapvariable(county.population, NC.county.map)
+mapvariable(incidence, NC.region.map)
+@
+%------------------------------------------------
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="NC_county_population.pdf"
+pdf(file=file)  
+mapvariable(county.population, NC.county.map)
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{Infants Births in Each County in North Carolina 2000-2004}
+\label{NC_county_population}
+\end{figure}
+%------------------------------------------------
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="NC_incidence.pdf"
+pdf(file=file)  
+mapvariable(incidence, NC.region.map)
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{Deaths per 1000 Infants in Each Region in North Carolina 2000-2004}
+\label{NC_incidence}
+\end{figure}
+%------------------------------------------------
+
+
+
+%-----------------------------------------------------------
+%\subsection{Leukemia in New York State}
+%-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------
+%
+\section{Methods}\label{methods}
+%
+%-------------------------------------------------------------------------------------------------
+%-----------------------------------------------------------
+\subsection{Expected Numbers of Disease and Standardized Mortality Ratios}
+%-----------------------------------------------------------
+In order to control for known risk factors (in this case strata) using internal indirect standardization, we can compute the (indirect) expected number of diseases~\cite{Elliott00} for each area using the {\tt expected()} command.  It is important that the population and cases vectors are balanced: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order.  i.e. if considering 16 strata, the first 16 elements correspond to the first area, the next 16 correspond to the second area, etc. and the strata are always listed in the same order.  
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(pennLC)
+n.strata <- 16
+population <- tapply(pennLC$data$population,pennLC$data$county,sum)
+cases <- tapply(pennLC$data$cases,pennLC$data$county,sum)
+expected.cases <- expected(pennLC$data$population,pennLC$data$cases,n.strata)
+@
+%------------------------------------------------
+
+
+
+%-----------------------------------------------------------
+\subsection{Disease Mapping}
+%-----------------------------------------------------------
+%-----------------------------------
+\subsubsection{Empirical Bayes}
+%-----------------------------------
+Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates~\cite{Clayton87}.  The estimates represent a weighted compromise between an area's SMR and the overall mean relative risk.  These estimates are much more stable than the raw SMR's.  In this example, we use a linear model $\alpha + \beta_1 x + \beta_2 x^2$ in the {\tt eBayes()} function to estimate relative risk with the resulting plot in Figure \ref{scotlandEB} 
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+data(scotland)
+data <- scotland$data
+x <- data$AFF
+Xmat <- cbind(x,x^2)
+results <- eBayes(data$cases,data$expected,Xmat)
+scotland.map <- scotland$spatial.polygon
+mapvariable(results$RR, scotland.map)
+@
+%------------------------------------------------
+
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="scotlandEB.pdf"
+pdf(file=file)  
+mapvariable(results$RR, scotland.map)
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")   
+@
+\end{center}
+\caption{Empirical Bayes estimates of the relative risk of lung cancer}
+\label{scotlandEB}
+\end{figure}
+%------------------------------------------------
+
+
+
+%-----------------------------------------------------------
+\subsection{Cluster Detection}
+%-----------------------------------------------------------
+Cluster detection is the routine surveillance of a large expanse of small administrative zones for evidence of individual ``hot-spots'' of disease without any preconceptions about their locations.~\cite{Besag91}.  For aggregated count data, a typical procedure is to consider a set of \textit{zones}, each zone being some amalgamation of areas in the study regions.  Each zone is then viewed as a potential cluster.  
+
+
+%-----------------------------------
+\subsubsection{Kulldorff}\label{kulldorff}
+%-----------------------------------
+The {\tt kulldorff()} function implements the Kulldorff method for finding the most likely cluster as described in Kulldorff and Nagarwalla (1995)~\cite{Kulldorff95} and Kulldorff (1997)~\cite{Kulldorff97}.  The {\tt kulldorff()} 
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+## Load Pennsylvania Lung Cancer Data
+data <- pennLC$data
+
+## Process geographical information and convert to grid
+geo <- latlong2grid( pennLC$geo[,2:3] )
+
+## Get aggregated counts of population and cases for each county
+population <- tapply(data$population,data$county,sum)
+cases <- tapply(data$cases,data$county,sum)
+
+## Based on the 16 strata levels, computed expected numbers of disease
+expected.cases <- expected(data$population, data$cases, 16)
+
+## Set Parameters
+pop.upper.bound <- 0.5
+n.simulations <- 999
+alpha.level <- 0.05
+plot <- TRUE
+@
+%------------------------------------------------
+
+
+We can pursue either a binomial or poisson analysis.  
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+## Kulldorff using Binomial likelihoods
+binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, alpha.level, plot)
+cluster <- binomial$most.likely.cluster$location.IDs.included
+
+## plot
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+title("Most Likely Cluster")
+@
+%------------------------------------------------
+
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red") 
+@
+\end{center}
+\caption{Binomial Analysis Kulldorff}
+\label{kulldorffBinomial}
+\end{figure}
+%------------------------------------------------
+
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+## Kulldorff using Poisson likelihoods
+poisson <- kulldorff(geo, cases, population, expected.cases, pop.upper.bound, n.simulations, alpha.level, plot)
+cluster <- poisson$most.likely.cluster$location.IDs.included
+
+## plot
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+title("Most Likely Cluster Controlling for Strata")
+@
+
+%------------------------------------------------
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+plot(pennLC$spatial.polygon,axes=TRUE)
+plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
+title("Most Likely Cluster")
+@
+\end{center}
+\caption{Poisson Analysis Kulldorff}
+\label{kulldorffPoisson}
+\end{figure}
+%------------------------------------------------
+
+
+
+
+
+
+
+%-----------------------------------
+\subsubsection{Besag-Newell}
+%-----------------------------------
+The {\tt besag.newell()} function implements the Besag-Newell method as described in Besag and Newell (1995)~\cite{Besag91}.  
+
+
+Using the same dataset as in Section \ref{kulldorff}
+
+
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+k <- 1250
+alpha.level <- 0.05
+
+# not controlling for stratas
+results <- besag.newell(geo, population, cases, expected.cases=NULL, k, alpha.level)
+
+# controlling for stratas
+results <- besag.newell(geo, population, cases, expected.cases, k, alpha.level)
+@
+%------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+%-----------------------------------------------------------
+\subsection{Generating Samples from an Improper Gaussian Random Field}
+%-----------------------------------------------------------
+Consider an improper GMF, see for example Besag~\cite{Besag95} and Rue~\cite{Rue05}. The model has the format:
+\[p(\boldsymbol{u}|\sigma^{2}_{u})=(2\pi)^{-(m-r)/2}|Q^{*}|^{1/2}\sigma^{-(m-r)}_{u}\exp(-\frac{1}{2\sigma^{2}_{u}}\boldsymbol{u}^{T}\boldsymbol{Qu})\]
+where $\boldsymbol{u}=(u_{1}, u_{2}, \cdots, u_{m})$ is the vector of random effects. $\boldsymbol{Q}$ is a (scaled) ``precision'' matrix of rank. $\tilde{\boldsymbol{Q}}$ is the precision matrix with rank $m-r$.\\
+
+To simulate samples from this distribution, the algorithm is:
+\begin{enumerate}
+\item Simulate $z_{j} \sim N(0, \lambda^{-1}_{j})$, $j=r+1, r+2, \cdots, m$, where $\lambda_{j}$ are the eigenvalues of $Q$.
+\item Let $\boldsymbol{x} = z_{r+1}e_{k+1} + z_{r+2}e_{r+2} + \cdots z_{m}e_{m}$.
+\end{enumerate}
+
+%------------------------------------------------
+To simulate spatial correlated data, we use function \texttt{sim.Q} in \texttt{SpatialEpi}. You need to provide the vector of number of neighbors, the vector of adjacency neighbors and the conditional variance $\sigma^{2}_{u}$. If your graph file is in the format as in \texttt{INLA}, you can use function \texttt{num.neighbors} and \texttt{num.neighbors} in \texttt{SpatialEpi}. These two functions will retrieve the vector of number of neighbors and the vector of adjacency neighbors from the graph file in the format in \texttt{INLA}. We take the scotland lip cancer data as an example. The following R code is used to generate samples from improper Gaussian random field with $\sigma^{2}_{u}=1$ using the scotland graph file from INLA. The simulated samples are in Figure \ref{simulateScotland}.
+
+
+
+<<echo=TRUE,print=FALSE,fig=FALSE>>= 
+library(INLA)
+# map file taken from the graph file in INLA
+g <- system.file("demodata/scotland.graph", package="INLA")
+m <- numNeighbors(g)
+adj <- listNeighbors(g)
+# Create, simulate, estimate omega2 from sample
+Q <- make.Q(m, adj,  omega.sq=1)
+tmp.x1 <- sim.Q(Q)
+@
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<results=tex,echo=FALSE>>=  
+file="simulated_u_scotland.pdf"
+pdf(file=file)
+data(scotland) 
+mapvariable(tmp.x1, scotland$spatial.polygon)
+graphics.off()  
+cat("\\includegraphics{", file, "}\n\n", sep="")  
+@
+\end{center}
+\caption{Simulated spatial random effect}
+\label{simulateScotland}
+\end{figure}
+%------------------------------------------------
+
+%-----------------------------------
+\subsubsection{Choosing the Prior on the Fixed Effects}
+%-----------------------------------
+Informative priors can be independently specified on each of the fixed effects. The parameters in the normal priors are assigned via specification of two quantiles with associated probabilities. For logistic and log-linear models these quantiles may be given on the exponentiated scale since these are more interpretable. If $\theta_{1}$ and $\theta_{2}$ are the quantiles on the exponentiated scale, and $p_{1}$ and $p_{2}$ are the associated probabilities, then the parameters of the normal prior are given by:
+\begin{eqnarray*}
+\mu &=& \frac{z_{2}\log(\theta_{1})-z_{1}\log(\theta_{2})}{z_{2}-z_{1}}\\
+\sigma &=& \frac{\log(\theta_{2})-\log(\theta_{1})}{z_{2}-z_{1}}
+\end{eqnarray*}   
+where $z_{1}$, $z_{2}$ are the $p_{1}, p_{2}$ quantiles of a standard normal distribution. For example, in an epidemiological context, we may wish to specify a prior on a relative risk parameter, $\exp(\beta_{1})$, which has a median of $1$ and a $95\%$ point of $3$ (if we think it is unlikely that the relative risk associated with a unit increase in exposure exceeds $3$). These speci?cations lead to $\beta_{1} \sim N(0, 0.6682^{2})$.\\
+ 
+
+%------------------------------------------------
+In R, the above calculation can be obtained by calling function {\tt LogNormalPriorCh}. 
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+# Function to choose the parameters of a lognormal, by specifying two
+# quantiles with associated probs.
+param <- LogNormalPriorCh(theta1=1, theta2=3, prob1=0.5, prob2=0.95)
+param
+@
+
+The resulting log normal distribution with parameter $\mu=0$ and $\sigma=0.6682$ is shown in Figure \ref{prior_FixedEffect}.
+
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+x<-rnorm(1000,param$mu,param$sigma)
+plot( function(y) dnorm(y, mean(x), sd(x)), from=min(x), to=max(x), xlab=expression(beta[1]), ylab="Density")
+title("Prior Distribution")
+@
+\end{center}
+\caption{Prior distribution of fixed effect $\beta_{1}$}
+\label{prior_FixedEffect}
+\end{figure}
+%------------------------------------------------
+
+
+
+%-----------------------------------
+\subsubsection{Choosing Prior on the Non-Spatial Residuals}
+%-----------------------------------
+
+The approach for choosing a prior for a single random effect is based on Wakefield(2009). The idea is to specify a range for the more interpretable marginal distribution of the random effect $b_{i}$, and use this to drive specification of prior parameters. It can be proven that if $b|\tau \sim N(0, \tau^{-1})$ and $\tau \sim Ga(a, b)$, then the marginal distribution of $b$ is $T_{1}(0, b/a, 2a)$. For a range of $b$ and a pre-specified degree of freedom $d$, we can solve for $a$ and $b$. For example, if the range of $b$ is $(-R, R)$, $a$ and $b$ can be solved by:
+\begin{eqnarray*}
+a &=& d/2\\
+b &=& R^{2}/2(t^{d}_{1-(1-q)/2})^{2}
+\end{eqnarray*}
+where $t^{d}_{q}$ is the 100$\times q^{th}$ quantile of a Student $t$ distribution with $d$ degrees of freedom. For example, if we choose $d=1$ and a $95\%$ range of $\exp(b) [0.1, 10]$ we take $R=\log(10)$ and obtain $a=0.5, b=0.0164$.\\
+
+Function {\tt GammaPriorCh} can be used for this calculation:
+
+%------------------------------------------------
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+# degrees of freedom is 1
+param1 <- GammaPriorCh(log(10), 0.975,1)
+# degrees of freedom is 1
+param2 <- GammaPriorCh(log(5), 0.975,2)
+@
+%------------------------------------------------
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+x<-rnorm(1000,param$mu,param$sigma)
+# plot of the prior distribution
+par(mfrow=c(1,2))
+curve(dgamma(x,shape=param1$a,rate=param1$b),from=0,to=6,n=1000,xlab=expression(tau^{-1}),ylab="density",main="d=1")
+curve(dgamma(x,shape=param2$a,rate=param2$b),from=0,to=6,n=1000,xlab=expression(tau^{-1}),ylab="density", main="d=2")
+@
+\end{center}
+\caption{Prior distribution of non-spatial residual error precision $\tau^{-1}$}
+\label{prior_nonspatial}
+\end{figure}
+%------------------------------------------------
+
+
+%-----------------------------------
+\subsubsection{Choosing the Prior on the Spatial Residuals}
+%-----------------------------------
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------
+%
+\bibliographystyle{plain}
+\bibliography{bibliography}
+%
+%-------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+\end{document}
+

@@ -7,7 +7,14 @@
 ^cran-comments\.md$
 ^README-.*\.png$
 ^README_cache$
-^testing$
+^other$
 ^README_figure$
 ^CRAN-RELEASE$
+<<<<<<< HEAD
 ^old-man$
+=======
+^doc$
+^Meta$
+^\.github$
+^old_man$
+>>>>>>> SURF21

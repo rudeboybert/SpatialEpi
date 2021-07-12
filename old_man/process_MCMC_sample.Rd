@@ -1,0 +1,21 @@
+\name{process_MCMC_sample}
+\alias{process_MCMC_sample}
+\title{Process MCMC Sample}
+\description{Take the output of sampled configurations from \code{\link{MCMC_simulation}} and produce area-by-area summaries}
+\usage{process_MCMC_sample(sample, param, RR.area, cluster.list, cutoffs)}
+\arguments{
+  \item{sample}{list objects of sampled configurations}
+  \item{param}{mean relative risk associted with each of the \code{n.zones} single zones considering the wide prior}
+  \item{RR.area}{mean relative risk associated with each of the \code{n} areas considering the narrow prior}
+  \item{cluster.list}{list of length \code{n.zones} listing, for each single zone, its component areas}
+  \item{cutoffs}{cutoffs used to declare highs (clusters) and lows (anti-clusters)}
+}
+\value{
+\item{high.area}{Probability of cluster membership for each area}
+\item{low.area}{Probability of anti-cluster membership for each area}
+\item{RR.est.area}{Smoothed relative risk estimates for each area}
+}
+\references{Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.
+\emph{Biostatistics}, \bold{14}, 752--765.}
+\seealso{\code{\link{MCMC_simulation}}}
+\keyword{internal}
