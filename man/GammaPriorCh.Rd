@@ -7,15 +7,28 @@
 GammaPriorCh(theta, prob, d)
 }
 \arguments{
-\item{theta}{}
+\item{theta}{upper quantile}
 
-\item{prob}{}
+\item{prob}{upper quantile}
 
-\item{d}{}
+\item{d}{degrees of freedom}
 }
 \value{
-
+List containing
+\item{a}{shape parameter}
+\item{b}{rate parameter}
 }
 \description{
-Compute Parameters to Calibrate a Gamma Distribution
+Compute parameters to calibrate the prior distribution of a relative risk that has a gamma distribution.
+}
+\examples{
+param <- GammaPriorCh(5, 0.975,1)
+curve(dgamma(x,shape=param$a,rate=param$b),from=0,to=6,n=1000,ylab="density"
+
+}
+\seealso{
+LogNormalPriorCh
+}
+\author{
+Jon Wakefield
 }
