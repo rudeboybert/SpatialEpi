@@ -13,8 +13,7 @@ Maintainer: Albert Y. Kim <albert@stat.washington.edu>
 Description: Methods and data for cluster detection and disease mapping.
 Depends:
     R (>= 3.0.2),
-    sp,
-    sf
+    sp
 License: GPL-2
 LazyData: true
 URL: https://github.com/rudeboybert/SpatialEpi
@@ -27,7 +26,9 @@ Imports:
     methods, 
     grDevices, 
     graphics,
-    stats
+    stats,
+    sf,
+    ggplot2
 LinkingTo:
     Rcpp,
     RcppArmadillo

@@ -18,6 +18,7 @@
 #' @source Turnbull, B. W. et al (1990) Monitoring for clusters of disease: application to leukemia incidence in upstate New York \emph{American Journal of Epidemiology}, \bold{132}, 136--143
 #' 
 #' @examples 
+#' @importFrom sf geom_sf
 #' # Static map of NY Leukemia rate per county
 #' library(ggplot2)
 #' ggplot(NYleukemia_sf) + 
