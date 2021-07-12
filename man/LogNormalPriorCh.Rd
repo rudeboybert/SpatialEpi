@@ -24,11 +24,6 @@ A list containing
 \preformatted{Compute parameters to calibrate the prior distribution of a relative risk that has a log-normal distribution.
 }
 }
-\examples{
-# Calibrate the log-normal distribution s.t. the 95\% confidence interval is [0.2, 5]
-param <- LogNormalPriorCh(0.2, 5, 0.025, 0.975)
-curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab="density"
-}
 \author{
 Jon Wakefield
 }
