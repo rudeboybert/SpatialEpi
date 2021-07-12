@@ -27,7 +27,8 @@ when applying the Bayesian cluster detection model in \code{\link{bayes_cluster}
 we merge them with the surrounding census tracts yielding \code{n=277} areas.
 }
 \examples{
-# Static map of NY Leukemia rate per county 
+# Static map of NY Leukemia rate per county
+library(ggplot2)
 ggplot(NYleukemia_sf) + 
   geom_sf(aes(fill= cases/population)) + 
   scale_fill_gradient(low = "white", high = "red")
