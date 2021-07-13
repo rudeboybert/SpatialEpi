@@ -4,3 +4,11 @@
 inst/doc
 README_cache
 .DS_Store
+<<<<<<< HEAD
+=======
+*.log
+doc
+Meta
+*.log
+old-man
+>>>>>>> SURF21

@@ -6,7 +6,8 @@ Authors@R: c(
     person("Cici", "Chen", email = "cicichen@u.washington.edu", role = "ctb"),
     person("Albert Y.", "Kim", email = "albert@stat.washington.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7824-306X")),
     person("Michelle", "Ross", email = "micher3@u.washington.edu", role = "ctb"),
-    person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = c("aut"))
+    person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = c("aut")),
+    person("Mikael","Moise", email = "amoise@smith.edu", role = c("aut"),comment = c(ORCID = "0000-0002-3608-1178"))
     )
 Maintainer: Albert Y. Kim <albert@stat.washington.edu>
 Description: Methods and data for cluster detection and disease mapping.
@@ -17,10 +18,34 @@ License: GPL-2
 LazyData: true
 URL: https://github.com/rudeboybert/SpatialEpi
 BugReports: https://github.com/rudeboybert/SpatialEpi/issues
-Imports: Rcpp, MASS, maptools, spdep, methods, grDevices, graphics,
-        stats
-LinkingTo: Rcpp, RcppArmadillo
+Imports:
+    Rcpp, 
+    MASS, 
+    maptools, 
+    spdep, 
+    methods, 
+    grDevices, 
+    graphics,
+    stats,
+    sf,
+    dplyr,
+    ggplot2
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 NeedsCompilation: yes
 RoxygenNote: 7.1.1
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+>>>>>>> SURF21
+>>>>>>> SURF21
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

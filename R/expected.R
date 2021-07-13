@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #' Compute Expected Numbers of Disease
 #'
 #' @description Compute the internally indirect standardized expected numbers of disease.
@@ -26,6 +27,12 @@
 #' 
 expected <-
 function(population, cases, n.strata){
+=======
+expected <- 
+  function(population, cases, n.strata){
+    
+  
+>>>>>>> SURF21
 
 n <- length(population)/n.strata
 E <- rep(0, n)
@@ -51,3 +58,8 @@ for(i in 1:n) {
 
 return(E)
 }
+
+
+
+
+
