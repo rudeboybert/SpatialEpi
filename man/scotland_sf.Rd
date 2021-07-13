@@ -7,11 +7,11 @@
 \format{
 A data frame with 56 rows representing counties and 5 variables:
 \describe{
-  \item{geometry}{Geometric representation of counties in Scotland}
-  \item{cases}{Number of Lip Cancer cases per county}
-  \item{county.names}{Scotland County name}
-  \item{AFF}{Proportion of the population who work in agricultural fishing and farming}
-  \item{expected}{Expected number of lip cancer cases}
+\item{geometry}{Geometric representation of counties in Scotland}
+\item{cases}{Number of Lip Cancer cases per county}
+\item{county.names}{Scotland County name}
+\item{AFF}{Proportion of the population who work in agricultural fishing and farming}
+\item{expected}{Expected number of lip cancer cases}
 }
 }
 \source{

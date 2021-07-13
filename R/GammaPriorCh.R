@@ -17,8 +17,9 @@
 #' 
 #' @export
 
-#' @examples param <- GammaPriorCh(5, 0.975,1)
-#' curve(dgamma(x,shape=param$a,rate=param$b),from=0,to=6,n=1000,ylab="density"
+#' @examples 
+#' param <- GammaPriorCh(5, 0.975,1)
+#' curve(dgamma(x,shape=param$a,rate=param$b),from=0,to=6,n=1000,ylab="density")
 #' 
 GammaPriorCh <-
 function(theta, prob, d){
