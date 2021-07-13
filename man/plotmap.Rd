@@ -54,7 +54,6 @@ map <- scotland$spatial.polygon
 y <- scotland$data$cases
 E <- scotland$data$expected
 SMR <- y/E
-
 ## Plot SMR
 plotmap(SMR, map, nclr=9, location="topleft")
 }
