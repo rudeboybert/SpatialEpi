@@ -35,11 +35,23 @@ LinkingTo:
     RcppArmadillo
 NeedsCompilation: yes
 RoxygenNote: 7.1.1
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 81f0ef7b97ea6b578067f631db4e4fbf5eee2a5b
 Suggests: 
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+<<<<<<< HEAD
+=======
+>>>>>>> SURF21
+>>>>>>> SURF21
+>>>>>>> 81f0ef7b97ea6b578067f631db4e4fbf5eee2a5b
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
