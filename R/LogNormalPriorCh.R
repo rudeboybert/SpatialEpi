@@ -20,7 +20,7 @@
 #' @examples 
 #' #Calibrate the log-normal distribution s.t. the 95% confidence interval is [0.2, 5]
 #' param <- LogNormalPriorCh(0.2, 5, 0.025, 0.975)
-#' curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab="density
+#' curve(dlnorm(x,param$mu,param$sigma), from=0, to=6, ylab=density
 LogNormalPriorCh <-
 function(theta1, theta2, prob1, prob2){	
 zq1 <- qnorm(prob1)
