@@ -1,3 +1,32 @@
+#' Create set of all single zones and output geographical information
+#'
+#' @description Based on the population counts and centroid coordinates of each of \code{n} areas, output the set of \code{n.zones} single zones as defined by Kulldorff and other geographical information.
+#' @param geo \code{n x 2} table of the (x,y)-coordinates of the area centroids
+#' @param population a vector of population counts of each area
+#' @param pop.upper.bound maximum proportion of study region each zone can contain
+#'
+#' @references Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+#' Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
+#' \emph{Statistics in Medicine}, \bold{14}, 799--810.
+#' 
+#' @author Albert Y. Kim
+#' 
+#' @return
+#' A list containing
+#' \item{nearest.neighbors}{list of \code{n} elements, where each element is a vector of the nearest neighbors in order of distance up until \code{pop.upper.bound} of the total population is attained}
+#' \item{cluster.coords}{\code{n.zones x 2} table of the center and the radial area for each zone}
+#' \item{dist}{\code{n x n} inter-point distance matrix of the centroids}
+#'
+#' 
+#' @export
+#' 
+#' @examples
+#' data(pennLC)
+#' geo <- pennLC$geo[,2:3]
+#' geo <- latlong2grid(geo)
+#' population <- tapply(pennLC$data$population, pennLC$data$county, sum)
+#' pop.upper.bound <- 0.5
+#' geo.info <- zones(geo, population, pop.upper.bound)
 zones <-
 function(geo, population, pop.upper.bound){
 
