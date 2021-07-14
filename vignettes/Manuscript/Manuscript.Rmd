@@ -40,14 +40,15 @@ Your introduction goes here! Some examples of commonly used commands and feature
 
 If you have a question, please use the help menu in the top right of the screen to get in touch. When your article or pre-print is complete, use the "Submit to PeerJ" button in the topbar to send your files to PeerJ.
 
-## Pennsylvania Lung Cancer data
+## 3 Data Examples
 
-Population data was obtained from the 2000 decennial census, lung cancer 
-and smoking data were obtained from the Pennsylvania Department of Health website: https://www.health.pa.gov/Pages/default.aspx
+##### 3.1 Pennsylvania Lung Cancer data
 
+This dataset consists of counts of lung cancer incidence in Pennsylvania for the year 2002 as reported by the Pennsylvania Department of Health. This case data was paired with the corresponding population data from the 2000 Census. Furthermore, smoking data is provided from a behavioral risk study conducted by the [Pennsylvania Department of Health](https://www.health.pa.gov/Pages/default.aspx) and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000. Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels. We plot lung cancer incidence per 1000 individuals in \@ref(fig:fig1)
 
 #### How to make a static choropleth map of lung cancer cases
-```{r}
+
+```{r fig1}
 library(SpatialEpi)
 library(ggplot2)
 ggplot() +
