@@ -17,7 +17,7 @@
 #'  \item{SMR}{the standardized mortality/morbidity ratio Y/E}
 #'  
 #' @export
-#'
+#' @importFrom MASS glm.nb
 #' @examples 
 #' data(scotland)
 #' data <- scotland$data
