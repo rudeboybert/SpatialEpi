@@ -68,6 +68,16 @@ ggplot() +
   geom_sf(data = scotland_sf, aes(fill = cases))
 ```
 
+##### 3.2 Upstate New York Leukemia
+```{r scotland, fig.cap="Upstate New York Leukemia", message=FALSE, warning=FALSE}
+
+library(SpatialEpi)
+library(ggplot2)
+ggplot() +
+  geom_sf(data = NYleukemia_sf, aes(fill = cases))
+
+```
+
 
 
 ## Figures and Tables {.unnumbered}
