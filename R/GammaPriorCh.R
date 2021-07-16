@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "qt"
+))
+
+
+
 #' Compute Parameters to Calibrate a Gamma Distribution
 #'
 #' 

@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "var"
+))
+
+
+
 #' Estimate lambda values
 #' 
 #' @description Internal function to estimate values of lambda needed for \code{\link{MCMC_simulation}} and prior probability of k clusters/anti-clusters for k=0,...,J

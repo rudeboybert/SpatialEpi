@@ -20,17 +20,17 @@ EBpostdens(
 
 \item{E}{expected disease counts}
 
-\item{alpha}{}
+\item{alpha}{x}
 
-\item{beta}{}
+\item{beta}{x}
 
-\item{Xrow}{}
+\item{Xrow}{x}
 
-\item{lower}{}
+\item{lower}{x}
 
-\item{upper}{}
+\item{upper}{x}
 
-\item{main}{}
+\item{main}{x}
 }
 \value{
 A plot containing the gamma posterior distribution

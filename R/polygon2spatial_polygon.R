@@ -1,3 +1,12 @@
+
+
+globalVariables(c(
+  "Polygon","Polygons","SpatialPolygons","CRS"
+))
+
+
+
+
 #' Convert a Polygon to a Spatial Polygons Object
 #'
 #' @description Converts a polygon (a matrix of coordinates with NA values to separate subpolygons) into a Spatial Polygons object.

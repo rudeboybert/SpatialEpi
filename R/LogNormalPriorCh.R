@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "qnorm"
+))
+
+
+
 #' Compute Parameters to Calibrate a Log-normal Distribution
 #'
 #'

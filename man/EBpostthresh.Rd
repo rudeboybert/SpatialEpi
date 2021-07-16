@@ -11,13 +11,13 @@ EBpostthresh(Y, E, alpha, beta, Xrow = NULL, rrthresh)
 
 \item{E}{expected disease counts}
 
-\item{alpha}{}
+\item{alpha}{x}
 
-\item{beta}{}
+\item{beta}{x}
 
-\item{Xrow}{}
+\item{Xrow}{x}
 
-\item{rrthresh}{}
+\item{rrthresh}{x}
 }
 \value{
 Posterior probabilities of exceedence are returned.
@@ -31,8 +31,7 @@ Y <- scotland$data$cases
 E <- scotland$data$expected
 ebresults <- eBayes(Y,E)
 #Find probabilities of exceedence of 3
-thresh3 <- EBpostthresh(Y, E, alpha=ebresults$alpha, beta=ebresults$beta,
-                        rrthresh=3)
+thresh3 <- EBpostthresh(Y, E, alpha=ebresults$alpha, beta=ebresults$beta, rrthresh=3)
 mapvariable(thresh3, scotland$spatial.polygon)
 }
 \seealso{

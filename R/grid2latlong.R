@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "is","Polygon","Polygons","SpatialPolygons","CRS"
+))
+
+
+
 #' Convert Coordinates from Grid to Latitude/Longitude
 #'
 #'

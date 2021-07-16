@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "qgamma"
+))
+
+
+
 #' Empirical Bayes Estimates of Relative Risk
 #' @description The computes empirical Bayes estimates of relative risk of study region with \code{n} areas, given observed and expected numbers of counts of disease and covariate information.
 #' 

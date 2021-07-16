@@ -1,3 +1,10 @@
+
+
+globalVariables(c(
+  "dist"
+))
+
+
 #' Compute cartesian coordinates of a cluster center and radius
 #' 
 #' @description This function is used for plotting purposes

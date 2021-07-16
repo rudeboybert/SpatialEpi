@@ -1,3 +1,6 @@
+globalVariables(c(
+  "grey","leglabs"
+))
 #' Plot Levels of a Variable in a Colour-Coded Map
 #'
 #' @description Plot levels of a variable in a colour-coded map.
@@ -18,6 +21,7 @@
 #' @return
 #' A map colour-coded to indicate the different levels of \code{values}.
 #' @export
+#' @importFrom maptools leglabs
 #'
 #' @examples
 #' ## Load data

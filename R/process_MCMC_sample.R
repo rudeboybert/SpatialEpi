@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "pgamma"
+))
+
+
+
 #' Process MCMC Sample
 #' 
 #' @description Take the output of sampled configurations from \code{\link{MCMC_simulation}} and produce area-by-area summaries

@@ -1,3 +1,11 @@
+
+
+globalVariables(c(
+  "poly2nb", "nb2mat"
+))
+
+
+
 #' Create geographical objects to be used in Bayesian Cluster Detection Method
 #'
 #' @description This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link{bayes_cluster}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).
@@ -18,6 +26,9 @@
 #' 
 #' 
 #' @export
+#' @importFrom spdep poly2nb
+#' @importFrom spdep nb2mat
+#' 
 #'
 #' @examples
 #' data(pennLC)

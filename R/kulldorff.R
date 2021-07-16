@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "rmultinom","hist","abline","legend"
+))
+
+
+
 #' Kulldorff Cluster Detection Method
 #'
 #' @description Kulldorff spatial cluster detection method for a study region with \code{n} areas.  The method constructs \emph{zones} by consecutively aggregating nearest-neighboring areas until a proportion of the total study population is included.  Given the observed number of cases, the likelihood of each zone is computed using either binomial or poisson likelihoods. The procedure reports the zone that is the \emph{most likely cluster} and generates significance measures via Monte Carlo sampling.  Further, \emph{secondary clusters}, whose Monte Carlo p-values are below the \eqn{\alpha}-threshold, are reported as well.

@@ -1,4 +1,7 @@
-#' 
+globalVariables(c(
+  "palette","gray","par","layout","axis","rect"
+))
+
 #' Plot Levels of a Variable in a Colour-Coded Map
 #' 
 #' @description Plot levels of a variable in a colour-coded map along with a legend.
@@ -21,6 +24,7 @@
 #' @return A map colour-coded to indicate the different levels of \code{y}
 #' 
 #' @export
+#' @import sp
 #'
 #' @examples
 #' data(scotland)

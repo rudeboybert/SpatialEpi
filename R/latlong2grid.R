@@ -1,3 +1,10 @@
+
+globalVariables(c(
+  "is","Polygon","Polygons","SpatialPolygons","CRS"
+))
+
+
+
 #' @title Convert Coordinates from Latitude/Longitude to Grid
 #'
 #' @description Convert geographic latitude/longitude coordinates to kilometer-based grid coordinates.
