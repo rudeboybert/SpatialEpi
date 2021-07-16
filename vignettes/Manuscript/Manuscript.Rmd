@@ -46,6 +46,7 @@ If you have a question, please use the help menu in the top right of the screen 
 
 This dataset consists of counts of lung cancer incidence in Pennsylvania for the year 2002 as reported by the Pennsylvania Department of Health. This case data was paired with the corresponding population data from the 2000 Census. Furthermore, smoking data is provided from a behavioral risk study conducted by the [Pennsylvania Department of Health](https://www.health.pa.gov/Pages/default.aspx) and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000. Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels. We plot lung cancer incidence per 1000 individuals in Figure \@ref(fig:pennLC)
 
+
 ```{r pennLC, fig.cap="Lung cancer incidence per 1000 in Pennsylvania in 2002 ", message=FALSE, warning=FALSE, out.width="100%"}
 library(SpatialEpi)
 library(ggplot2)
@@ -74,22 +75,6 @@ ggplot() +
 
 Standard \LaTeX references will work as well (e.g. Fig. \ref{fig:view}).
 
-<!-- There are three ways to include figures: -->
-
-<!-- 1. The LaTeX way -->
-
-```{=html}
-<!-- 
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\linewidth]{view}
-\caption{An example image.}
-\label{fig:view}
-\end{figure} 
-
- -->
-```
 <!-- 2. The RMarkdown way -->
 
 ```{r view, out.width = "100%", fig.cap = "An example image.", echo = FALSE}
