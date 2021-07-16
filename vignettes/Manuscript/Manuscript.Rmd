@@ -1,5 +1,5 @@
 ---
-title: Template for preparing your research report submission to PeerJ using RMarkdown
+title: Data and Methods for Spatial Epidemiology the SpatialEpi Package
 preprint: false
 author: 
   - name: Cici Chen
@@ -44,30 +44,33 @@ If you have a question, please use the help menu in the top right of the screen 
 
 ##### 3.1 Pennsylvania Lung Cancer data
 
-This dataset consists of counts of lung cancer incidence in Pennsylvania for the year 2002 as reported by the Pennsylvania Department of Health. This case data was paired with the corresponding population data from the 2000 Census. Furthermore, smoking data is provided from a behavioral risk study conducted by the [Pennsylvania Department of Health](https://www.health.pa.gov/Pages/default.aspx) and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000. Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels. We plot lung cancer incidence per 1000 individuals in \@ref(fig:fig1)
+This dataset consists of counts of lung cancer incidence in Pennsylvania for the year 2002 as reported by the Pennsylvania Department of Health. This case data was paired with the corresponding population data from the 2000 Census. Furthermore, smoking data is provided from a behavioral risk study conducted by the [Pennsylvania Department of Health](https://www.health.pa.gov/Pages/default.aspx) and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000. Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels. We plot lung cancer incidence per 1000 individuals in Figure \@ref(fig:pennLC)
 
-#### How to make a static choropleth map of lung cancer cases
-
-```{r fig1}
+```{r pennLC, fig.cap="Lung cancer incidence per 1000 in Pennsylvania in 2002 ", message=FALSE, warning=FALSE, out.width="100%"}
 library(SpatialEpi)
 library(ggplot2)
 ggplot() +
   geom_sf(data = pennLC_sf, aes(fill = cases))
 ```
 
-## About PeerJ {.unnumbered}
+##### 3.2 Scotland Lip Cancer among Males in 1975-1980
+AFF agriculture farming and fishing
+The expected numbers of disease were calculated by the method of Mantel and Stark 
 
-PeerJ is an award-winning open access publisher covering the biological and medical sciences. PeerJ provides authors with three publication venues: *PeerJ* and *PeerJ Computer Science* (peer-reviewed academic journals) and *PeerJ PrePrints* (a 'pre-print server'). See <https://peerj.com/about/publications/> for more information.
+Figure \@ref(fig:scotland)
 
-The PeerJ model allows an author to publish articles in their peer-reviewed journal via the purchase of a lifetime Publication Plan. Prices start from just \$99 (a one-off payment) which entitles an author to the lifetime ability to publish 1 article per year for free. Publication in PeerJ PrePrints is entirely free.
+```{r scotland, fig.cap="lung cancer among males in Scotland between 1975-1980", message=FALSE, warning=FALSE}
 
-# Some \LaTeX{} Examples {.unnumbered}
+library(SpatialEpi)
+library(ggplot2)
+ggplot() +
+  geom_sf(data = scotland_sf, aes(fill = cases))
+```
 
-Use section and subsection commands to organize your document. \LaTeX{} handles all the formatting and numbering automatically. Use ref and label commands for cross-references.
+
 
 ## Figures and Tables {.unnumbered}
 
-Use the table and tabular commands for basic tables --- see Table \@ref(tab:widgets), for example. You can upload a figure (JPEG, PNG or PDF) using the project menu. To include it in your document, use the includegraphics command as in the code for Figure \@ref(fig:view) below.
 
 Standard \LaTeX references will work as well (e.g. Fig. \ref{fig:view}).
 
@@ -90,7 +93,7 @@ Standard \LaTeX references will work as well (e.g. Fig. \ref{fig:view}).
 <!-- 2. The RMarkdown way -->
 
 ```{r view, out.width = "100%", fig.cap = "An example image.", echo = FALSE}
-knitr::include_graphics("view.jpg")
+#knitr::include_graphics("view.jpg")
 ```
 
 <!-- 3. The pandoc way -->
