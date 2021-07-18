@@ -7,7 +7,7 @@ globalVariables(c(
 
 #' Estimate lambda values
 #' 
-#' @description Internal function to estimate values of lambda needed for \code{\link{MCMC_simulation}} and prior probability of k clusters/anti-clusters for k=0,...,J
+#' @description Internal function to estimate values of lambda needed for `MCMC_simulation` and prior probability of k clusters/anti-clusters for k=0,...,J
 #' 
 #' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.
 #' @param n.sim number of importance sampling iterations

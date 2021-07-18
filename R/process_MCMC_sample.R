@@ -7,7 +7,7 @@ globalVariables(c(
 
 #' Process MCMC Sample
 #' 
-#' @description Take the output of sampled configurations from \code{\link{MCMC_simulation}} and produce area-by-area summaries
+#' @description Take the output of sampled configurations from `MCMC_simulation` and produce area-by-area summaries
 #' 
 #' @param sample list objects of sampled configurations
 #' @param param mean relative risk associted with each of the \code{n.zones} single zones considering the wide prior
@@ -21,12 +21,7 @@ globalVariables(c(
 #' \item{high.area}{Probability of cluster membership for each area}
 #' \item{low.area}{Probability of anti-cluster membership for each area}
 #' \item{RR.est.area}{Smoothed relative risk estimates for each area}
-#' 
-#' @seealso \code{\link{MCMC_simulation}}
-
 #' @export
-#'
-#' 
 process_MCMC_sample <-
 function(sample, param, RR.area, cluster.list, cutoffs){
 

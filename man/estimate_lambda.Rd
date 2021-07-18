@@ -21,7 +21,7 @@ estimate_lambda(n.sim, J, prior.z, overlap, pi0)
 estimates of lambda and prior.j
 }
 \description{
-Internal function to estimate values of lambda needed for \code{\link{MCMC_simulation}} and prior probability of k clusters/anti-clusters for k=0,...,J
+Internal function to estimate values of lambda needed for \code{MCMC_simulation} and prior probability of k clusters/anti-clusters for k=0,...,J
 }
 \references{
 Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.

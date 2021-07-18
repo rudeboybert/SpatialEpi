@@ -23,11 +23,8 @@ process_MCMC_sample(sample, param, RR.area, cluster.list, cutoffs)
 \item{RR.est.area}{Smoothed relative risk estimates for each area}
 }
 \description{
-Take the output of sampled configurations from \code{\link{MCMC_simulation}} and produce area-by-area summaries
+Take the output of sampled configurations from \code{MCMC_simulation} and produce area-by-area summaries
 }
 \references{
 Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.
-}
-\seealso{
-\code{\link{MCMC_simulation}}
 }
