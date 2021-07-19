@@ -1,3 +1,38 @@
+
+globalVariables(c(
+  "qgamma"
+))
+
+
+
+#' Empirical Bayes Estimates of Relative Risk
+#' @description The computes empirical Bayes estimates of relative risk of study region with \code{n} areas, given observed and expected numbers of counts of disease and covariate information.
+#' 
+#' @param Y a length \code{n} vector of observed cases
+#' @param E a length \code{n} vector of expected number of cases
+#' @param Xmat \code{n x p} dimension matrix of covariates
+#'
+#' @references Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \bold{43}, 671--681
+#' 
+#' 
+#' @return
+#' A list with 5 elements:
+#'  \item{RR}{the ecological relative risk posterior mean estimates}
+#'  \item{RRmed}{the ecological relative risk posterior median estimates}
+#'  \item{beta}{the MLE's of the regression coefficients}
+#'  \item{alpha}{the MLE of negative binomial dispersion parameter}
+#'  \item{SMR}{the standardized mortality/morbidity ratio Y/E}
+#'  
+#' @export
+#' @importFrom MASS glm.nb
+#' @examples 
+#' data(scotland)
+#' data <- scotland$data
+#' x <- data$AFF
+#' Xmat <- cbind(x,x^2)
+#' results <- eBayes(data$cases,data$expected,Xmat)
+#' scotland.map <- scotland$spatial.polygon
+#' mapvariable(results$RR, scotland.map)
 eBayes <-
 function(Y, E, Xmat=NULL){
 	# Check for covariates

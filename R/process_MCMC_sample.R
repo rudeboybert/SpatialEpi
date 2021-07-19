@@ -1,3 +1,27 @@
+
+globalVariables(c(
+  "pgamma"
+))
+
+
+
+#' Process MCMC Sample
+#' 
+#' @description Take the output of sampled configurations from `MCMC_simulation` and produce area-by-area summaries
+#' 
+#' @param sample list objects of sampled configurations
+#' @param param mean relative risk associted with each of the \code{n.zones} single zones considering the wide prior
+#' @param RR.area mean relative risk associated with each of the \code{n} areas considering the narrow prior
+#' @param cluster.list list of length \code{n.zones} listing, for each single zone, its component areas
+#' @param cutoffs cutoffs used to declare highs (clusters) and lows (anti-clusters)
+#' 
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.
+#' 
+#' @return
+#' \item{high.area}{Probability of cluster membership for each area}
+#' \item{low.area}{Probability of anti-cluster membership for each area}
+#' \item{RR.est.area}{Smoothed relative risk estimates for each area}
+#' @export
 process_MCMC_sample <-
 function(sample, param, RR.area, cluster.list, cutoffs){
 

@@ -1,3 +1,26 @@
+
+globalVariables(c(
+  "var"
+))
+
+
+
+#' Estimate lambda values
+#' 
+#' @description Internal function to estimate values of lambda needed for `MCMC_simulation` and prior probability of k clusters/anti-clusters for k=0,...,J
+#' 
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.
+#' @param n.sim number of importance sampling iterations
+#' @param J maximum number of clusters/anti-clusters to consider
+#' @param prior.z prior probability of each single zone
+#' @param overlap output of \code{\link{create_geo_objects}}: list with two elements: \code{presence} which lists for each area all the single zones it is present in and \code{cluster_list} for each single zone its component areas
+#' @param pi0 prior probability of no clusters
+#'
+#' @return
+#' estimates of lambda and prior.j
+#' @export
+#'
+#'
 estimate_lambda <-
 function(n.sim, J, prior.z, overlap, pi0){
 

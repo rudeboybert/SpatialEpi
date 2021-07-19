@@ -1,3 +1,37 @@
+globalVariables(c(
+  "grey","leglabs"
+))
+#' Plot Levels of a Variable in a Colour-Coded Map
+#'
+#' @description Plot levels of a variable in a colour-coded map.
+#' @param values variable to plot
+#' @param map an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})
+#' @param log boolean of whether to plot values on log scale
+#' @param nclr number of colour-levels to use
+#' @param include.legend boolean of whether to include legend
+#' @param lwd line width of borders of areas
+#' @param round number of digits to round to in legend
+#' @param brks if desired, pre-specified breaks for legend
+#' @param legend if desired, a pre-specified legend
+#' @param location location of legend
+#' @param rev boolean of whether to reverse colour scheme (darker colours for smaller values)
+#'
+#' @author Albert Y. Kim
+#' 
+#' @return
+#' A map colour-coded to indicate the different levels of \code{values}.
+#' @export
+#' @importFrom maptools leglabs
+#'
+#' @examples
+#' ## Load data
+#' data(scotland)
+#' map <- scotland$spatial.polygon
+#' y <- scotland$data$cases
+#' E <- scotland$data$expected
+#' SMR <- y/E
+#' ## Plot SMR
+#' plotmap(SMR, map, nclr=9, location="topleft")
 plotmap <-
 function(values, map, log=FALSE, nclr=7, include.legend=TRUE, lwd=0.5, round=3,
          brks=NULL, legend=NULL, location='topright', rev=FALSE){
