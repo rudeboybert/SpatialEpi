@@ -23,4 +23,15 @@ scotland_sf
 \description{
 County-level (n=56) data for lip cancer among males in Scotland between 1975-1980
 }
+\examples{
+library(ggplot2)
+ggplot() +
+geom_sf(data = scotland_sf, aes(fill= cases))
+
+
+
+}
+\references{
+Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \bold{43}, 671--681.
+}
 \keyword{datasets}
