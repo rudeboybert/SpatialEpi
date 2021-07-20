@@ -69,7 +69,7 @@ ggplot() +
 ```
 
 ##### 3.2 Upstate New York Leukemia
-```{r scotland, fig.cap="Upstate New York Leukemia", message=FALSE, warning=FALSE}
+```{r , fig.cap="Upstate New York Leukemia", message=FALSE, warning=FALSE}
 
 library(SpatialEpi)
 library(ggplot2)
