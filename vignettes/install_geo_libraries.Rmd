@@ -51,14 +51,14 @@ only have to do this once.
     -   Open a new tab and run `xcode-select --install`
 
 -   Install Macports as per the
-    [Quickstart](http://www.macports.org/install.php) instructions.
+    [Quickstart](https://www.macports.org/install.php) instructions.
 
     -   You have already completed steps 1 and 2.
     -   To know what version of OS X you have click on the Apple icon on
         the top left of the menu bar -\> About This Mac
 
--   Install the [`gdal`](http://www.gdal.org/) and
-    [`geos`](http://trac.osgeo.org/geos/) geospatial libraries.
+-   Install the [`gdal`](https://www.gdal.org/) and
+    [`geos`](https://trac.osgeo.org/geos/) geospatial libraries.
 
     -   In Terminal open a new tab and run `sudo port install gdal`
     -   In Terminal open a new tab and run `sudo port install geos`
@@ -67,7 +67,7 @@ only have to do this once.
     library with R
 
     -   Under
-        [Downloads](https://cran.r-project.org/web/packages/rgdal/index.html)
+        [Downloads](https://CRAN.R-project.org/package=rgdal)
         select "Package Source". It should be named `rgdal_X.Y-Z.tar.gz`
         where `X,Y,Z` denote the version number.
     -   In Terminal open a new tab and run
@@ -88,9 +88,9 @@ only have to do this once.
 ### Windows Users
 
 -   Follow the instructions in [Quick Start for OSGeo4W
-    Users](http://trac.osgeo.org/osgeo4w/)
+    Users](https://trac.osgeo.org/osgeo4w/)
 -   In R, run
-    `install.packages("rgeos", repos="http://R-Forge.R-project.org", type="source")`
+    `install.packages("rgeos", repos="https://R-Forge.R-project.org", type="source")`
 
 ### Linux Users
 
