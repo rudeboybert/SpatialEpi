@@ -146,7 +146,7 @@ title("Most Likely Cluster")
 
 ```{r}
 poisson <- kulldorff(geo, cases, population, expected.cases,
-+     pop.upper.bound, n.simulations, alpha.level, plot)
+                     pop.upper.bound, n.simulations, alpha.level, plot)
 cluster <- poisson$most.likely.cluster$location.IDs.included
 plot(pennLC$spatial.polygon, axes = TRUE)
 plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
