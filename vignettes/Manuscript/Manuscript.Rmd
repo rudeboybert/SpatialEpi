@@ -99,7 +99,7 @@ expected.cases <- expected(pennLC$data$population, pennLC$data$cases, n.strata)
 ## 4.2 Disease Mapping
 ### 4.2.1 Empricial Bayes 
 
-Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates [4]. The estimates represent a weighted compromise between an area’s SMR and the overall mean relative risk. These estimates are much more stable than the raw SMR’s. In this example, we use a linear model α + β1x + β2x2 in the eBayes() function to estimate relative risk with the resulting plot in Figure 
+Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates [4]. The estimates represent a weighted compromise between an area’s SMR and the overall mean relative risk. These estimates are much more stable than the raw SMR’s. In this example, we use a linear model $\alpha + \beta_1 x + \beta_2 x_2$ in the eBayes() function to estimate relative risk with the resulting plot in Figure 
 
 
 ```{r}
@@ -136,7 +136,7 @@ alpha.level <- 0.05
 We can pursue either a binomial or poisson analysis.
 
 ```{r}
-binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, alpha.level, plot)
+binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, alpha.level, plot = FALSE)
 cluster <- binomial$most.likely.cluster$location.IDs.included
 plot(pennLC$spatial.polygon, axes = TRUE)
 plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
@@ -146,7 +146,7 @@ title("Most Likely Cluster")
 
 ```{r}
 poisson <- kulldorff(geo, cases, population, expected.cases,
-                     pop.upper.bound, n.simulations, alpha.level, plot)
+                     pop.upper.bound, n.simulations, alpha.level, plot = FALSE)
 cluster <- poisson$most.likely.cluster$location.IDs.included
 plot(pennLC$spatial.polygon, axes = TRUE)
 plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
@@ -161,8 +161,8 @@ Using the same dataset as in Section 4.3.1
 ```{r}
 k <- 1250
 alpha.level <- 0.05
-results <- besag.newell(geo, population, cases, expected.cases = NULL,  k, alpha.level)
-results <- besag.newell(geo, population, cases, expected.cases,   k, alpha.level)
+results <- besag_newell(geo, population, cases, expected.cases = NULL,  k, alpha.level)
+results <- besag_newell(geo, population, cases, expected.cases,   k, alpha.level)
 ```
 
 # 4.4 Generating Samples from an Improper Gaussian Random Field
@@ -184,12 +184,13 @@ To simulate spatial correlated data, we use function sim. Q in SpatialEpi. You n
 
 
 ```{r}
-library(INLA)
-g <- system.file("demodata/scotland.graph", package = "INLA")
-m <- numNeighbors(g)
-adj <- listNeighbors(g)
-Q <- make.Q(m, adj, omega.sq = 1)
-tmp.x1 <- sim.Q(Q)
+# Heads up Arris I temporarily commented this out
+# library(INLA)
+# g <- system.file("demodata/scotland.graph", package = "INLA")
+# m <- numNeighbors(g)
+# adj <- listNeighbors(g)
+# Q <- make.Q(m, adj, omega.sq = 1)
+# tmp.x1 <- sim.Q(Q)
 ```
 
 
@@ -200,11 +201,12 @@ tmp.x1 <- sim.Q(Q)
 
 Informative priors can be independently specified on each of the fixed effects. The parameters in the normal priors are assigned via specification of two quantiles with associated probabilities. For logistic and log-linear models these quantiles may be given on the exponentiated scale since these are more interpretable. If $\theta_{1}$ and $\theta_{2}$ are the quantiles on the exponentiated scale, and $p_{1}$ and $p_{2}$ are the associated probabilities, then the parameters of the normal prior are given by:
 
+$$
 \begin{aligned}
 \mu &=\frac{z_{2} \log \left(\theta_{1}\right)-z_{1} \log \left(\theta_{2}\right)}{z_{2}-z_{1}} \\
 \sigma &=\frac{\log \left(\theta_{2}\right)-\log \left(\theta_{1}\right)}{z_{2}-z_{1}}
 \end{aligned}
-
+$$
 
 
 where $z_{1}, z_{2}$ are the $p_{1}, p_{2}$ quantiles of a standard normal distribution. For example, in an epidemiological context, we may wish to specify a prior on a relative risk parameter, $\exp \left(\beta_{1}\right)$, which has a median of 1 and a $95 \%$ point of 3 (if we think it is unlikely that the relative risk associated with a unit increase in exposure exceeds 3). These speciÃdcations lead to $\beta_{1} \sim N\left(0,0.6682^{2}\right)$.
@@ -213,26 +215,28 @@ In R, the above calculation can be obtained by calling function LogNormalPriorCh
 
 ```{r}
 param <- LogNormalPriorCh(theta1 = 1, theta2 = 3, prob1 = 0.5, prob2 = 0.95)
-param
-
-$mu
-
-$sigma
+# Heads up Arris I temporarily commented this out
+# param
+# 
+# $mu
+# 
+# $sigma
 ```
 
 
-The resulting log normal distribution with parameter μ = 0 and σ = 0.6682 is shown in Figure 13.
+The resulting log normal distribution with parameter $\mu$ = 0 and $\sigma$ = 0.6682 is shown in Figure 13.
 
 
 ## 4.4.2 Choosing Prior on the Non-Spatial Residuals
 
 The approach for choosing a prior for a single random effect is based on Wakefield(2009). The idea is to specify a range for the more interpretable marginal distribution of the random effect $b_{i}$, and use this to drive specification of prior parameters. It can be proven that if $b \mid \tau \sim N\left(0, \tau^{-1}\right)$ and $\tau \sim G a(a, b)$, then the marginal distribution of $b$ is $T_{1}(0, b / a, 2 a)$. For a range of $b$ and a pre-specified degree of freedom $d$, we can solve for $a$ and $b$. For example, if the range of $b$ is $(-R, R), a$ and $b$ can be solved by:
 
+$$
 \begin{aligned}
 a &=d / 2 \\
 b &=R^{2} / 2\left(t_{1-(1-q) / 2}^{d}\right)^{2}
 \end{aligned}
-
+$$
 
 
 where $t_{q}^{d}$ is the $100 \times q^{\text {th }}$ quantile of a Student $t$ distribution with $d$ degrees of freedom. For example, if we choose $d=1$ and a $95 \%$ range of $\exp (b)[0.1,10]$ we take $R=\log (10)$ and obtain $a=0.5, b=0.0164$.
