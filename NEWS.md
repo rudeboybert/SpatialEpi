@@ -1,5 +1,6 @@
 # SpatialEpi 1.2.4
 
-* Development version
-* Fixed SpatialEpi-package.Rd file formatting issues
-* CRAN v 1.2.2 uploaded to GitHub 
+* Added `sf` package `scotland_sf`, `pennLC_sf`, `NYleukemia_sf` versions of 
+`scotland`, `pennLC`, `NYleukemia` maps + datasets
+* Converted all `man` documentation to be built using `roxygen2`
+* Started updating main package vignette
