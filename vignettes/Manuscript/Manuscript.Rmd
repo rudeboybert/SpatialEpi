@@ -133,9 +133,10 @@ n.simulations <- 999
 alpha.level <- 0.05
 ```
 
+We can pursue either a binomial or poisson analysis.
+
 ```{r}
-binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound,
-+     n.simulations, alpha.level, plot)
+binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound, n.simulations, alpha.level, plot)
 cluster <- binomial$most.likely.cluster$location.IDs.included
 plot(pennLC$spatial.polygon, axes = TRUE)
 plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
@@ -167,7 +168,7 @@ results <- besag.newell(geo, population, cases, expected.cases,   k, alpha.level
 # 4.4 Generating Samples from an Improper Gaussian Random Field
 ## Consider an improper GMF, see for example Besag [1] and Rue [12]. The model has the format:
 
-$$ p\left(\boldsymbol{u} \mid \sigma_{u}^{2}\right)=(2 \pi)^{-(m-r) / 2}\left|Q^{*}\right|^{1 / 2} \sigma_{u}^{-(m-r)} \exp \left(-\frac{1}{2 \sigma_{u}^{2}} \boldsymbol{u}^{T} \boldsymbol{Q} \boldsymbol{u}\right) $$
+$$ p \left(\boldsymbol{u} \mid \sigma_{u}^{2}\right)=(2 \pi)^{-(m-r) / 2}\left|Q^{*}\right|^{1 / 2} \sigma_{u}^{-(m-r)} \exp \left(-\frac{1}{2 \sigma_{u}^{2}} \boldsymbol{u}^{T} \boldsymbol{Q} \boldsymbol{u}\right) $$
 
 where $\boldsymbol{u}=\left(u_{1}, u_{2}, \cdots, u_{m}\right)$ is the vector of random effects. $\boldsymbol{Q}$ is a (scaled) "precision" matrix of rank. $\tilde{\boldsymbol{Q}}$ is the precision matrix with rank $m-r$.
 
