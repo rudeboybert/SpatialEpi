@@ -46,7 +46,6 @@ If you have a question, please use the help menu in the top right of the screen 
 
 This dataset consists of counts of lung cancer incidence in Pennsylvania for the year 2002 as reported by the Pennsylvania Department of Health. This case data was paired with the corresponding population data from the 2000 Census. Furthermore, smoking data is provided from a behavioral risk study conducted by the [Pennsylvania Department of Health](https://www.health.pa.gov/Pages/default.aspx) and are presented as the percentage of adults who were current smokers sometime between 1996 and 2000. Both population and case counts are stratified by gender, age (0-39, 40-59, 60-69 and 70+) and race (white and other) for a total of 16 strata levels. We plot lung cancer incidence per 1000 individuals in Figure \@ref(fig:pennLC)
 
-
 ```{r pennLC, fig.cap="Lung cancer incidence per 1000 in Pennsylvania in 2002 ", message=FALSE, warning=FALSE, out.width="100%"}
 library(SpatialEpi)
 library(ggplot2)
@@ -55,8 +54,8 @@ ggplot() +
 ```
 
 ##### 3.2 Scotland Lip Cancer among Males in 1975-1980
-AFF agriculture farming and fishing
-The expected numbers of disease were calculated by the method of Mantel and Stark 
+
+AFF agriculture farming and fishing The expected numbers of disease were calculated by the method of Mantel and Stark
 
 Figure \@ref(fig:scotland)
 
@@ -69,6 +68,7 @@ ggplot() +
 ```
 
 ##### 3.2 Upstate New York Leukemia
+
 ```{r , fig.cap="Upstate New York Leukemia", message=FALSE, warning=FALSE}
 
 library(SpatialEpi)
@@ -78,10 +78,178 @@ ggplot() +
 
 ```
 
+# 4 Methods
+
+## 4.1 Expected Numbers of Disease and Standardized Mortality Ratios
+
+In order to control for known risk factors (in this case strata) using internal indirect standardization, we can compute the (indirect) expected number of diseases [6] for each area using the expected() command. It is
+important that the population and cases vectors are balanced: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order. i.e. if considering 16 strata, the first 16 elements correspond to the first area, the next 16 correspond to the second area, etc. and the strata are always listed in the same order.\
+\
+
+
+
+```{r}
+data("pennLC")
+n.strata <- 16
+population <- tapply(pennLC$data$population, pennLC$data$county, sum)
+cases <- tapply(pennLC$data$cases, pennLC$data$county, sum)
+expected.cases <- expected(pennLC$data$population, pennLC$data$cases, n.strata)
+```
+
+## 4.2 Disease Mapping
+### 4.2.1 Empricial Bayes 
+
+Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates [4]. The estimates represent a weighted compromise between an area’s SMR and the overall mean relative risk. These estimates are much more stable than the raw SMR’s. In this example, we use a linear model α + β1x + β2x2 in the eBayes() function to estimate relative risk with the resulting plot in Figure 
+
+
+```{r}
+data(scotland)
+data <- scotland$data
+x <- data$AFF
+Xmat <- cbind(x, x^2)
+results <- eBayes(data$cases, data$expected, Xmat)
+scotland.map <- scotland$spatial.polygon
+mapvariable(results$RR, scotland.map)
+```
+
+
+# 4.3 Cluster Detection 
+
+Cluster detection is the routine surveillance of a large expanse of small administrative zones for evidence of individual “hot-spots” of disease without any preconceptions about their locations. [2]. For aggregated count data, a typical procedure is to consider a set of zones, each zone being some amalgamation of areas in the study regions. Each zone is then viewed as a potential cluster.
+
+
+## 4.3.1 Kulldorff
+The kulldorff() function implements the Kulldorff method for finding the most likely cluster as described in Kulldorff and Nagarwalla (1995) [9] and Kulldorff (1997) [8]. The kulldorff()
+
+
+```{r}
+data <- pennLC$data
+geo <- latlong2grid(pennLC$geo[, 2:3])
+population <- tapply(data$population, data$county, sum)
+cases <- tapply(data$cases, data$county, sum)
+expected.cases <- expected(data$population, data$cases, 16)
+pop.upper.bound <- 0.5
+n.simulations <- 999
+alpha.level <- 0.05
+```
+
+```{r}
+binomial <- kulldorff(geo, cases, population, NULL, pop.upper.bound,
++     n.simulations, alpha.level, plot)
+cluster <- binomial$most.likely.cluster$location.IDs.included
+plot(pennLC$spatial.polygon, axes = TRUE)
+plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
+title("Most Likely Cluster")
+```
+
+
+```{r}
+poisson <- kulldorff(geo, cases, population, expected.cases,
++     pop.upper.bound, n.simulations, alpha.level, plot)
+cluster <- poisson$most.likely.cluster$location.IDs.included
+plot(pennLC$spatial.polygon, axes = TRUE)
+plot(pennLC$spatial.polygon[cluster], add = TRUE, col = "red")
+title("Most Likely Cluster Controlling for Strata")
+```
+
+## 4.3.2 Besag-Newell
+
+The besag.newell() function implements the Besag-Newell method as described in Besag and Newell (1995) [2].
+Using the same dataset as in Section 4.3.1
+
+```{r}
+k <- 1250
+alpha.level <- 0.05
+results <- besag.newell(geo, population, cases, expected.cases = NULL,  k, alpha.level)
+results <- besag.newell(geo, population, cases, expected.cases,   k, alpha.level)
+```
+
+# 4.4 Generating Samples from an Improper Gaussian Random Field
+## Consider an improper GMF, see for example Besag [1] and Rue [12]. The model has the format:
+
+$$ p\left(\boldsymbol{u} \mid \sigma_{u}^{2}\right)=(2 \pi)^{-(m-r) / 2}\left|Q^{*}\right|^{1 / 2} \sigma_{u}^{-(m-r)} \exp \left(-\frac{1}{2 \sigma_{u}^{2}} \boldsymbol{u}^{T} \boldsymbol{Q} \boldsymbol{u}\right) $$
+
+where $\boldsymbol{u}=\left(u_{1}, u_{2}, \cdots, u_{m}\right)$ is the vector of random effects. $\boldsymbol{Q}$ is a (scaled) "precision" matrix of rank. $\tilde{\boldsymbol{Q}}$ is the precision matrix with rank $m-r$.
+
+
+To simulate samples from this distribution, the algorithm is:
+
+1. Simulate $z_{j} \sim N\left(0, \lambda_{j}^{-1}\right), j=r+1, r+2, \cdots, m$, where $\lambda_{j}$ are the eigenvalues of $Q$.
+
+2. Let $\boldsymbol{x}=z_{r+1} e_{k+1}+z_{r+2} e_{r+2}+\cdots z_{m} e_{m}$
+
+
+To simulate spatial correlated data, we use function sim. Q in SpatialEpi. You need to provide the vector of number of neighbors, the vector of adjacency neighbors and the conditional variance $\sigma_{u^{*}}^{2}$. If your graph file is in the format as in INLA, you can use function num. neighbors and num.neighbors in SpatialEpi. These two functions will retrieve the vector of number of neighbors and the vector of adjacency neighbors from the graph file in the format in INLA. We take the scotland lip cancer data as an example. The following R code is used to generate samples from improper Gaussian random field with $\sigma_{u}^{2}=1$ using the scotland graph file from INLA. The simulated samples are in Figure $12 .$
+
+
+```{r}
+library(INLA)
+g <- system.file("demodata/scotland.graph", package = "INLA")
+m <- numNeighbors(g)
+adj <- listNeighbors(g)
+Q <- make.Q(m, adj, omega.sq = 1)
+tmp.x1 <- sim.Q(Q)
+```
+
+
+
+
+
+## 4.4.1 Choosing the Prior on the Fixed Effects
+
+Informative priors can be independently specified on each of the fixed effects. The parameters in the normal priors are assigned via specification of two quantiles with associated probabilities. For logistic and log-linear models these quantiles may be given on the exponentiated scale since these are more interpretable. If $\theta_{1}$ and $\theta_{2}$ are the quantiles on the exponentiated scale, and $p_{1}$ and $p_{2}$ are the associated probabilities, then the parameters of the normal prior are given by:
+
+\begin{aligned}
+\mu &=\frac{z_{2} \log \left(\theta_{1}\right)-z_{1} \log \left(\theta_{2}\right)}{z_{2}-z_{1}} \\
+\sigma &=\frac{\log \left(\theta_{2}\right)-\log \left(\theta_{1}\right)}{z_{2}-z_{1}}
+\end{aligned}
+
+
+
+where $z_{1}, z_{2}$ are the $p_{1}, p_{2}$ quantiles of a standard normal distribution. For example, in an epidemiological context, we may wish to specify a prior on a relative risk parameter, $\exp \left(\beta_{1}\right)$, which has a median of 1 and a $95 \%$ point of 3 (if we think it is unlikely that the relative risk associated with a unit increase in exposure exceeds 3). These speciÃdcations lead to $\beta_{1} \sim N\left(0,0.6682^{2}\right)$.
+
+In R, the above calculation can be obtained by calling function LogNormalPriorCh.
+
+```{r}
+param <- LogNormalPriorCh(theta1 = 1, theta2 = 3, prob1 = 0.5, prob2 = 0.95)
+param
+
+$mu
+
+$sigma
+```
+
+
+The resulting log normal distribution with parameter μ = 0 and σ = 0.6682 is shown in Figure 13.
+
+
+## 4.4.2 Choosing Prior on the Non-Spatial Residuals
+
+The approach for choosing a prior for a single random effect is based on Wakefield(2009). The idea is to specify a range for the more interpretable marginal distribution of the random effect $b_{i}$, and use this to drive specification of prior parameters. It can be proven that if $b \mid \tau \sim N\left(0, \tau^{-1}\right)$ and $\tau \sim G a(a, b)$, then the marginal distribution of $b$ is $T_{1}(0, b / a, 2 a)$. For a range of $b$ and a pre-specified degree of freedom $d$, we can solve for $a$ and $b$. For example, if the range of $b$ is $(-R, R), a$ and $b$ can be solved by:
+
+\begin{aligned}
+a &=d / 2 \\
+b &=R^{2} / 2\left(t_{1-(1-q) / 2}^{d}\right)^{2}
+\end{aligned}
+
+
+
+where $t_{q}^{d}$ is the $100 \times q^{\text {th }}$ quantile of a Student $t$ distribution with $d$ degrees of freedom. For example, if we choose $d=1$ and a $95 \%$ range of $\exp (b)[0.1,10]$ we take $R=\log (10)$ and obtain $a=0.5, b=0.0164$.
+
+
+Function GammaPriorCh can be used for this calculation:
+```{r}
+param1 <- GammaPriorCh(log(10), 0.975, 1)
+
+param2 <- GammaPriorCh(log(5), 0.975, 2)
+```
+
+
+
+
 
 
 ## Figures and Tables {.unnumbered}
-
 
 Standard \LaTeX references will work as well (e.g. Fig. \ref{fig:view}).
 
