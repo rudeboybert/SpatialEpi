@@ -15,14 +15,14 @@ globalVariables(c(
 #' @param area.names names of all areas
 #' @param nrepeats number of sub polygons for each area
 #'
-#' @details Just as when plotting with the \code{\link[graphics]{polygon}} function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix \code{poly}, NA values separate complete subpolygons. 
-#' \code{coordinate.system} must be either \code{'+proj=utm'} or \code{'+proj=longlat'}.
-#' In the case with an area consists of more than one separate closed polygon, \code{nrepeats} specifies the number of closed polygons associated with each area.
+#' @details Just as when plotting with the [graphics::polygon()] function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix `poly`, NA values separate complete subpolygons. 
+#' `coordinate.system` must be either `'+proj=utm'` or `'+proj=longlat'`.
+#' In the case with an area consists of more than one separate closed polygon, `nrepeats` specifies the number of closed polygons associated with each area.
 #' 
-#' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics. E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \bold{5}, 9--13.  
+#' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) *Applied Spatial Data Analysis with R*.  Springer Series in Statistics. E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. *R News*, **5**, 9--13.  
 #' @author Albert Y. Kim
 #' @return
-#' An object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class} from the \pkg{sp} package).
+#' An object of class SpatialPolygons (See [SpatialPolygons-class][sp::SpatialPolygons-class] from the \pkg{sp} package).
 #' @export
 #'
 #' @examples

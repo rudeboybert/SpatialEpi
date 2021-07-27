@@ -19,7 +19,7 @@ mapvariable(
 \arguments{
 \item{y}{variable to plot}
 
-\item{spatial.polygon}{an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})}
+\item{spatial.polygon}{an object of class SpatialPolygons (See \link[sp:SpatialPolygons-class]{SpatialPolygons-class})}
 
 \item{ncut}{number of cuts in colour levels to plot}
 
@@ -51,7 +51,7 @@ mapvariable(SMR,map,main="Scotland",xlab="Eastings (km)",ylab="Northings (km)")
 }
 \references{
 Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics.
-E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \bold{5}, 9--13.
+E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \strong{5}, 9--13.
 }
 \author{
 Jon Wakefield, Nicky Best, Sebastien Haneuse, and Albert Y. Kim

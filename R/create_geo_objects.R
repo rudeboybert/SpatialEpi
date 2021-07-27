@@ -8,19 +8,19 @@ globalVariables(c(
 
 #' Create geographical objects to be used in Bayesian Cluster Detection Method
 #'
-#' @description This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link{bayes_cluster}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).
+#' @description This internal function creates the geographical objects needed to run the Bayesian cluster detection method in [bayes_cluster()].  Specifically it creates all single zones based data objects, where single zones are the *zones* defined by Kulldorff (1997).
 #' 
-#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.\emph{Biostatistics}, \bold{14}, 752--765.
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.*Biostatistics*, **14**, 752--765.
 #' @author Albert Y. Kim
 #' 
 #' @param max.prop maximum proportion of study region's population each single zone can contain
-#' @param population vector of length \code{n} of the population of each area
-#' @param centroids \code{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based
-#' @param sp.obj object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class}) representing the study region
+#' @param population vector of length `n` of the population of each area
+#' @param centroids `n x 2` table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based
+#' @param sp.obj object of class SpatialPolygons (See [SpatialPolygons-class][sp::SpatialPolygons-class]) representing the study region
 #'
 #' @return
-#' \item{overlap}{list with two elements: \code{1. presence} which lists for each area all the single zones it is present in and \code{2. cluster.list} for each single zone its component areas}
-#' \item{cluster.coords}{\code{n.zones x 2} matrix of the center and radial area of each single zone}
+#' \item{overlap}{list with two elements: `1. presence` which lists for each area all the single zones it is present in and `2. cluster.list` for each single zone its component areas}
+#' \item{cluster.coords}{`n.zones x 2` matrix of the center and radial area of each single zone}
 #' 
 #' 
 #' 

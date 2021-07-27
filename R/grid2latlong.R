@@ -10,7 +10,7 @@ globalVariables(c(
 #'
 #' @description Convert geographic coordinates from Universal Transverse Mercator system to Latitude/Longitude.
 #' 
-#' @param input A data frame with columns named \code{x} and \code{y} of the UTM coordinates to convert or  an \code{n x 2} matrix of grid coordinates or an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})
+#' @param input A data frame with columns named `x` and `y` of the UTM coordinates to convert or  an `n x 2` matrix of grid coordinates or an object of class SpatialPolygons (See [SpatialPolygons-class][sp::SpatialPolygons-class])
 #'
 #' @author Lance A. Waller
 #' 

@@ -11,16 +11,16 @@ create_geo_objects(max.prop, population, centroids, sp.obj)
 
 \item{population}{vector of length \code{n} of the population of each area}
 
-\item{centroids}{\code{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based}
+\item{centroids}{\verb{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based}
 
-\item{sp.obj}{object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class}) representing the study region}
+\item{sp.obj}{object of class SpatialPolygons (See \link[sp:SpatialPolygons-class]{SpatialPolygons-class}) representing the study region}
 }
 \value{
-\item{overlap}{list with two elements: \code{1. presence} which lists for each area all the single zones it is present in and \code{2. cluster.list} for each single zone its component areas}
-\item{cluster.coords}{\code{n.zones x 2} matrix of the center and radial area of each single zone}
+\item{overlap}{list with two elements: \verb{1. presence} which lists for each area all the single zones it is present in and \verb{2. cluster.list} for each single zone its component areas}
+\item{cluster.coords}{\verb{n.zones x 2} matrix of the center and radial area of each single zone}
 }
 \description{
-This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link{bayes_cluster}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).
+This internal function creates the geographical objects needed to run the Bayesian cluster detection method in \code{\link[=bayes_cluster]{bayes_cluster()}}.  Specifically it creates all single zones based data objects, where single zones are the \emph{zones} defined by Kulldorff (1997).
 }
 \examples{
 data(pennLC)
@@ -33,7 +33,7 @@ output <- create_geo_objects(max.prop, population, centroids, sp.obj)
 nrow(output$cluster.coords)
 }
 \references{
-Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.\emph{Biostatistics}, \bold{14}, 752--765.
+Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection.\emph{Biostatistics}, \strong{14}, 752--765.
 }
 \author{
 Albert Y. Kim

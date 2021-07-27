@@ -17,7 +17,7 @@
 #'  \item{smoking}{Overall county smoking rate (not broken down by strata)}
 #'  \item{geometry}{Geometric representation of counties in Pennsylvania}
 #' }
-#' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:\url{https://www.health.pa.gov/Pages/default.aspx}.
+#' @source Population data was obtained from the 2000 decennial census, lung cancer and smoking data were obtained from the Pennsylvania Department of Health website:<https://www.health.pa.gov/Pages/default.aspx>.
 #' @examples 
 #' library(ggplot2)
 #' library(dplyr)

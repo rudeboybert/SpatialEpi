@@ -7,7 +7,7 @@
 grid2latlong(input)
 }
 \arguments{
-\item{input}{A data frame with columns named \code{x} and \code{y} of the UTM coordinates to convert or  an \code{n x 2} matrix of grid coordinates or an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})}
+\item{input}{A data frame with columns named \code{x} and \code{y} of the UTM coordinates to convert or  an \verb{n x 2} matrix of grid coordinates or an object of class SpatialPolygons (See \link[sp:SpatialPolygons-class]{SpatialPolygons-class})}
 }
 \value{
 Either a data frame with the corresponding longitude and latitude, or a SpatialPolygons object with the coordinates changed.

@@ -2,18 +2,18 @@
 #' 
 #' @description Besag-Newell cluster detection method.  There are differences with the original paper and our implementation:
 #' \itemize{
-#' \item{we base our analysis on \eqn{k} cases, rather than \eqn{k} \emph{other} cases as prescribed in the paper.} 
-#' \item we do not subtract 1 from the \emph{accumulated numbers of other cases} and \emph{accumulated numbers of others at risk}, as was prescribed in the paper to discount selection bias
+#' \item{we base our analysis on \eqn{k} cases, rather than \eqn{k} *other* cases as prescribed in the paper.} 
+#' \item we do not subtract 1 from the *accumulated numbers of other cases* and *accumulated numbers of others at risk*, as was prescribed in the paper to discount selection bias
 #' \item M is the total number of areas included, not the number of additional areas included.  i.e. \eqn{M} starts at 1, not 0.
 #' \item p-values are not based on the original value of \eqn{k}, rather the actual number of cases observed until we view \eqn{k} or more cases.  Ex:  if \eqn{k = 10}, but as we consider neighbors we encounter 1, 2, 9 then 12 cases, we base our \eqn{p}-values on \eqn{k=12}
 #' \item we do not provide a Monte-Carlo simulated \eqn{R}:  the number of tests that attain significance at a fixed level \eqn{\alpha}
 #' }
 #' The first two and last differences are because we view the testing on an area-by-area level, rather than a case-by-case level.
 #' 
-#' @param geo an \code{n x 2} table of the (x,y)-coordinates of the area centroids
-#' @param population aggregated population counts for all \code{n} areas
-#' @param cases aggregated case counts for all \code{n} areas
-#' @param expected.cases expected numbers of disease for all \code{n} areas
+#' @param geo an `n x 2` table of the (x,y)-coordinates of the area centroids
+#' @param population aggregated population counts for all `n` areas
+#' @param cases aggregated case counts for all `n` areas
+#' @param expected.cases expected numbers of disease for all `n` areas
 #' @param k number of cases to consider
 #' @param alpha.level alpha-level threshold used to declare significance
 #'
@@ -23,9 +23,9 @@
 #'
 #'
 #' @details 
-#' For the \code{population} and \code{cases} tables, the rows are bunched by areas first, and then for each area, the counts for each strata are listed.  It is important that the tables are balanced:  the strata information are in the same order for each area, and counts for each area/strata combination appear exactly once (even if zero). 
+#' For the `population` and `cases` tables, the rows are bunched by areas first, and then for each area, the counts for each strata are listed.  It is important that the tables are balanced:  the strata information are in the same order for each area, and counts for each area/strata combination appear exactly once (even if zero). 
 #'
-#' @references Besag J. and Newell J. (1991) The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \bold{154}, 143--155
+#' @references Besag J. and Newell J. (1991) The Detection of Clusters in Rare Diseases *Journal of the Royal Statistical Society. Series A (Statistics in Society)*, **154**, 143--155
 #' @author Albert Y. Kim
 #'
 #' @return
@@ -33,16 +33,16 @@
 #' \item{clusters}{information on all clusters that are \eqn{\alpha}-level significant, in decreasing order of the \eqn{p}-value}
 #' \item{p.values}{for each of the \eqn{n} areas, \eqn{p}-values of each cluster of size at least \eqn{k}}
 #' \item{m.values}{for each of the \eqn{n} areas, the number of areas need to observe at least \eqn{k} cases}
-#' \item{observed.k.values}{based on \code{m.values}, the actual number of cases used to compute the \eqn{p}-values}
+#' \item{observed.k.values}{based on `m.values`, the actual number of cases used to compute the \eqn{p}-values}
 #' 
-#' @note The \code{clusters} list elements are themselves lists reporting:\cr\cr
+#' @note The `clusters` list elements are themselves lists reporting:\cr\cr
 #'\tabular{ll}{
-#'  \code{location.IDs.included} \tab ID's of areas in cluster, in order of distance\cr
-#'  \code{population} \tab population of cluster\cr
-#'  \code{number.of.cases} \tab number of cases in cluster\cr
-#'  \code{expected.cases} \tab expected number of cases in cluster\cr
-#'  \code{SMR} \tab estimated SMR of cluster\cr
-#'  \code{p.value} \tab \eqn{p}-value\cr
+#'  `location.IDs.included` \tab ID's of areas in cluster, in order of distance\cr
+#'  `population` \tab population of cluster\cr
+#'  `number.of.cases` \tab number of cases in cluster\cr
+#'  `expected.cases` \tab expected number of cases in cluster\cr
+#'  `SMR` \tab estimated SMR of cluster\cr
+#'  `p.value` \tab \eqn{p}-value\cr
 #' }
 #' 
 #' 

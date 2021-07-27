@@ -21,7 +21,7 @@ plotmap(
 \arguments{
 \item{values}{variable to plot}
 
-\item{map}{an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})}
+\item{map}{an object of class SpatialPolygons (See \link[sp:SpatialPolygons-class]{SpatialPolygons-class})}
 
 \item{log}{boolean of whether to plot values on log scale}
 

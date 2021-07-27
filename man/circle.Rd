@@ -7,7 +7,7 @@
 circle(geo, cluster.center, cluster.end)
 }
 \arguments{
-\item{geo}{A \code{n x 2} table of the x-coordinate and y-coordinates of the centroids of each area}
+\item{geo}{A \verb{n x 2} table of the x-coordinate and y-coordinates of the centroids of each area}
 
 \item{cluster.center}{The area index (an integer between \code{1} and \code{n}) indicating the center of the circle}
 

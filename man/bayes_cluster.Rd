@@ -31,7 +31,7 @@ bayes_cluster(
 
 \item{sp.obj}{an object of class SpatialPolygons}
 
-\item{centroids}{\code{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based}
+\item{centroids}{\verb{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based}
 
 \item{max.prop}{maximum proportion of the study region's population each single zone can contain}
 
@@ -69,8 +69,8 @@ Implementation of the Bayesian Cluster detection model of Wakefield and Kim (201
 \examples{
 ## Note for the NYleukemia example, 4 census tracts were completely surrounded 
 ## by another unique census tract; when applying the Bayesian cluster detection 
-## model in \code{\link{bayes_cluster}}, we merge them with the surrounding 
-## census tracts yielding \code{n=277} areas.
+## model in [bayes_cluster()], we merge them with the surrounding 
+## census tracts yielding `n=277` areas.
 
 ## Load data and convert coordinate system from latitude/longitude to grid
 data(NYleukemia)

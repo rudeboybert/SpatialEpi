@@ -10,12 +10,12 @@ globalVariables(c(
 #' @description Take the output of sampled configurations from `MCMC_simulation` and produce area-by-area summaries
 #' 
 #' @param sample list objects of sampled configurations
-#' @param param mean relative risk associted with each of the \code{n.zones} single zones considering the wide prior
-#' @param RR.area mean relative risk associated with each of the \code{n} areas considering the narrow prior
-#' @param cluster.list list of length \code{n.zones} listing, for each single zone, its component areas
+#' @param param mean relative risk associted with each of the `n.zones` single zones considering the wide prior
+#' @param RR.area mean relative risk associated with each of the `n` areas considering the narrow prior
+#' @param cluster.list list of length `n.zones` listing, for each single zone, its component areas
 #' @param cutoffs cutoffs used to declare highs (clusters) and lows (anti-clusters)
 #' 
-#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. \emph{Biostatistics}, \bold{14}, 752--765.
+#' @references Wakefield J. and Kim A.Y. (2013) A Bayesian model for cluster detection. *Biostatistics*, **14**, 752--765.
 #' 
 #' @return
 #' \item{high.area}{Probability of cluster membership for each area}

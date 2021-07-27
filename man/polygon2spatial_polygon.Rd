@@ -21,13 +21,13 @@ polygon2spatial_polygon(
 \item{nrepeats}{number of sub polygons for each area}
 }
 \value{
-An object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class} from the \pkg{sp} package).
+An object of class SpatialPolygons (See \link[sp:SpatialPolygons-class]{SpatialPolygons-class} from the \pkg{sp} package).
 }
 \description{
 Converts a polygon (a matrix of coordinates with NA values to separate subpolygons) into a Spatial Polygons object.
 }
 \details{
-Just as when plotting with the \code{\link[graphics]{polygon}} function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix \code{poly}, NA values separate complete subpolygons.
+Just as when plotting with the \code{\link[graphics:polygon]{graphics::polygon()}} function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix \code{poly}, NA values separate complete subpolygons.
 \code{coordinate.system} must be either \code{'+proj=utm'} or \code{'+proj=longlat'}.
 In the case with an area consists of more than one separate closed polygon, \code{nrepeats} specifies the number of closed polygons associated with each area.
 }
@@ -56,7 +56,7 @@ nrepeats[23]
 plot(spatial.polygon[23],add=TRUE,col="red")
 }
 \references{
-Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics. E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \bold{5}, 9--13.
+Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics. E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \strong{5}, 9--13.
 }
 \author{
 Albert Y. Kim

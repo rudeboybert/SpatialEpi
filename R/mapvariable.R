@@ -7,7 +7,7 @@ globalVariables(c(
 #' @description Plot levels of a variable in a colour-coded map along with a legend.
 #' 
 #' @param y variable to plot
-#' @param spatial.polygon an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})
+#' @param spatial.polygon an object of class SpatialPolygons (See [SpatialPolygons-class][sp::SpatialPolygons-class])
 #' @param ncut number of cuts in colour levels to plot
 #' @param nlevels number of levels to include in legend
 #' @param lower lower bound of levels
@@ -16,12 +16,12 @@ globalVariables(c(
 #' @param xlab a title for the x axis
 #' @param ylab a title for the y axis
 #'
-#' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) \emph{Applied Spatial Data Analysis with R}.  Springer Series in Statistics.
-#' E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. \emph{R News}, \bold{5}, 9--13. 
+#' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) *Applied Spatial Data Analysis with R*.  Springer Series in Statistics.
+#' E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. *R News*, **5**, 9--13. 
 #' 
 #' @author Jon Wakefield, Nicky Best, Sebastien Haneuse, and Albert Y. Kim
 #' 
-#' @return A map colour-coded to indicate the different levels of \code{y}
+#' @return A map colour-coded to indicate the different levels of `y`
 #' 
 #' @export
 #' @import sp

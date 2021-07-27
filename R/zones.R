@@ -1,21 +1,21 @@
 #' Create set of all single zones and output geographical information
 #'
-#' @description Based on the population counts and centroid coordinates of each of \code{n} areas, output the set of \code{n.zones} single zones as defined by Kulldorff and other geographical information.
-#' @param geo \code{n x 2} table of the (x,y)-coordinates of the area centroids
+#' @description Based on the population counts and centroid coordinates of each of `n` areas, output the set of `n.zones` single zones as defined by Kulldorff and other geographical information.
+#' @param geo `n x 2` table of the (x,y)-coordinates of the area centroids
 #' @param population a vector of population counts of each area
 #' @param pop.upper.bound maximum proportion of study region each zone can contain
 #'
-#' @references Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+#' @references Kulldorff, M. (1997) A spatial scan statistic. *Communications in Statistics: Theory and Methods*, **26**, 1481--1496.
 #' Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
-#' \emph{Statistics in Medicine}, \bold{14}, 799--810.
+#' *Statistics in Medicine*, **14**, 799--810.
 #' 
 #' @author Albert Y. Kim
 #' 
 #' @return
 #' A list containing
-#' \item{nearest.neighbors}{list of \code{n} elements, where each element is a vector of the nearest neighbors in order of distance up until \code{pop.upper.bound} of the total population is attained}
-#' \item{cluster.coords}{\code{n.zones x 2} table of the center and the radial area for each zone}
-#' \item{dist}{\code{n x n} inter-point distance matrix of the centroids}
+#' \item{nearest.neighbors}{list of `n` elements, where each element is a vector of the nearest neighbors in order of distance up until `pop.upper.bound` of the total population is attained}
+#' \item{cluster.coords}{`n.zones x 2` table of the center and the radial area for each zone}
+#' \item{dist}{`n x n` inter-point distance matrix of the centroids}
 #'
 #' 
 #' @export

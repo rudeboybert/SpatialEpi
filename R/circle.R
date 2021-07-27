@@ -11,9 +11,9 @@ globalVariables(c(
 #' 
 #' @author Albert Y. Kim
 #' 
-#' @param geo A \code{n x 2} table of the x-coordinate and y-coordinates of the centroids of each area
-#' @param cluster.center The area index (an integer between \code{1} and \code{n}) indicating the center of the circle
-#' @param cluster.end The area index (an integer between \code{1} and \code{n}) indicating the area at the end of the circle
+#' @param geo A `n x 2` table of the x-coordinate and y-coordinates of the centroids of each area
+#' @param cluster.center The area index (an integer between `1` and `n`) indicating the center of the circle
+#' @param cluster.end The area index (an integer between `1` and `n`) indicating the area at the end of the circle
 #'
 #' @return
 #'  \item{cluster.radius}{A data frame that you can plot}

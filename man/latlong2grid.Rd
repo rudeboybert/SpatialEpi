@@ -7,7 +7,7 @@
 latlong2grid(input)
 }
 \arguments{
-\item{input}{either an \code{n x 2} matrix of longitude and latitude coordinates in decimal format or an object of class SpatialPolygons}
+\item{input}{either an \verb{n x 2} matrix of longitude and latitude coordinates in decimal format or an object of class SpatialPolygons}
 }
 \value{
 Either a data frame with the corresponding (x,y) kilometer-based grid coordinates, or a SpatialPolygons object with the coordinates changed.

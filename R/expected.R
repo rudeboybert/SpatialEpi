@@ -5,9 +5,9 @@
 #' @param cases a vector of the corresponding number of cases
 #' @param n.strata number of strata considered
 #' 
-#' @details The \code{population} and \code{cases} vectors must be \emph{balanced}: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order.
+#' @details The `population` and `cases` vectors must be *balanced*: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order.
 #'
-#' @references Elliot, P. et al. (2000) \emph{Spatial Epidemiology:  Methods and Applications}.  Oxford Medical Publications.
+#' @references Elliot, P. et al. (2000) *Spatial Epidemiology:  Methods and Applications*.  Oxford Medical Publications.
 #' @author Albert Y. Kim
 #' @return
 #' \item{expected.cases}{a vector of the expected numbers of disease for each area}

@@ -16,7 +16,7 @@ kulldorff(
 )
 }
 \arguments{
-\item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
+\item{geo}{an \verb{n x 2} table of the (x,y)-coordinates of the area centroids}
 
 \item{cases}{aggregated case counts for all \code{n} areas}
 
@@ -103,9 +103,9 @@ plot(pennLC$spatial.polygon[cluster],add=TRUE,col="red")
 title("Most Likely Cluster Controlling for Strata")
 }
 \references{
-SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{https://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{https://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \strong{26}, 1481--1496.
 Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
-\emph{Statistics in Medicine}, \bold{14}, 799--810.
+\emph{Statistics in Medicine}, \strong{14}, 799--810.
 }
 \author{
 Albert Y. Kim

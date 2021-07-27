@@ -8,7 +8,7 @@ globalVariables(c(
 #'
 #' @description This function produces the posterior probabilities of exceeding a threshold given a gamma distributions with parameters (alpha+Y, (alpha+E*mu)/mu) where mu = exp(x beta). This model arises from Y being Poisson with mean theta times E where theta is the relative risk and E are the expected numbers. The prior on theta is gamma with parameters alpha and beta. The parameters alpha and beta may be estimated using empirical Bayes.
 #' @author Jon Wakefield
-#' @seealso  \code{\link{eBayes}}
+#' @seealso  [eBayes()]
 #' 
 #' @param Y observed disease counts
 #' @param E expected disease counts

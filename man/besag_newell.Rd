@@ -7,7 +7,7 @@
 besag_newell(geo, population, cases, expected.cases = NULL, k, alpha.level)
 }
 \arguments{
-\item{geo}{an \code{n x 2} table of the (x,y)-coordinates of the area centroids}
+\item{geo}{an \verb{n x 2} table of the (x,y)-coordinates of the area centroids}
 
 \item{population}{aggregated population counts for all \code{n} areas}
 
@@ -81,7 +81,7 @@ results <- besag_newell(geo, population, cases, expected.cases, k, alpha.level)
 
 }
 \references{
-Besag J. and Newell J. (1991) The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \bold{154}, 143--155
+Besag J. and Newell J. (1991) The Detection of Clusters in Rare Diseases \emph{Journal of the Royal Statistical Society. Series A (Statistics in Society)}, \strong{154}, 143--155
 }
 \author{
 Albert Y. Kim

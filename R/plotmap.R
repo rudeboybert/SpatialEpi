@@ -5,7 +5,7 @@ globalVariables(c(
 #'
 #' @description Plot levels of a variable in a colour-coded map.
 #' @param values variable to plot
-#' @param map an object of class SpatialPolygons (See \link[sp]{SpatialPolygons-class})
+#' @param map an object of class SpatialPolygons (See [SpatialPolygons-class][sp::SpatialPolygons-class])
 #' @param log boolean of whether to plot values on log scale
 #' @param nclr number of colour-levels to use
 #' @param include.legend boolean of whether to include legend
@@ -19,7 +19,7 @@ globalVariables(c(
 #' @author Albert Y. Kim
 #' 
 #' @return
-#' A map colour-coded to indicate the different levels of \code{values}.
+#' A map colour-coded to indicate the different levels of `values`.
 #' @export
 #' @importFrom maptools leglabs
 #'

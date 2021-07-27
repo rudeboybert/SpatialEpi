@@ -11,7 +11,7 @@ eBayes(Y, E, Xmat = NULL)
 
 \item{E}{a length \code{n} vector of expected number of cases}
 
-\item{Xmat}{\code{n x p} dimension matrix of covariates}
+\item{Xmat}{\verb{n x p} dimension matrix of covariates}
 }
 \value{
 A list with 5 elements:
@@ -34,5 +34,5 @@ scotland.map <- scotland$spatial.polygon
 mapvariable(results$RR, scotland.map)
 }
 \references{
-Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \bold{43}, 671--681
+Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \strong{43}, 671--681
 }

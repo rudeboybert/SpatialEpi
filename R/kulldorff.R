@@ -7,42 +7,42 @@ globalVariables(c(
 
 #' Kulldorff Cluster Detection Method
 #'
-#' @description Kulldorff spatial cluster detection method for a study region with \code{n} areas.  The method constructs \emph{zones} by consecutively aggregating nearest-neighboring areas until a proportion of the total study population is included.  Given the observed number of cases, the likelihood of each zone is computed using either binomial or poisson likelihoods. The procedure reports the zone that is the \emph{most likely cluster} and generates significance measures via Monte Carlo sampling.  Further, \emph{secondary clusters}, whose Monte Carlo p-values are below the \eqn{\alpha}-threshold, are reported as well.
+#' @description Kulldorff spatial cluster detection method for a study region with `n` areas.  The method constructs *zones* by consecutively aggregating nearest-neighboring areas until a proportion of the total study population is included.  Given the observed number of cases, the likelihood of each zone is computed using either binomial or poisson likelihoods. The procedure reports the zone that is the *most likely cluster* and generates significance measures via Monte Carlo sampling.  Further, *secondary clusters*, whose Monte Carlo p-values are below the \eqn{\alpha}-threshold, are reported as well.
 #' 
-#' @param geo an \code{n x 2} table of the (x,y)-coordinates of the area centroids
-#' @param cases aggregated case counts for all \code{n} areas
-#' @param population aggregated population counts for all \code{n} areas
-#' @param expected.cases expected numbers of disease for all \code{n} areas
+#' @param geo an `n x 2` table of the (x,y)-coordinates of the area centroids
+#' @param cases aggregated case counts for all `n` areas
+#' @param population aggregated population counts for all `n` areas
+#' @param expected.cases expected numbers of disease for all `n` areas
 #' @param pop.upper.bound the upper bound on the proportion of the total population each zone can include
 #' @param n.simulations number of Monte Carlo samples used for significance measures
 #' @param alpha.level alpha-level threshold used to declare significance
 #' @param plot flag for whether to plot histogram of Monte Carlo samples of the log-likelihood of the most likely cluster
 #' 
-#' @details If \code{expected.cases} is specified to be \code{NULL}, then the binomial likelihood is used.  Otherwise, a Poisson model is assumed.  Typical values of \code{n.simulations} are \code{99}, \code{999}, \code{9999}
+#' @details If `expected.cases` is specified to be `NULL`, then the binomial likelihood is used.  Otherwise, a Poisson model is assumed.  Typical values of `n.simulations` are `99`, `999`, `9999`
 #' @return
 #' List containing:
 #' \item{most.likely.cluster}{information on the most likely cluster}
-#' \item{secondary.clusters}{information on secondary clusters, if none \code{NULL} is returned}
+#' \item{secondary.clusters}{information on secondary clusters, if none `NULL` is returned}
 #' \item{type}{type of likelihood}
 #' \item{log.lkhd}{log-likelihood of each zone considered}
-#' \item{simulated.log.lkhd}{\code{n.simulations} Monte Carlo samples of the log-likelihood of the most likely cluster}
+#' \item{simulated.log.lkhd}{`n.simulations` Monte Carlo samples of the log-likelihood of the most likely cluster}
 #' 
 #' 
-#' @note The \code{most.likely.cluster} and \code{secondary.clusters} list elements are themselves lists reporting:\cr\cr
+#' @note The `most.likely.cluster` and `secondary.clusters` list elements are themselves lists reporting:\cr\cr
 #' \tabular{ll}{
-#'  \code{location.IDs.included} \tab ID's of areas in cluster, in order of distance\cr
-#'  \code{population} \tab population of cluster\cr
-#'  \code{number.of.cases} \tab number of cases in cluster\cr
-#'  \code{expected.cases} \tab expected number of cases in cluster\cr
-#'  \code{SMR} \tab estimated SMR of cluster\cr
-#'  \code{log.likelihood.ratio} \tab log-likelihood of cluster\cr
-#'  \code{monte.carlo.rank} \tab rank of lkhd of cluster within Monte Carlo simulated values\cr
-#'  \code{p.value} \tab Monte Carlo \eqn{p}-value\cr
+#'  `location.IDs.included` \tab ID's of areas in cluster, in order of distance\cr
+#'  `population` \tab population of cluster\cr
+#'  `number.of.cases` \tab number of cases in cluster\cr
+#'  `expected.cases` \tab expected number of cases in cluster\cr
+#'  `SMR` \tab estimated SMR of cluster\cr
+#'  `log.likelihood.ratio` \tab log-likelihood of cluster\cr
+#'  `monte.carlo.rank` \tab rank of lkhd of cluster within Monte Carlo simulated values\cr
+#'  `p.value` \tab Monte Carlo \eqn{p}-value\cr
 #' }
 #' 
-#' @references SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{https://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+#' @references SatScan:  Software for the spatial, temporal, and space-time scan statistics <https://www.satscan.org/> Kulldorff, M. (1997) A spatial scan statistic. *Communications in Statistics: Theory and Methods*, **26**, 1481--1496.
 #' Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
-#' \emph{Statistics in Medicine}, \bold{14}, 799--810.
+#' *Statistics in Medicine*, **14**, 799--810.
 #' @author Albert Y. Kim
 #' @export
 #'

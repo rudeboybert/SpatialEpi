@@ -35,7 +35,7 @@ thresh3 <- EBpostthresh(Y, E, alpha=ebresults$alpha, beta=ebresults$beta, rrthre
 mapvariable(thresh3, scotland$spatial.polygon)
 }
 \seealso{
-\code{\link{eBayes}}
+\code{\link[=eBayes]{eBayes()}}
 }
 \author{
 Jon Wakefield

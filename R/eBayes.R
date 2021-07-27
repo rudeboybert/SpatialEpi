@@ -6,13 +6,13 @@ globalVariables(c(
 
 
 #' Empirical Bayes Estimates of Relative Risk
-#' @description The computes empirical Bayes estimates of relative risk of study region with \code{n} areas, given observed and expected numbers of counts of disease and covariate information.
+#' @description The computes empirical Bayes estimates of relative risk of study region with `n` areas, given observed and expected numbers of counts of disease and covariate information.
 #' 
-#' @param Y a length \code{n} vector of observed cases
-#' @param E a length \code{n} vector of expected number of cases
-#' @param Xmat \code{n x p} dimension matrix of covariates
+#' @param Y a length `n` vector of observed cases
+#' @param E a length `n` vector of expected number of cases
+#' @param Xmat `n x p` dimension matrix of covariates
 #'
-#' @references Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  \emph{Biometrics}, \bold{43}, 671--681
+#' @references Clayton D. and Kaldor J. (1987) Empirical Bayes estimates of age-standardized relative risks for use in disease mapping.  *Biometrics*, **43**, 671--681
 #' 
 #' 
 #' @return

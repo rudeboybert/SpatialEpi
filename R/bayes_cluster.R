@@ -1,11 +1,11 @@
 #' Bayesian Cluster Detection Method
-#' @description Implementation of the Bayesian Cluster detection model of Wakefield and Kim (2013) for a study region with \code{n} areas. The prior and posterior probabilities of each of the \code{n.zones} single zones being a cluster/anti-cluster are estimated using Markov chain Monte Carlo. Furthermore, the posterior probability of k clusters/anti-clusters is computed.  
+#' @description Implementation of the Bayesian Cluster detection model of Wakefield and Kim (2013) for a study region with `n` areas. The prior and posterior probabilities of each of the `n.zones` single zones being a cluster/anti-cluster are estimated using Markov chain Monte Carlo. Furthermore, the posterior probability of k clusters/anti-clusters is computed.  
 #'
-#' @param y vector of length \code{n} of the observed number of disease in each area
-#' @param E vector of length \code{n} of the expected number of disease in each area
-#' @param population vector of length \code{n} of the population in each area
+#' @param y vector of length `n` of the observed number of disease in each area
+#' @param E vector of length `n` of the expected number of disease in each area
+#' @param population vector of length `n` of the population in each area
 #' @param sp.obj an object of class SpatialPolygons
-#' @param centroids \code{n x 2} table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based
+#' @param centroids `n x 2` table of the (x,y)-coordinates of the area centroids.  The coordinate system must be grid-based
 #' @param max.prop maximum proportion of the study region's population each single zone can contain
 #' @param shape vector of length 2 of narrow/wide shape parameter for gamma prior on relative risk
 #' @param rate vector of length 2 of narrow/wide rate parameter for gamma prior on relative risk
@@ -24,8 +24,8 @@
 #' prior.map=prior.map, 
 #' post.map=post.map, 
 #' pk.y=pk.y))
-#' \item{prior.map}{A list containing, for each area: 1) \code{high.area} the prior probability of cluster membership, 2) \code{low.area} anti-cluster membership, and 3) \code{RR.est.area} smoothed prior estimates of relative risk}
-#' \item{post.map}{A list containing, for each area: 1) \code{high.area} the posterior probability of cluster membership, 2) \code{low.area} anti-cluster membership, and 3) \code{RR.est.area} smoothed posterior estimates of the relative risk}
+#' \item{prior.map}{A list containing, for each area: 1) `high.area` the prior probability of cluster membership, 2) `low.area` anti-cluster membership, and 3) `RR.est.area` smoothed prior estimates of relative risk}
+#' \item{post.map}{A list containing, for each area: 1) `high.area` the posterior probability of cluster membership, 2) `low.area` anti-cluster membership, and 3) `RR.est.area` smoothed posterior estimates of the relative risk}
 #' \item{pk.y}{posterior probability of k clusters/anti-clusters given y for k=0,...,J}
 #'
 #'
@@ -39,8 +39,8 @@
 #' @examples 
 #' ## Note for the NYleukemia example, 4 census tracts were completely surrounded 
 #' ## by another unique census tract; when applying the Bayesian cluster detection 
-#' ## model in \code{\link{bayes_cluster}}, we merge them with the surrounding 
-#' ## census tracts yielding \code{n=277} areas.
+#' ## model in [bayes_cluster()], we merge them with the surrounding 
+#' ## census tracts yielding `n=277` areas.
 #' 
 #' ## Load data and convert coordinate system from latitude/longitude to grid
 #' data(NYleukemia)
