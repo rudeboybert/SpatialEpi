@@ -33,7 +33,7 @@ only have to do this once.
 
 -   Install either Xcode (available for free in the App Store) or the
     [Command Line Tools for
-    Xcode](https://developer.apple.com/downloads/). You'll need to have
+    Xcode](https://developer.apple.com/download/all/). You'll need to have
     a (free) Apple ID.
 
 -   In your Mac menu bar go to System Preferences... -\> Security &
@@ -57,7 +57,7 @@ only have to do this once.
     -   To know what version of OS X you have click on the Apple icon on
         the top left of the menu bar -\> About This Mac
 
--   Install the [`gdal`](https://www.gdal.org/) and
+-   Install the [`gdal`](https://gdal.org/) and
     [`geos`](https://trac.osgeo.org/geos/) geospatial libraries.
 
     -   In Terminal open a new tab and run `sudo port install gdal`
@@ -78,7 +78,7 @@ only have to do this once.
     library with R
 
     -   Under
-        [Downloads](https://cran.r-project.org/web/packages/rgeos/index.html)
+        [Downloads](https://CRAN.R-project.org/package=rgeos)
         select "Package Source". It should be named `rgeos_X.Y-Z.tar.gz`
         where `X,Y,Z` denote the version number.
     -   In Terminal open a new tab and run
