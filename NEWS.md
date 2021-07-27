@@ -1,4 +1,4 @@
-# SpatialEpi 1.2.9000
+# SpatialEpi 1.2.4.9000
 
 * Development version
 
