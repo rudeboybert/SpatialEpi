@@ -40,7 +40,7 @@ globalVariables(c(
 #'  \code{p.value} \tab Monte Carlo \eqn{p}-value\cr
 #' }
 #' 
-#' @references SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{http://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
+#' @references SatScan:  Software for the spatial, temporal, and space-time scan statistics \url{https://www.satscan.org/} Kulldorff, M. (1997) A spatial scan statistic. \emph{Communications in Statistics: Theory and Methods}, \bold{26}, 1481--1496.
 #' Kulldorff M. and Nagarwalla N. (1995) Spatial disease clusters: Detection and Inference.
 #' \emph{Statistics in Medicine}, \bold{14}, 799--810.
 #' @author Albert Y. Kim

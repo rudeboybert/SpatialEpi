@@ -15,9 +15,6 @@ List with 5 items:
 
 }
 }
-\source{
-http://www.sph.emory.edu/~lwaller/ch4index.html
-}
 \usage{
 NYleukemia
 }

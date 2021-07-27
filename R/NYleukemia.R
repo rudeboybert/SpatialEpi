@@ -18,7 +18,6 @@
 #'   
 #' }
 #' 
-#' @source http://www.sph.emory.edu/~lwaller/ch4index.html 
 #' @references  Turnbull, B. W. et al (1990) Monitoring for clusters of disease: application to leukemia incidence in upstate New York \emph{American Journal of Epidemiology}, \bold{132}, 136--143
 #' 
 #' @examples 

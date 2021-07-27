@@ -2,23 +2,11 @@
 ^\.Rproj\.user$
 ^README\.md$
 ^README\.Rmd$
-^\.travis\.yml$
-^data-raw$
-^cran-comments\.md$
+^README_figure$
 ^README-.*\.png$
 ^README_cache$
-^other$
-^README_figure$
+^data-raw$
+^cran-comments\.md$
 ^CRAN-RELEASE$
-<<<<<<< HEAD
-^old-man$
-=======
-<<<<<<< HEAD
-^old-man$
-=======
 ^doc$
-^Meta$
 ^\.github$
-^old_man$
->>>>>>> SURF21
->>>>>>> SURF21

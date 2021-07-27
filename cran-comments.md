@@ -1,16 +1,22 @@
-## Summary
-
-Addressed SpatialEpi-package.Rd file issue as per Kurt Hornik's email on 2018/5/16.
-
 ## Test environments
 
-* local OS X install, R 3.5.0
-* ubuntu 14.04.5 (on travis-ci), R 3.5.0, R-oldrel, R-devel
-* win-builder (devel and release)
+* local macOS install, R 4.1.0
+* win-builder (release, devel, oldrelease)
+* GitHub Actions
+    + ubuntu-16.04: latest
+    + windows: latest
+    + macOS: latest, devel
+* Rhub via devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
+    + Ubuntu Linux 20.04.1 LTS, R-release, GCC
+    + Windows Server 2008 R2 SP1, R-devel, 32/64 bit
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
+* Errors: 
+    + Rhub "Windows Server 2008 R2 SP1, R-devel, 32/64 bit" is returning the following error: Package required but not available: 'sf'. However I'm able to install the package from CRAN without any issue
+* Warnings
+    + I got the following warning: Found the following (possibly) invalid URLs: URL: https://developer.apple.com/download/all/. However I'm able to access the link without issue.
 
 ## Comments
 
+I am switching the package maintainer from albert@stat.washington.edu to albert.ys.kim@gmail.com

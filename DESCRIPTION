@@ -4,12 +4,12 @@ Title: Methods and Data for Spatial Epidemiology
 Version: 1.2.4
 Authors@R: c(
     person("Cici", "Chen", email = "cicichen@u.washington.edu", role = "ctb"),
-    person("Albert Y.", "Kim", email = "albert@stat.washington.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7824-306X")),
+    person("Albert Y.", "Kim", email = "albert.ys.kim@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7824-306X")),
     person("Michelle", "Ross", email = "micher3@u.washington.edu", role = "ctb"),
-    person("Jon", "Wakefield", email = "jonno@u.washington.edu", role = c("aut")),
+    person("Jon", "Wakefield", email = "jonno@uw.edu", role = c("aut")),
     person("Mikael","Moise", email = "amoise@smith.edu", role = c("aut"),comment = c(ORCID = "0000-0002-3608-1178"))
     )
-Maintainer: Albert Y. Kim <albert@stat.washington.edu>
+Maintainer: Albert Y. Kim <albert.ys.kim@gmail.com>
 Description: Methods and data for cluster detection and disease mapping.
 Depends:
     R (>= 3.0.2),
