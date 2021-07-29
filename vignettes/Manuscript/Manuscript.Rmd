@@ -36,9 +36,20 @@ output:
 
 # Introduction {.unnumbered}
 
-Your introduction goes here! Some examples of commonly used commands and features are listed below, to help you get started.
+Spatial epidemiology is the description and analysis of geographically indexed health data with respect to demographic, environmental, behavioral, socioeconomic, genetic, and infectious risk factors [5]. Broadly speaking, the field of spatial epidemiology can be divided into three principal subfields: disease mapping, spatial regression/geographic correlation studies, and analysis of disease clusters. The SpatialEpi package implements methods for these subfields.
 
-If you have a question, please use the help menu in the top right of the screen to get in touch. When your article or pre-print is complete, use the "Submit to PeerJ" button in the topbar to send your files to PeerJ.
+```{r}
+library(SpatialEpi)
+Rcode <- system.file("doc", "SpatialEpi.Rnw", package = "SpatialEpi")
+options(device.ask.default = FALSE)
+Stangle(Rcode)
+```
+
+# 2 Producing Maps
+
+
+
+
 
 ## 3 Data Examples
 
