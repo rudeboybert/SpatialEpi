@@ -45,7 +45,97 @@ options(device.ask.default = FALSE)
 Stangle(Rcode)
 ```
 
-# 2 Producing Maps
+## 2 Producing Maps
+
+The production of disease atlases is one of the chief tasks in spatial epidemiology. In order to facilitate producing such maps, the SpatialEpi package uses the sp package to process objects of class SpatialPoly- gons [11]. Further information on the sp package can be found in Applied Spatial Data Analysis with R [3].
+
+
+##### 2.1 Converting Different Map Formats into SpatialPolygons
+
+Several different formats of maps can be converted into objects of class SpatialPolygons.
+
+##### 2.1.1 Converting Polygons to SpatialPolygons
+
+A polygon file consists of a 2-column matrix of coordinates, where each complete subpolygon representing some subarea of the study region (counties, census tracts, zip/postal codes) is separated by NA values. All subpolygons are assumed to be closed by joining the last point to the first point.
+Using the polygon2spatial.polygon() function, we can convert the polygon file into an object of class SpatialPolygons. In the case when certain subareas consist of more than one contiguous land mass, we specify the nrepeats vector where each element represents the number of subpolygons corresponding to that subarea.
+The advantages of plotting maps as a SpatialPolygon rather than a simple polygon are: 
+a) the aspect ratio of the x and y axes in plots is preserved to reflect geography
+b) specific subareas can be highlighted easily
+c) subareas that consist of more than one contiguous land mass can be treated as one unit
+As an demonstration of these three advantages, in Figure 1 we plot a map of Scotland with all 56 counties of Scotland in 1975 both as a polygon (using the R polygon() function) and as a SpatialPolygons object. Several of the counties of Scotland consist of more than one contiguous land mass, e.g. the county Argyll-Bute consists of 8 separate land masses.
+
+```{r}
+data(scotland)
+polygon <- scotland$polygon$polygon
+nrepeats <- scotland$polygon$nrepeats
+names <- scotland$data$county.names
+spatial.polygon <- polygon2spatial.polygon(polygon, coordinate.system = "+proj=utm", + names, nrepeats)
+```
+
+
+```{r}
+par(mfrow = c(1, 2))
+plot(polygon, type = "n", xlab = "Eastings (km)", ylab = "Northings (km)", main = "Polygon File")
+polygon(polygon)
+plot(spatial.polygon, axes = TRUE)
+title(xlab = "Eastings (km)", ylab = "Northings (km)", main = "Spatial Polygon")
+plot(spatial.polygon[23], add = TRUE, col = "red")
+```
+
+
+##### 2.1.2 Converting maps objects to SpatialPolygons
+
+The maps R package includes several commonly used maps, which can be converted into SpatialPolygons objects using the map2SpatialPolygons command. For instance, a county-level map of just the states Pennsylvania and Vermont with red borders, along with the boundaries of neighboring states with slightly thicker black borders can be produced with the resulting plot shown in Figure 2).
+
+```{r}
+library(maps)
+county.map <- map("county", c("pennsylvania", "vermont"), fill = TRUE, plot = FALSE)
+county.names <- as.character(county.map$names)
+county <- map2SpatialPolygons(county.map, IDs = county.names, proj4string = CRS("+proj=longlat"))
+state.map <- map("state", c(), fill = TRUE, plot = FALSE)
+state.names <- as.character(state.map$names)
+state <- map2SpatialPolygons(state.map, IDs = state.names, proj4string = CRS("+proj=longlat")) > plot(county, axes = TRUE, border = "red")
+plot(state, add = TRUE, lwd = 2)
+```
+
+## 2.2 Converting Between Coordinate Systems
+
+In the Pennsylvania and Vermont example in Section 2.1.2, all coordinates are in longitude/latitude. How- ever, this coordinate system is not appropriate for many distance-based methods as degrees of longitude are not equidistant, and must be converted to a grid based system.
+The function latlong2grid() can convert either 
+a) an n×2 matrix of coordinates
+b) a SpatialPolygons object
+based on longitude/latitude (expressed in decimal values) into kilometer-based grid coordinates. Figure 3 shows the resulting transformed map.
+
+```{r}
+county.grid <- latlong2grid(county)
+state.grid <- latlong2grid(state)
+plot(county.grid, axes = TRUE, border = "red")
+plot(state.grid, add = TRUE, lwd = 2)
+```
+
+Or a simple 2-column matrix of coordinates can be converted as well. As an example, consider the latitude and longitudes of Montreal QC (latitude: 45deg 28’ 0” N (deg min sec), longitude: 73deg 45’ 0” W) and Vancouver BC (latitude: 45deg 39’ 38” N (deg min sec), longitude: 122deg 36’ 15” W) in decimal format. These also can be converted to a grid-based coordinate system.
+
+```{r}
+coord <- rbind(c(-73.75, 45.4667), c(-122.6042, 45.6605))
+```
+
+
+```{r}
+latlong2grid(coord)
+```
+
+
+## 2.3 Plotting a Variable
+In spatial epidemiology, the production of disease atlases (a geographic map along with some scheme to illustrate the different levels of a disease) are often used as visual summaries of geographic disease patterns. The mapvariable() command simplifies the production of such atlases by taking in a SpatialPolygons object and a vector as inputs. For example, consider plotting random Uniform(0,1) random variables on a map of Scotland in Figure 4.
+
+```{r}
+data(scotland)
+scotland.map <- scotland$spatial.polygon
+y <- runif(nrow(scotland$data))
+mapvariable(y, scotland.map)
+```
+
+
 
 
 
@@ -260,147 +350,8 @@ param1 <- GammaPriorCh(log(10), 0.975, 1)
 param2 <- GammaPriorCh(log(5), 0.975, 2)
 ```
 
-
-
-
-
-
-## Figures and Tables {.unnumbered}
-
-Standard \LaTeX references will work as well (e.g. Fig. \ref{fig:view}).
-
-<!-- 2. The RMarkdown way -->
-
-```{r view, out.width = "100%", fig.cap = "An example image.", echo = FALSE}
-#knitr::include_graphics("view.jpg")
-```
-
-<!-- 3. The pandoc way -->
-
-```{=html}
-<!-- 
-
-![An example image. Text *can* be processed with markdown.](view.jpg){#view width = 100%}
-
- -->
-```
-```{=html}
-<!-- 
-\begin{table}[ht]
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
--->
-```
-| Item    | Quantity |
-|:--------|---------:|
-| Widgets |       42 |
-| Gadgets |       13 |
-
-: (\#tab:widgets) An Example Table.
-
-## Citations {.unnumbered}
-
-LaTeX formats citations and references automatically using the bibliography records in your .bib file, which you can edit via the project menu. Use the cite command for an inline citation, like @Figueredo:2009dg, and the citep command for a citation in parentheses [@Figueredo:2009dg].
-
-## Mathematics {.unnumbered}
-
-\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let $$S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i$$ denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
-
-## Lists {.unnumbered}
-
-You can make lists with automatic numbering \dots
-
-1.  Like this,
-2.  and like this.
-
-or bullet points...
-
--   Like this,
--   and like this.
-
-or with descriptions...
-
--   **Word** Definition
--   **Concept** Explanation
--   **Idea** Text
-
-We hope you find write\LaTeX useful for your PeerJ submission, and please let us know if you have any feedback. Further examples with dummy text are included in the following pages.
-
-# Methods {.unnumbered}
-
-\lipsum[4]
-
-```{=tex}
-\begin{equation}
-\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
-\label{eq:refname2}
-\end{equation}
-```
-\lipsum[5]
-
-## Subsection {.unnumbered}
-
-\lipsum[6]
-
-\paragraph{Paragraph}
-
-\lipsum[7]
-
-\paragraph{Paragraph}
-
-\\lipsum[8]
-
-## Subsection {.unnumbered}
-
-\lipsum[9]
-
-<!-- \begin{figure}[ht]\centering -->
-
-<!-- \includegraphics[width=\linewidth]{results} -->
-
-<!-- \caption{In-text Picture} -->
-
-<!-- \label{fig:results} -->
-
-<!-- \end{figure} -->
-
-```{r results, fig.width = 5, fig.height = 4, out.width = "100%", fig.cap = "In-text Picture", echo = FALSE}
-time = seq(1.5, 8, 0.1)
-plot(time, sin(time), type = "l", xlab = "time [s]", ylab = "amplitude [m]", 
-     cex.main = 2, col = "blue", lwd = 3, font = 2, font.main = 2)
-```
-
-Reference to Figure \@ref(fig:results).
-
-# Results and Discussion {.unnumbered}
-
-\lipsum[10]
-
-## Subsection {.unnumbered}
-
-\lipsum[11]
-
-### Subsubsection {.unnumbered}
-
-\lipsum[12]
-
-### Subsubsection {.unnumbered}
-
-\lipsum[14]
-
-## Subsection {.unnumbered}
-
-\lipsum[15-20]
-
-# Acknowledgments {.unnumbered}
-
-So long and thanks for all the fish.
+## 4.4.3 Choosing the Prior on the Spatial Residuals
 
 # References
+
+
