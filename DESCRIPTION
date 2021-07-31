@@ -1,7 +1,7 @@
 Package: SpatialEpi
 Type: Package
 Title: Methods and Data for Spatial Epidemiology
-Version: 1.2.4.9000
+Version: 1.2.4
 Authors@R: c(
     person("Cici", "Chen", email = "cicichen@u.washington.edu", role = "ctb"),
     person("Albert Y.", "Kim", email = "albert.ys.kim@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7824-306X")),

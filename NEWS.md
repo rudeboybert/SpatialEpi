@@ -1,8 +1,3 @@
-# SpatialEpi 1.2.4.9000
-
-* Development version
-
-
 # SpatialEpi 1.2.4
 
 * Added `sf` package `scotland_sf`, `pennLC_sf`, `NYleukemia_sf` versions of 
