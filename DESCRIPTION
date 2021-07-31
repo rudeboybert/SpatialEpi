@@ -22,14 +22,7 @@ Imports:
     Rcpp, 
     MASS, 
     maptools, 
-    spdep, 
-    methods, 
-    grDevices, 
-    graphics,
-    stats,
-    sf,
-    dplyr,
-    ggplot2
+    spdep
 LinkingTo:
     Rcpp,
     RcppArmadillo
@@ -39,7 +32,9 @@ Suggests:
     rmarkdown,
     markdown,
     knitr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    ggplot2,
+    dplyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Encoding: UTF-8
