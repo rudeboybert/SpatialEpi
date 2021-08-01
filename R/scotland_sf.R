@@ -17,9 +17,8 @@
 #' 
 #' @examples
 #' library(ggplot2)
+#' \dontrun{
 #' ggplot() +
 #' geom_sf(data = scotland_sf, aes(fill= cases))
-#' 
-#' 
-#' 
+#' }
 "scotland_sf"

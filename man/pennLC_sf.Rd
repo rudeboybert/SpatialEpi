@@ -40,7 +40,9 @@ lung_cancer_rate <- pennLC_sf \%>\%
   mutate(rate = cases/population)
 
 # Static map of Pennsylvania lung cancer rates for each county
+\dontrun{
 ggplot() +
   geom_sf(data = lung_cancer_rate, aes(fill = rate))
+  }
 }
 \keyword{datasets}

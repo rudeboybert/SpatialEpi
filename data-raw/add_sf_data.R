@@ -90,7 +90,7 @@ pennLC_sf <- left_join(pennLC_sf, tibble(pennLC$smoking), by = "county")
 
 # Set projection: 
 # https://stackoverflow.com/questions/61286108/error-in-cpl-transformx-crs-aoi-pipeline-reverse-ogrcreatecoordinatetrans
-st_crs(pennLC_sf) <- 4326
+pennLC_sf <- st_transform(pennLC_sf, 4326)
 
 usethis::use_data(pennLC_sf,overwrite = TRUE)
 
