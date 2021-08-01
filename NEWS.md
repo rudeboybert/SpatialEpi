@@ -1,3 +1,8 @@
+# SpatialEpi 1.2.5
+
+* Fixed errors with 1.2.4 CRAN submission
+
+
 # SpatialEpi 1.2.4
 
 * Added `sf` package `scotland_sf`, `pennLC_sf`, `NYleukemia_sf` versions of 
