@@ -4,9 +4,9 @@
 # SpatialEpi
 
 [![R-CMD-check](https://github.com/rudeboybert/SpatialEpi/workflows/R-CMD-check/badge.svg)](https://github.com/rudeboybert/SpatialEpi/actions)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/SpatialEpi)](http://cran.r-project.org/package=SpatialEpi)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SpatialEpi)](https://cran.r-project.org/package=SpatialEpi)
 [![CRAN RStudio mirror
-downloads](http://cranlogs.r-pkg.org/badges/SpatialEpi)](http://www.r-pkg.org/pkg/SpatialEpi)
+downloads](https://cranlogs.r-pkg.org/badges/SpatialEpi)](https://www.r-pkg.org/pkg/SpatialEpi)
 
 Package of data and methods for spatial epidemiology.
 
@@ -26,8 +26,16 @@ Or the development version from GitHub:
 devtools::install_github("rudeboybert/SpatialEpi")
 ```
 
-Note: You may need to install the `cpp11` for all C++ code to compile
-correctly.
+Note: In order for all C++ code to compile correctly you may need to
+
+1.  Install the `cpp11` package
+
+2.  Install an older version of `RcppArmadillo` by running
+    
+    ``` r
+    packageurl <- "https://cran.r-project.org/src/contrib/Archive/RcppArmadillo/RcppArmadillo_0.9.900.3.0.tar.gz"
+    install.packages(packageurl, repos=NULL, type="source")
+    ```
 
 ## Example
 
@@ -53,7 +61,7 @@ plotmap(cases/population, sp.obj, log=TRUE, nclr=5)
 points(grid2latlong(centroids), pch=4)
 ```
 
-![](README_figure/README-unnamed-chunk-6-1.png)<!-- -->
+![](README_figure/README-unnamed-chunk-7-1.png)<!-- -->
 
 We run the Bayesian Cluster Detection method from [Wakefield and Kim
 (2013)](https://www.researchgate.net/publication/235896508_A_Bayesian_model_for_cluster_detection):
@@ -87,4 +95,4 @@ plotmap(output$post.map$high.area, sp.obj)
 #> Warning in wkt(obj): CRS object has no comment
 ```
 
-![](README_figure/README-unnamed-chunk-7-1.png)<!-- -->
+![](README_figure/README-unnamed-chunk-8-1.png)<!-- -->

@@ -35,7 +35,14 @@ Or the development version from GitHub:
 devtools::install_github("rudeboybert/SpatialEpi")
 ```
 
-Note: You may need to install the `cpp11` for all C++ code to compile correctly.
+Note: In order for all C++ code to compile correctly you may need to
+
+1. Install the `cpp11` package
+1. Install an older version of `RcppArmadillo` by running  
+    ```{r, eval=FALSE}
+    packageurl <- "https://cran.r-project.org/src/contrib/Archive/RcppArmadillo/RcppArmadillo_0.9.900.3.0.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
+    ```
 
 
 
