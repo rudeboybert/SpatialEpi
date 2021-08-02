@@ -41,8 +41,8 @@
                 labelsep=period,%
                 justification=raggedright]{caption}
 
-% \RequirePackage{natbib}
-% \bibliographystyle{apalike}
+\RequirePackage{natbib}
+\bibliographystyle{apalike}
 
 %
 % writeLaTeX logo
@@ -133,8 +133,7 @@
 \RequirePackage{enumitem}
 %\setlist{nolistsep} % Uncomment to remove spacing between items in lists (enumerate, itemize)
 
-% Remove brackets from numbering in List of References
-\renewcommand{\@biblabel}[1]{\bfseries\color{color1}\textsuperscript{[#1]}}
+
 
 %
 % article meta data

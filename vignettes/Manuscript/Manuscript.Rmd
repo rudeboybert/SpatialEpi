@@ -28,7 +28,8 @@ abstract: >
   It can also be on *multiple* lines.
 header-includes: >
   \usepackage{lipsum}
-bibliography: sample.bib
+bibliography: bibliography.bib
+link-citations: true
 output: 
   bookdown::pdf_book:
     base_format: rticles::peerj_article # for using bookdown features like \@ref()
@@ -36,18 +37,18 @@ output:
 
 # Introduction {.unnumbered}
 
-Spatial epidemiology is the description and analysis of geographically indexed health data with respect to demographic, environmental, behavioral, socioeconomic, genetic, and infectious risk factors [5]. Broadly speaking, the field of spatial epidemiology can be divided into three principal subfields: disease mapping, spatial regression/geographic correlation studies, and analysis of disease clusters. The SpatialEpi package implements methods for these subfields.\
+Spatial epidemiology is the description and analysis of geographically indexed health data with respect to demographic, environmental, behavioral, socioeconomic, genetic, and infectious risk factors @Elliott04. Broadly speaking, the field of spatial epidemiology can be divided into three principal subfields: disease mapping, spatial regression/geographic correlation studies, and analysis of disease clusters. The SpatialEpi package implements methods for these subfields.\
 
 ```{r}
 library(SpatialEpi)
-Rcode <- system.file("doc", "SpatialEpi.Rnw", package = "SpatialEpi")
-options(device.ask.default = FALSE)
-Stangle(Rcode)
+# Rcode <- system.file("doc", "SpatialEpi.Rnw", package = "SpatialEpi")
+# options(device.ask.default = FALSE)
+# Stangle(Rcode)
 ```
 
 ## 2 Producing Maps
 
-The production of disease atlases is one of the chief tasks in spatial epidemiology. In order to facilitate producing such maps, the SpatialEpi package uses the sp package to process objects of class SpatialPoly-gons [11]. Further information on the sp package can be found in Applied Spatial Data Analysis with R [3].
+The production of disease atlases is one of the chief tasks in spatial epidemiology. In order to facilitate producing such maps, the SpatialEpi package uses the sp package to process objects of class SpatialPoly-gons [@Pebesma05]. Further information on the sp package can be found in Applied Spatial Data Analysis with R [@Bivand08].
 
 ##### 2.1 Converting Different Map Formats into SpatialPolygons
 
@@ -58,20 +59,20 @@ Several different formats of maps can be converted into objects of class Spatial
 A polygon file consists of a 2-column matrix of coordinates, where each complete subpolygon representing some subarea of the study region (counties, census tracts, zip/postal codes) is separated by NA values. All subpolygons are assumed to be closed by joining the last point to the first point. Using the polygon2spatial.polygon() function, we can convert the polygon file into an object of class SpatialPolygons. In the case when certain subareas consist of more than one contiguous land mass, we specify the nrepeats vector where each element represents the number of subpolygons corresponding to that subarea. The advantages of plotting maps as a SpatialPolygon rather than a simple polygon are: a) the aspect ratio of the x and y axes in plots is preserved to reflect geography b) specific subareas can be highlighted easily c) subareas that consist of more than one contiguous land mass can be treated as one unit As an demonstration of these three advantages, in Figure 1 we plot a map of Scotland with all 56 counties of Scotland in 1975 both as a polygon (using the R polygon() function) and as a SpatialPolygons object. Several of the counties of Scotland consist of more than one contiguous land mass, e.g. the county Argyll-Bute consists of 8 separate land masses.
 
 ```{r}
-data(scotland)
-polygon <- scotland$polygon$polygon
-nrepeats <- scotland$polygon$nrepeats
-names <- scotland$data$county.names
-spatial.polygon <- polygon2spatial.polygon(polygon, coordinate.system = "+proj=utm", + names, nrepeats)
+# data(scotland)
+# polygon <- scotland$polygon$polygon
+# nrepeats <- scotland$polygon$nrepeats
+# names <- scotland$data$county.names
+# spatial.polygon <- polygon2spatial.polygon(polygon, coordinate.system = "+proj=utm", + names, nrepeats)
 ```
 
 ```{r}
-par(mfrow = c(1, 2))
-plot(polygon, type = "n", xlab = "Eastings (km)", ylab = "Northings (km)", main = "Polygon File")
-polygon(polygon)
-plot(spatial.polygon, axes = TRUE)
-title(xlab = "Eastings (km)", ylab = "Northings (km)", main = "Spatial Polygon")
-plot(spatial.polygon[23], add = TRUE, col = "red")
+# par(mfrow = c(1, 2))
+# plot(polygon, type = "n", xlab = "Eastings (km)", ylab = "Northings (km)", main = "Polygon File")
+# polygon(polygon)
+# plot(spatial.polygon, axes = TRUE)
+# title(xlab = "Eastings (km)", ylab = "Northings (km)", main = "Spatial Polygon")
+# plot(spatial.polygon[23], add = TRUE, col = "red")
 ```
 
 ##### 2.1.2 Converting maps objects to SpatialPolygons
@@ -79,14 +80,14 @@ plot(spatial.polygon[23], add = TRUE, col = "red")
 The maps R package includes several commonly used maps, which can be converted into SpatialPolygons objects using the map2SpatialPolygons command. For instance, a county-level map of just the states Pennsylvania and Vermont with red borders, along with the boundaries of neighboring states with slightly thicker black borders can be produced with the resulting plot shown in Figure 2).
 
 ```{r}
-library(maps)
-county.map <- map("county", c("pennsylvania", "vermont"), fill = TRUE, plot = FALSE)
-county.names <- as.character(county.map$names)
-county <- map2SpatialPolygons(county.map, IDs = county.names, proj4string = CRS("+proj=longlat"))
-state.map <- map("state", c(), fill = TRUE, plot = FALSE)
-state.names <- as.character(state.map$names)
-state <- map2SpatialPolygons(state.map, IDs = state.names, proj4string = CRS("+proj=longlat")) > plot(county, axes = TRUE, border = "red")
-plot(state, add = TRUE, lwd = 2)
+# library(maps)
+# county.map <- map("county", c("pennsylvania", "vermont"), fill = TRUE, plot = FALSE)
+# county.names <- as.character(county.map$names)
+# county <- map2SpatialPolygons(county.map, IDs = county.names, proj4string = CRS("+proj=longlat"))
+# state.map <- map("state", c(), fill = TRUE, plot = FALSE)
+# state.names <- as.character(state.map$names)
+# state <- map2SpatialPolygons(state.map, IDs = state.names, proj4string = CRS("+proj=longlat")) > plot(county, axes = TRUE, border = "red")
+# plot(state, add = TRUE, lwd = 2)
 ```
 
 ## 2.2 Converting Between Coordinate Systems
@@ -94,10 +95,10 @@ plot(state, add = TRUE, lwd = 2)
 In the Pennsylvania and Vermont example in Section 2.1.2, all coordinates are in longitude/latitude. How- ever, this coordinate system is not appropriate for many distance-based methods as degrees of longitude are not equidistant, and must be converted to a grid based system. The function latlong2grid() can convert either a) an n×2 matrix of coordinates b) a SpatialPolygons object based on longitude/latitude (expressed in decimal values) into kilometer-based grid coordinates. Figure 3 shows the resulting transformed map.
 
 ```{r}
-county.grid <- latlong2grid(county)
-state.grid <- latlong2grid(state)
-plot(county.grid, axes = TRUE, border = "red")
-plot(state.grid, add = TRUE, lwd = 2)
+# county.grid <- latlong2grid(county)
+# state.grid <- latlong2grid(state)
+# plot(county.grid, axes = TRUE, border = "red")
+# plot(state.grid, add = TRUE, lwd = 2)
 ```
 
 Or a simple 2-column matrix of coordinates can be converted as well. As an example, consider the latitude and longitudes of Montreal QC (latitude: 45deg 28' 0" N (deg min sec), longitude: 73deg 45' 0" W) and Vancouver BC (latitude: 45deg 39' 38" N (deg min sec), longitude: 122deg 36' 15" W) in decimal format. These also can be converted to a grid-based coordinate system.
@@ -136,7 +137,8 @@ ggplot() +
 
 ##### 3.2 Scotland Lip Cancer among Males in 1975-1980
 
-AFF agriculture farming and fishing The expected numbers of disease were calculated by the method of Mantel and Stark
+AFF agriculture farming and fishing The expected numbers of disease were calculated by the method of Mantel and Stark [@Mantel68].
+[@Kemp85]
 
 Figure \@ref(fig:scotland)
 
@@ -163,7 +165,7 @@ ggplot() +
 
 ## 4.1 Expected Numbers of Disease and Standardized Mortality Ratios
 
-In order to control for known risk factors (in this case strata) using internal indirect standardization, we can compute the (indirect) expected number of diseases [6] for each area using the expected() command. It is important that the population and cases vectors are balanced: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order. i.e. if considering 16 strata, the first 16 elements correspond to the first area, the next 16 correspond to the second area, etc. and the strata are always listed in the same order.\
+In order to control for known risk factors (in this case strata) using internal indirect standardization, we can compute the (indirect) expected number of diseases [@Wakefield00] for each area using the expected() command. It is important that the population and cases vectors are balanced: all counts are sorted by area first, and then within each area the counts for all strata are listed (even if 0 count) in the same order. i.e. if considering 16 strata, the first 16 elements correspond to the first area, the next 16 correspond to the second area, etc. and the strata are always listed in the same order.\
 \
 
 ```{r}
@@ -178,7 +180,7 @@ expected.cases <- expected(pennLC$data$population, pennLC$data$cases, n.strata)
 
 ### 4.2.1 Empricial Bayes
 
-Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates [4]. The estimates represent a weighted compromise between an area's SMR and the overall mean relative risk. These estimates are much more stable than the raw SMR's. In this example, we use a linear model $\alpha + \beta_1 x + \beta_2 x_2$ in the eBayes() function to estimate relative risk with the resulting plot in Figure
+Given that SMR estimates for areas with small values of expected numbers of disease can be highly variable, Clayton and Kaldor proposed an empirical Bayes approach to estimate disease rates [@Clayton87]. The estimates represent a weighted compromise between an area's SMR and the overall mean relative risk. These estimates are much more stable than the raw SMR's. In this example, we use a linear model $\alpha + \beta_1 x + \beta_2 x_2$ in the eBayes() function to estimate relative risk with the resulting plot in Figure
 
 ```{r}
 data(scotland)
@@ -192,11 +194,11 @@ mapvariable(results$RR, scotland.map)
 
 # 4.3 Cluster Detection
 
-Cluster detection is the routine surveillance of a large expanse of small administrative zones for evidence of individual "hot-spots" of disease without any preconceptions about their locations. [2]. For aggregated count data, a typical procedure is to consider a set of zones, each zone being some amalgamation of areas in the study regions. Each zone is then viewed as a potential cluster.
+Cluster detection is the routine surveillance of a large expanse of small administrative zones for evidence of individual "hot-spots" of disease without any preconceptions about their locations. [@Besag91]. For aggregated count data, a typical procedure is to consider a set of zones, each zone being some amalgamation of areas in the study regions. Each zone is then viewed as a potential cluster.
 
 ## 4.3.1 Kulldorff
 
-The kulldorff() function implements the Kulldorff method for finding the most likely cluster as described in Kulldorff and Nagarwalla (1995) [9] and Kulldorff (1997) [8]. The kulldorff()
+The kulldorff() function implements the Kulldorff method for finding the most likely cluster as described in Kulldorff and Nagarwalla (1995) [@Kulldorff95] and Kulldorff (1997) [@Kulldorff97]. The kulldorff()
 
 ```{r}
 data <- pennLC$data
@@ -230,7 +232,7 @@ title("Most Likely Cluster Controlling for Strata")
 
 ## 4.3.2 Besag-Newell
 
-The besag.newell() function implements the Besag-Newell method as described in Besag and Newell (1995) [2]. Using the same dataset as in Section 4.3.1
+The besag.newell() function implements the Besag-Newell method as described in Besag and Newell (1995) [@Besag91]. Using the same dataset as in Section 4.3.1
 
 ```{r}
 k <- 1250
@@ -314,5 +316,7 @@ param2 <- GammaPriorCh(log(5), 0.975, 2)
 ```
 
 ## 4.4.3 Choosing the Prior on the Spatial Residuals
+Unfinished section
 
 # References
+
