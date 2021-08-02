@@ -1,3 +1,8 @@
+# SpatialEpi 1.2.5.9000
+
+* Development version
+
+
 # SpatialEpi 1.2.5
 
 * Fixed errors with 1.2.4 CRAN submission
