@@ -30,9 +30,13 @@ header-includes: >
   \usepackage{lipsum}
 bibliography: bibliography.bib
 link-citations: true
+#nocite: '@*'
+csl: ieee.csl
 output: 
   bookdown::pdf_book:
-    base_format: rticles::peerj_article # for using bookdown features like \@ref()
+    
+    base_format: rticles::peerj_article
+         # for using bookdown features like \@ref()
 ---
 
 # Introduction {.unnumbered}
