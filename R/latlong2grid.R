@@ -51,7 +51,7 @@ sine51 <- sin( 51.5*toradians )
 #-------------------------------------------------------------------------------
 # If a Spatial Polygon
 #-------------------------------------------------------------------------------
-if(is(input)[1] == "SpatialPolygons"){  
+if(is(input)[1] == "SpatialPolygons"){
   for( i in 1:length(input@polygons) ){
     # for all Polygons's in polygon
     for( j in 1:length(input@polygons[[i]]@Polygons) ){
@@ -75,7 +75,7 @@ if(is(input)[1] == "SpatialPolygons"){
     )	
   }
   
-  output <- SpatialPolygons(input@polygons,proj4string=CRS("+proj=utm"))
+  output <- SpatialPolygons(input@polygons,proj4string=CRS("+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
 
   
 #-------------------------------------------------------------------------------  

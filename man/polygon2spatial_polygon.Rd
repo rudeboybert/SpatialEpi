@@ -28,7 +28,6 @@ Converts a polygon (a matrix of coordinates with NA values to separate subpolygo
 }
 \details{
 Just as when plotting with the \code{\link[graphics:polygon]{graphics::polygon()}} function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix \code{poly}, NA values separate complete subpolygons.
-\code{coordinate.system} must be either \code{'+proj=utm'} or \code{'+proj=longlat'}.
 In the case with an area consists of more than one separate closed polygon, \code{nrepeats} specifies the number of closed polygons associated with each area.
 }
 \examples{
@@ -36,7 +35,8 @@ In the case with an area consists of more than one separate closed polygon, \cod
 data(scotland)
 
 polygon <- scotland$polygon$polygon
-coord.system <- '+proj=utm'
+coord.system <- "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 "
+coord.system <- paste(coord.system, "+ellps=WGS84 +datum=WGS84 +units=m +no_defs", sep = "")
 names <- scotland$data$county.names
 nrepeats <- scotland$polygon$nrepeats
 

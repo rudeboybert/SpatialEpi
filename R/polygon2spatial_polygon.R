@@ -16,7 +16,6 @@ globalVariables(c(
 #' @param nrepeats number of sub polygons for each area
 #'
 #' @details Just as when plotting with the [graphics::polygon()] function, it is assumed that each subpolygon is to be closed by joining the last point to the first point.  In the matrix `poly`, NA values separate complete subpolygons. 
-#' `coordinate.system` must be either `'+proj=utm'` or `'+proj=longlat'`.
 #' In the case with an area consists of more than one separate closed polygon, `nrepeats` specifies the number of closed polygons associated with each area.
 #' 
 #' @references Bivand, R. S., Pebesma E. J., and Gomez-Rubio V. (2008) *Applied Spatial Data Analysis with R*.  Springer Series in Statistics. E. J. Pebesma and R. S. Bivand. (2005) Classes and methods for spatial data in R. *R News*, **5**, 9--13.  
@@ -30,7 +29,8 @@ globalVariables(c(
 #' data(scotland)
 #' 
 #' polygon <- scotland$polygon$polygon
-#' coord.system <- '+proj=utm'
+#' coord.system <- "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 "
+#' coord.system <- paste(coord.system, "+ellps=WGS84 +datum=WGS84 +units=m +no_defs", sep = "")
 #' names <- scotland$data$county.names
 #' nrepeats <- scotland$polygon$nrepeats
 #' 
@@ -55,7 +55,7 @@ function(poly, coordinate.system, area.names = NULL, nrepeats = NULL){
 # Deal with non-specified values
 #-------------------------------------------------------------------------------
 if(missing(coordinate.system)){
-	stop("Coordinate system must be specified: '+proj=utm' or '+proj=longlat'.")
+	stop("Coordinate system must be specified")
 }
 
 if(is.null(nrepeats)){

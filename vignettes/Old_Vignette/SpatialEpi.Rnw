@@ -116,7 +116,8 @@ data(scotland)
 polygon <- scotland$polygon$polygon; nrepeats <- scotland$polygon$nrepeats
 names <- scotland$data$county.names
 
-spatial.polygon <- polygon2spatial.polygon(polygon,coordinate.system='+proj=utm',names,nrepeats)
+crs <- "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+spatial.polygon <- polygon2spatial.polygon(polygon,coordinate.system=crs,names,nrepeats)
 
 par(mfrow=c(1,2))
 plot(polygon,type='n',xlab="Eastings (km)",ylab="Northings (km)",main="Polygon File")

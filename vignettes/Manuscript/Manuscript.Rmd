@@ -67,7 +67,7 @@ A polygon file consists of a 2-column matrix of coordinates, where each complete
 # polygon <- scotland$polygon$polygon
 # nrepeats <- scotland$polygon$nrepeats
 # names <- scotland$data$county.names
-# spatial.polygon <- polygon2spatial.polygon(polygon, coordinate.system = "+proj=utm", + names, nrepeats)
+# spatial.polygon <- polygon2spatial.polygon(polygon, coordinate.system = "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs", + names, nrepeats)
 ```
 
 ```{r}
