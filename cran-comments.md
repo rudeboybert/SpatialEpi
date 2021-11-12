@@ -35,18 +35,21 @@ Flavors: r-devel-linux-x86_64-debian-clang, r-devel-linux-x86_64-debian-gcc
 * local macOS install, R 4.0.3
 * win-builder (release, devel, oldrelease)
 * GitHub Actions
-    + ubuntu-16.04: latest
-    + windows: latest
-    + macOS: latest, devel
+    + macOS: latest
 * Rhub via devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
-    + Ubuntu Linux 20.04.1 LTS, R-release, GCC
+    + Apple Silicon (M1), macOS 11.6 Big Sur, R-release
     + Windows Server 2008 R2 SP1, R-devel, 32/64 bit
-    + Oracle Solaris 10, x86, 32 bit, R-release
+    + Windows Server 2008 R2 SP1, R-oldrel, 32/64 bit
+    + Windows Server 2008 R2 SP1, R-release, 32/64 bit
+    + macOS 10.13.6 High Sierra, R-release, CRAN's setup
+    + Fedora Linux, R-devel, GCC
+    + Debian Linux, R-release, GCC
 
 
 ## R CMD check results
 
 * Warnings
     + I got the following warning: Found the following (possibly) invalid URLs: URL: https://developer.apple.com/download/all/. However I'm able to access the link without issue.
-
+* Notes
+    + Version contains large components (1.2.5.9000)
 

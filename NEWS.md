@@ -1,6 +1,6 @@
-# SpatialEpi 1.2.5.9000
+# SpatialEpi 1.2.6
 
-* Development version
+* Fixed GDAL/PROJ requiring UTM zone error https://github.com/rudeboybert/SpatialEpi/issues/34
 
 
 # SpatialEpi 1.2.5
