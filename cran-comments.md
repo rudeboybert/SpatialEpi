@@ -37,13 +37,13 @@ Flavors: r-devel-linux-x86_64-debian-clang, r-devel-linux-x86_64-debian-gcc
 * GitHub Actions
     + macOS: latest
 * Rhub via devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
-    + Apple Silicon (M1), macOS 11.6 Big Sur, R-release
     + Windows Server 2008 R2 SP1, R-devel, 32/64 bit
     + Windows Server 2008 R2 SP1, R-oldrel, 32/64 bit
     + Windows Server 2008 R2 SP1, R-release, 32/64 bit
     + macOS 10.13.6 High Sierra, R-release, CRAN's setup
-    + Fedora Linux, R-devel, GCC
     + Debian Linux, R-release, GCC
+    + Fedora Linux, R-devel, GCC
+    + Fedora Linux, R-devel, clang, gfortran
 
 
 ## R CMD check results
