@@ -1,49 +1,38 @@
-## Resubmission
+## Submission
 
-This is a resubmission of SpatialEpi v1.2.4 which I originally submitted on 2021-07-27. In this version I have addressed all NOTES and ERRORS in https://cran.r-project.org/web/checks/check_results_SpatialEpi.html:
+This fixes the errors found at https://cran.r-project.org/web/checks/check_results_SpatialEpi.html
 
-Version: 1.2.4
-Check: dependencies in R code
-Result: NOTE
-    Namespaces in Imports field not imported from:
-     ‘dplyr’ ‘ggplot2’ ‘grDevices’ ‘graphics’ ‘methods’ ‘sf’ ‘stats’
-     All declared Imports should be used.
-Flavors: r-devel-linux-x86_64-fedora-clang, r-devel-linux-x86_64-fedora-gcc, r-devel-windows-x86_64-gcc10-UCRT, r-patched-solaris-x86, r-release-macos-arm64, r-release-macos-x86_64, r-oldrel-macos-x86_64
-
-
-Version: 1.2.4
+Version: 1.2.5
 Check: examples
 Result: ERROR
-    Running examples in ‘SpatialEpi-Ex.R’ failed
+    Running examples in 'SpatialEpi-Ex.R' failed
     The error most likely occurred in:
     
-    > ### Name: NYleukemia_sf
-    > ### Title: Upstate New York Leukemia
-    > ### Aliases: NYleukemia_sf
-    > ### Keywords: datasets
+    > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+    > ### Name: EBpostthresh
+    > ### Title: Produce the probabilities of exceeding a threshold given a
+    > ### posterior gamma distribution.
+    > ### Aliases: EBpostthresh
     >
     > ### ** Examples
     >
-    >
-    > # Static map of NY Leukemia rate per county
-    > library(ggplot2)
-    > ggplot(NYleukemia_sf) +
-    + geom_sf(aes(fill= cases/population)) +
-    + scale_fill_gradient(low = "white", high = "red")
-    Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
-     GDAL Error 1: No PROJ.4 translation for source SRS, coordinate transformation initialization has failed.
-    Error in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
-     OGRCreateCoordinateTransformation() returned NULL: PROJ available?
-    Calls: <Anonymous> ... st_transform.sfc -> st_sfc -> structure -> CPL_transform
+    > data(scotland)
+    > Y <- scotland$data$cases
+    > E <- scotland$data$expected
+    > ebresults <- eBayes(Y,E)
+    > #Find probabilities of exceedence of 3
+    > thresh3 <- EBpostthresh(Y, E, alpha=ebresults$alpha, beta=ebresults$beta, rrthresh=3)
+    > mapvariable(thresh3, scotland$spatial.polygon)
+    Warning in wkt(obj) : CRS object has no comment
+    Error in rgdal::OSRIsProjected(obj) : Can't parse user input string
+    Calls: mapvariable ... is.projected -> is.projected -> is.projected -> <Anonymous>
     Execution halted
-Flavor: r-patched-solaris-x86
-
-
+Flavors: r-devel-linux-x86_64-debian-clang, r-devel-linux-x86_64-debian-gcc
 
 
 ## Test environments
 
-* local macOS install, R 4.1.0
+* local macOS install, R 4.0.3
 * win-builder (release, devel, oldrelease)
 * GitHub Actions
     + ubuntu-16.04: latest
@@ -59,12 +48,5 @@ Flavor: r-patched-solaris-x86
 
 * Warnings
     + I got the following warning: Found the following (possibly) invalid URLs: URL: https://developer.apple.com/download/all/. However I'm able to access the link without issue.
-* NOTES only for Oracle Solaris 10, x86, 32 bit, R-release
-    + Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ being installed.
-    + Compilation used the following non-portable flag(s): '-march=pentiumpro'
 
 
-
-## Comments
-
-I am switching the package maintainer from albert@stat.washington.edu to albert.ys.kim@gmail.com
