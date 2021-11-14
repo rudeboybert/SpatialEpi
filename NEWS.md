@@ -4,7 +4,6 @@
 * Removed non-vignettes from vignettes folder
 
 
-
 # SpatialEpi 1.2.6
 
 * Fixed GDAL/PROJ requiring UTM zone error https://github.com/rudeboybert/SpatialEpi/issues/34
