@@ -1,3 +1,10 @@
+# SpatialEpi 1.2.7
+
+* Removed outdated vignette with instructions on installing geos and gdal geospatial libraries
+* Removed non-vignettes from vignettes folder
+
+
+
 # SpatialEpi 1.2.6
 
 * Fixed GDAL/PROJ requiring UTM zone error https://github.com/rudeboybert/SpatialEpi/issues/34

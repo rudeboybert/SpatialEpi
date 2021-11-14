@@ -10,3 +10,7 @@
 ^CRAN-RELEASE$
 ^doc$
 ^\.github$
+^vignettes/Old_Vignette$
+^vignettes/Manuscript$
+^vignettes/Jonno_SISMID$
+^vignettes/install_geo_libraries\.Rmd$
