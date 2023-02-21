@@ -21,7 +21,6 @@ globalVariables(c(
 #' @return
 #' A map colour-coded to indicate the different levels of `values`.
 #' @export
-#' @importFrom maptools leglabs
 #'
 #' @examples
 #' ## Load data

@@ -183,55 +183,6 @@ plot(state,add=TRUE,lwd=2)
 
 
 
-%%-------------------------------------------
-%\subsubsection{Converting Shapefiles to \pkg{SpatialPolygons}}
-%%-------------------------------------------
-%ESRI shapefiles from ArcMap Geographical Infomation Systems (GIS) application can be loaded into {\tt R} and converted into {\tt Spatial Polygons} objects using the \pkg{shapefiles} package.  For example, say in the current working directory 6 files called ``{\tt ww\_county}'' exist with extensions {\tt .dbf}, {\tt .prj}, {\tt .sbn}, {\tt .sbx}, {\tt .shp} and {\tt .shx} represent a map of the 13 counties in Western Washington.  These shapefiles can be converted into a {\tt SpatialPolygons} object {\tt ww} with the resulting plot shown in Figure \ref{ww}.  
-
-%%
-%%
-%% CHANGE THIS!
-%%
-%%------------------------------------------------
-%<<echo=FALSE,print=FALSE,fig=FALSE>>= 
-%temp <- getwd()
-%setwd("/Users/rudeboybert/Documents/SC/SEER/ww")
-%@
-%%------------------------------------------------
-
-%%------------------------------------------------
-%<<echo=TRUE,print=FALSE,fig=FALSE>>= 
-%library(shapefiles)
-
-%ww <- read.shapefile("ww_county")
-%df <- ww$dbf$dbf
-%row.names(df) <- 1:nrow(df)
-
-%wwpl <- shape2poly(ww)
-%wwSpP <- maptools:::.polylist2SpP(wwpl)
-%wwSPDF <- SpatialPolygonsDataFrame(wwSpP,df)
-
-%ww <- SpatialPolygons(wwSPDF@polygons,proj4string=CRS("+proj=longlat"))
-%# change this!
-%setwd(temp)
-%plot(ww,axes=TRUE)
-%@
-%%------------------------------------------------
-%%------------------------------------------------
-%\setkeys{Gin}{width=0.5\textwidth}
-%\begin{figure}
-%\begin{center}
-%<<echo=FALSE,print=FALSE,fig=TRUE>>= 
-%plot(ww,axes=TRUE,lwd=0.75)
-%@
-%\end{center}
-%\caption{County-Level Map of Western Washington}
-%\label{ww}
-%\end{figure}
-%%------------------------------------------------
-
-
-
 
 
 %-----------------------------------------------------------
