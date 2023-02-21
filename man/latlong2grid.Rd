@@ -19,8 +19,17 @@ Convert geographic latitude/longitude coordinates to kilometer-based grid coordi
 Longitude/latitudes are not a grid-based coordinate system:  latitudes are equidistant but the distance between longitudes varies.
 }
 \note{
-Rough conversion of US lat/long to km (used by GeoBUGS):  (see also forum.swarthmore.edu/dr.math/problems/longandlat.html).  Radius of earth: r = 3963.34 (equatorial) or 3949.99 (polar) mi = 6378.2 or 6356.7 km, which implies: km per mile  = 1.609299 or 1.609295 a change of 1 degree of latitude corresponds to the same number of km, regardless of longitude.  arclength=r*theta, so the multiplier for coord\$y should probably be just the radius of earth.
-On the other hand, a change of 1 degree in longitude corresponds to a different distance, depending on latitude.  (at N pole, the change is essentially 0.  at the equator, use equatorial radius.
+Rough conversion of US lat/long to km (used by GeoBUGS):  (see
+also forum.swarthmore.edu/dr.math/problems/longandlat.html).
+Radius of earth: r = 3963.34 (equatorial) or 3949.99 (polar) mi =
+6378.2 or 6356.7 km, which implies: km per mile  = 1.609299 or
+1.609295 a change of 1 degree of latitude corresponds to the same
+number of km, regardless of longitude.  arclength=r*theta, so the
+multiplier for coord y should probably be just the radius of
+earth. On the other hand, a change of 1 degree in longitude
+corresponds to a different distance, depending on latitude.  (at N
+pole, the change is essentially 0.  at the equator, use equatorial
+radius.
 }
 \examples{
 ## Convert coordinates
