@@ -14,3 +14,4 @@
 ^vignettes/Manuscript$
 ^vignettes/Jonno_SISMID$
 ^vignettes/install_geo_libraries\.Rmd$
+^CRAN-SUBMISSION$

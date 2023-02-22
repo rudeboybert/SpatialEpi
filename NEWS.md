@@ -1,3 +1,10 @@
+# SpatialEpi 1.2.8
+
+* Removed dependencies on `rgdal`, `rgeos`, and `maptools` https://r-spatial.org/r/2022/04/12/evolution.html, including
+    + `install_geo_libraries.Rmd` vignette
+    + `maptools::leglabs()`: we copied this function into our package, with original author Roger Bivand's permission and giving him full attribution
+
+
 # SpatialEpi 1.2.7
 
 * Removed outdated vignette with instructions on installing geos and gdal geospatial libraries

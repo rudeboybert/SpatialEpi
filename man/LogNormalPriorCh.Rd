@@ -21,8 +21,8 @@ A list containing
 \item{sigma}{variance of log-normal distribution}
 }
 \description{
-\preformatted{Compute parameters to calibrate the prior distribution of a relative risk that has a log-normal distribution.
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Compute parameters to calibrate the prior distribution of a relative risk that has a log-normal distribution.
+}\if{html}{\out{</div>}}
 }
 \examples{
 # Calibrate the log-normal distribution s.t. the 95\% confidence interval is [0.2, 5]
