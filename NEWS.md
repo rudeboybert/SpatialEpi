@@ -1,3 +1,8 @@
+# SpatialEpi 1.2.8.9000
+
+* Development version
+
+
 # SpatialEpi 1.2.8
 
 * Removed dependencies on `rgdal`, `rgeos`, and `maptools` https://r-spatial.org/r/2022/04/12/evolution.html, including
